@@ -16,7 +16,7 @@ body {
   @apply text-base overflow-hidden;
   font-family: var(--font-family-body), sans-serif;
   color: rgb(var(--foreground-rgb));
-  background-color: #0e0f0f;
+  background-color: white;
 
   @media (max-width: 1200px) {
     font-size: 16px;
