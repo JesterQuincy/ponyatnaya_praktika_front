@@ -2,6 +2,13 @@
   --foreground-rgb: 0, 0, 0;
   --background-start-rgb: 214, 219, 220;
   --background-end-rgb: 255, 255, 255;
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  background-image: url('../public/img/background.png');
+  background-size: cover;
+  background-position: center;
+  background-repeat: repeat;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -16,7 +23,11 @@ body {
   @apply text-base overflow-hidden;
   font-family: var(--font-family-body), sans-serif;
   color: rgb(var(--foreground-rgb));
-  background-color: white;
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
 
   @media (max-width: 1200px) {
     font-size: 16px;
@@ -27,4 +38,10 @@ body {
     font-size: 14px;
   }
 
+}
+
+.fc-timegrid-slot-label {
+  color: #000 !important; /* Установите нужный цвет */
+  font-weight: lighter !important; /* По желанию, сделайте текст жирным */
+  font-size: 0.875rem !important; /* Задайте размер шрифта */
 }

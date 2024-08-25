@@ -1,14 +1,13 @@
 'use client'
 
 import styles from "@/styles/calendar.module.css"
-// @ts-ignore
-import {CalendarSideBar} from "@/components/ui/calendar/CalendarSideBar"
-// @ts-ignore
-import {CalendarHeader } from "@/components/ui/calendar/CalendarHeader"
-// @ts-ignore
-import {CalendarBody} from "@/components/ui/calendar/CalendarBody"
+import CalendarSideBar from "@/components/ui/calendar/CalendarSideBar"
+import CalendarHeader from "@/components/ui/calendar/CalendarHeader"
+import CalendarBody from "@/components/ui/calendar/CalendarBody"
 
-export function CalendarUser() {
+
+
+export function Calendar() {
 
     return (
         <div className={styles.MainBody}>

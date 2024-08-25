@@ -1,0 +1,74 @@
+.MainContainer {
+    width: 100%;
+   height: 964px;
+    border-radius: 6px;
+    background: white;
+}
+
+.calendarTitle {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #333;
+}
+
+/* Стили для кнопок навигации */
+.calendarButton {
+    background-color: #007bff;
+    border: none;
+    color: white;
+    padding: 5px 10px;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-right: 5px;
+}
+
+.calendarButton:hover {
+    background-color: #0056b3;
+}
+
+/* Стили для дней недели (шапка таблицы) */
+.calendarHeader {
+    background-color: #f8f9fa;
+    color: #333;
+    padding: 10px 0;
+    font-weight: 500;
+}
+
+/* Стили для ячеек с датами */
+.calendarDay {
+    border: 1px solid #ddd;
+    padding: 10px;
+}
+
+.calendarDayNumber {
+    font-size: 0.875rem;
+    color: #888;
+}
+
+/* Стили для событий */
+.calendarEvent {
+    background-color: #28a745;
+    color: white;
+    padding: 5px;
+    border-radius: 4px;
+    font-size: 0.875rem;
+    margin-bottom: 5px;
+}
+
+/* Стили для сегодняшнего дня */
+.calendarToday {
+    background-color: #fff3cd;
+    border-color: #ffeeba;
+}
+
+.fc-timegrid-slot-label {
+    color: #FF5733 !important; /* Задайте нужный цвет текста времени */
+    font-weight: bold !important; /* Сделать текст жирным */
+    font-size: 0.875rem !important; /* Размер шрифта */
+}
+
+.calendarTimeLabels {
+    color: #FF5733; /* Задайте нужный цвет текста времени */
+    font-weight: bold; /* По желанию можно сделать текст жирным */
+    font-size: 0.875rem; /* Размер шрифта */
+}
