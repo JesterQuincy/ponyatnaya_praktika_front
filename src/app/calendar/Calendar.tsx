@@ -6,12 +6,11 @@ import CalendarHeader from "@/components/ui/calendar/CalendarHeader"
 import CalendarBody from "@/components/ui/calendar/CalendarBody"
 
 
-
 export function Calendar() {
 
     return (
         <div className={styles.MainBody}>
-            <CalendarSideBar />
+            <CalendarSideBar/>
             <div className={styles.CentralContainer}>
                 <CalendarHeader />
                 <CalendarBody />
@@ -19,3 +18,4 @@ export function Calendar() {
         </div>
     )
 }
+

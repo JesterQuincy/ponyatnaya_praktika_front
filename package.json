@@ -28,6 +28,7 @@
     "react-day-picker": "^9.0.6",
     "react-dom": "^18",
     "react-hook-form": "^7.52.2",
+    "react-pure-modal": "^2.2.6",
     "react-toastify": "^10.0.5",
     "sass": "^1.77.8"
   },

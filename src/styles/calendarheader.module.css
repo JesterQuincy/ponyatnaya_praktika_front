@@ -4,4 +4,54 @@
     background: white;
     margin-top: 20px;
     border-radius: 6px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 35%;
+}
+
+.Input {
+    background-color: #ECECEC;
+    border: 1px solid #CECECE;
+    height: 30px;
+    margin-left: 2%;
+    border-radius: 20px;
+    padding-left: 15px;
+    width: 292px;
+}
+.buttonsGroup {
+    color: white;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 2%;
+}
+
+.addClient {
+    width: 200px;
+    height: 30px;
+    color: white;
+    background-color: #EA6608;
+    border: none;
+    word-wrap: normal;
+    border-radius: 6px;
+}
+
+.newEvent {
+    border-radius: 6px;
+    width: 200px;
+    height: 30px;
+    color: white;
+    background-color: #5A5A5A;
+    border: none;
+}
+
+.addDayOff {
+    height: 30px;
+    width: 150px;
+    border: none;
+    color: #5A5A5A;
+    font-weight: bold;
+    background-color: white;
+    border-bottom: 1px solid #CECECE;
 }

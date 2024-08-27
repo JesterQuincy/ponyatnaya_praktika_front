@@ -1,9 +1,6 @@
-import type {Metadata} from 'next'
-import {Calendar} from "@/app/calendar/Calendar";
+'use client'
 
-export const metadata: Metadata = {
-    title:'Calendar',
-}
+import {Calendar} from "@/app/calendar/Calendar";
 
 export default function CalendarPage () {
     return <Calendar />
