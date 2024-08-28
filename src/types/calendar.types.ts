@@ -36,5 +36,5 @@ export interface UserMeeting {
     therapistStateAtSessionEnd: string,
     planNextSession: string,
     supervisionThemAndProblem: string,
-
+    clientType: string,
 }

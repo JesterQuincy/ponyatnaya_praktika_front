@@ -5,6 +5,7 @@ import { useForm, SubmitHandler } from "react-hook-form";
 import { useMutation } from "@tanstack/react-query";
 import { calendarService } from "@/services/calendar.service";
 import { toast } from "react-toastify";
+import {UserMeeting} from "@/types/calendar.types";
 
 // Определение типов формы
 interface ClientForm {
@@ -48,7 +49,7 @@ const AddClientModal = ({ isOpen, onClose }) => {
 
     const { mutate } = useMutation({
         mutationKey: ['createMeeting'],
-        mutationFn: (data: ClientForm) => calendarService.createMeeting(data),
+        mutationFn: (data: UserMeeting) => calendarService.createUser(data),
         onSuccess: () => {
             toast.success('Клиент успешно добавлен!');
             reset();
@@ -60,6 +61,7 @@ const AddClientModal = ({ isOpen, onClose }) => {
     });
 
     const onSubmit: SubmitHandler<ClientForm> = (data) => {
+        // @ts-ignore
         mutate({ ...data, clientType });
     };
 
