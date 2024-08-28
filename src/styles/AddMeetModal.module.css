@@ -1,0 +1,136 @@
+.modalOverlay {
+    background-color: rgba(0, 0, 0, 0.75); /* Затемнение фона */
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+.modalContent {
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 10px;
+    max-width: 500px;
+    width: 100%;
+    position: relative;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    font-family: Arial, sans-serif;
+}
+.typeSelector {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 15px;
+}
+
+.typeSelector label {
+    font-size: 16px;
+    color: #333;
+}
+
+.input, .select, .textarea {
+    width: calc(100% - 20px);
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 14px;
+    color: #333;
+}
+
+.input {
+    height: 40px;
+}
+
+.select {
+    height: 40px;
+}
+
+.textarea {
+    min-height: 80px;
+    resize: vertical;
+}
+
+.dateTime {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 15px;
+}
+
+.dateTime input {
+    width: calc(50% - 10px);
+    height: 40px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 14px;
+    color: #333;
+}
+
+.checkboxGroup {
+    margin-bottom: 15px;
+}
+
+.checkboxGroup label {
+    font-size: 16px;
+    color: #333;
+    display: flex;
+    align-items: center;
+}
+
+.checkboxGroup input[type="checkbox"] {
+    margin-right: 10px;
+}
+
+.repeatOptions, .remindOptions {
+    padding: 10px 0 0 20px;
+    margin-top: 10px;
+    border-top: 1px solid #e0e0e0;
+}
+
+.repeatFrequency {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.repeatFrequency select, .repeatFrequency input {
+    width: calc(50% - 10px);
+    height: 40px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 14px;
+    color: #333;
+}
+
+.formActions {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+}
+
+.formActions button {
+    padding: 10px 20px;
+    font-size: 16px;
+    color: #fff;
+    background-color: #f27007;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.formActions button[type="button"] {
+    background-color: #ccc;
+    color: #333;
+}
+
+.formActions button[type="submit"]:hover {
+    background-color: #d86007;
+}

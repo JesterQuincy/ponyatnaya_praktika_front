@@ -8,6 +8,8 @@ import interactionPlugin from '@fullcalendar/interaction';
 import moment from 'moment';
 
 export default function CalendarBody() {
+
+
     const dataFromServer = {
         currentDate: "2024-08-25T02:51:37.197Z",
         clientsData: [
