@@ -12,4 +12,4 @@ WORKDIR /app
 COPY --from=build /app ./
 EXPOSE 3330
 
-CMD ["npm", "start"]
+CMD ["npm", "start -p 3300"]
