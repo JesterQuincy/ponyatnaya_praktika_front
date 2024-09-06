@@ -3,21 +3,21 @@ import {axiosClassic} from "@/api/interceptors";
 import {removeTokenStorage, saveTokenStorage} from "@/services/auth-token.service";
 
 export const authService = {
-    async main(type: 'login' | 'register', data: AuthForm){
+    async main( data: AuthForm){
         const response = await axiosClassic.post<AuthResponse>(
-            `/auth/${type}`,
+            `/auth/sign-in`,
             data
         )
-        if (response.data.accessToken) saveTokenStorage(response.data.accessToken)
+        if (response.data.access) saveTokenStorage(response.data.access, response.data.refresh)
         return response
 
     },
 
-    async getNewToken() {
+    async getNewToken(refreshToken:string) {
         const response = await axiosClassic.post<AuthResponse>(
-            '/auth/login/access_token'
+            '/auth/refresh',refreshToken
         )
-        if (response.data.accessToken) saveTokenStorage(response.data.accessToken)
+        if (response.data.access) saveTokenStorage(response.data.access,response.data.refresh)
         return response
     },
 

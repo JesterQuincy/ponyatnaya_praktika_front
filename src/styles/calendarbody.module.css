@@ -6,8 +6,8 @@
 }
 
 .calendarTitle {
-    font-size: 1.5rem;
-    font-weight: bold;
+    font-size: 15px;
+    font-weight: lighter;
     color: #333;
 }
 
@@ -47,7 +47,7 @@
 
 /* Стили для событий */
 .calendarEvent {
-    background-color: #28a745;
+    background-color: #EA660C;
     color: white;
     padding: 5px;
     border-radius: 4px;
@@ -61,10 +61,18 @@
     border-color: #ffeeba;
 }
 
-.fc-timegrid-slot-label {
-    color: #FF5733 !important; /* Задайте нужный цвет текста времени */
-    font-weight: bold !important; /* Сделать текст жирным */
-    font-size: 0.875rem !important; /* Размер шрифта */
+.customTimeIndicator {
+    position: absolute;
+    width: 75%;
+    height: 2px;
+    background-color: orange;
+    z-index: 999;
+}
+
+/* Контейнер календаря с относительным позиционированием */
+.fc-timegrid-body {
+    position: relative;  /* Добавляем относительное позиционирование */
+    overflow: hidden;    /* Убираем видимость за границами блока */
 }
 
 .calendarTimeLabels {

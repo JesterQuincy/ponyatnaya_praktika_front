@@ -6,6 +6,9 @@ import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from '@fullcalendar/interaction';
 import moment from 'moment';
+import 'moment/locale/ru';
+
+moment.locale('ru');
 
 export default function CalendarBody() {
 
@@ -57,24 +60,33 @@ export default function CalendarBody() {
                 }}
                 initialDate={new Date()}
                 height={954}
-                titleFormat={{ year: 'numeric', month: 'short', day: 'numeric' }}
+                locale="ru"  // Устанавливаем локаль на русский
+                titleFormat={{ year: 'numeric', month: 'long', day: 'numeric' }}  // Длинное название месяца
                 buttonText={{
                     today: 'Сегодня',
                     month: 'Месяц',
                     week: 'Неделя',
                     day: 'День',
                 }}
-                dayHeaderClassNames={() => styles.calendarHeader}
-                dayCellClassNames={() => styles.calendarDay}
-                dayCellContent={({ date, view }) => (
-                    <div className={styles.calendarDayNumber}>
-                        {date.getDate()}
-                    </div>
-                )}
+                slotLabelFormat={{
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    hour12: false // Используем 24-часовой формат без AM/PM
+                }}
+                nowIndicator={true}
+                scrollTime={moment().format('HH:mm:ss')}
+                dayHeaderContent={({ date }) => {
+                    const isToday = moment(date).isSame(moment(), 'day');
+                    return (
+                        <div className={styles.calendarTitle}>
+                            {moment(date).format('ddd')},{' '}
+                            <span className={isToday ? 'current-day' : ''}>
+                                {moment(date).format('D')}
+                            </span>
+                        </div>
+                    );
+                }}
                 eventClassNames={() => styles.calendarEvent}
-                dayHeaderContent={({ text }) => (
-                    <span className={styles.calendarTitle}>{text}</span>
-                )}
             />
         </div>
     );

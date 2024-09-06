@@ -1,10 +1,10 @@
 import axios, {CreateAxiosDefaults} from 'axios';
-import {getAccessToken, removeTokenStorage} from "@/services/auth-token.service";
+import { getTokens, removeTokenStorage} from "@/services/auth-token.service";
 import {errorCatch} from "@/api/error";
 import {authService} from "@/services/auth.service";
 
 const options: CreateAxiosDefaults = {
-    baseURL: 'http://195.151.1.151:3330/api/',
+    baseURL: 'http://195.151.1.151:3330/',
     headers: {
         "Content-Type": "application/json",
     },
@@ -16,7 +16,7 @@ const axiosClassic = axios.create(options)
 const axiosWithAuth = axios.create(options)
 
 axiosWithAuth.interceptors.request.use( config => {
-    const accessToken = getAccessToken()
+    const {accessToken} = getTokens()
 
     if (config?.headers && accessToken)
         config.headers.Authorization = `Bearer ${accessToken}`
@@ -35,7 +35,9 @@ axiosWithAuth.interceptors.response.use(
                 !error.config._isRetry))) {
             originalRequest._isRetry = true
             try {
-                await authService.getNewToken()
+                const {refreshToken} = getTokens();
+                // @ts-ignore
+                await authService.getNewToken(refreshToken)
                 return axiosWithAuth.request(originalRequest)
             } catch (error) {
                 if (errorCatch(error) === 'jwt expired') removeTokenStorage()

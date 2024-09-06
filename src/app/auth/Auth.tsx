@@ -21,11 +21,11 @@ export function Auth() {
     const {push} = useRouter()
     const {mutate} = useMutation({
         mutationKey: ['auth'],
-        mutationFn: (data:AuthForm) => authService.main(isLoginForm ? 'login' : 'register', data),
+        mutationFn: (data:AuthForm) => authService.main(data),
         onSuccess(){
             toast.success('Login successful!')
             reset()
-            push('/home/')
+            push('/calendar')
         }
     })
 
@@ -40,9 +40,9 @@ export function Auth() {
                 <Field
                     id='email'
                     placeholder='Введите почту:'
-                    type='email'
+                    type='text'
                     extra='mb-4'
-                    {...register('email' ,{required: 'Email is required'})}
+                    {...register('username' ,{required: 'Username is required'})}
                 />
                 <Field
                     id='password'

@@ -8,12 +8,14 @@ import PersonFoto from "@/public/Ellipse 1.png"
 import ExitLogo from "@/public/Out.png"
 import Client from "@/public/icon/client.png"
 import CalendarIcon from "@/public/icon/calendar.png"
-import { useRouter } from 'next/router';
+import {calendarService} from "@/services/calendar.service";
+import {authService} from "@/services/auth.service";
 
 export default function CalendarSideBar({ children }: PropsWithChildren) {
     const [currentPath, setCurrentPath] = useState('');
     const [showAll, setShowAll] = useState(false);
-
+    const [meetings, setMeetings] = useState([]);
+    const [userData, setUserData] = useState(null);
 
 
     useEffect(() => {
@@ -22,45 +24,79 @@ export default function CalendarSideBar({ children }: PropsWithChildren) {
         }
     }, []);
 
-    const UserData = {
-        "status": "string",
-        "actualTimestamp": "string",
-        "userData": {
-        "userPicture": "string",
-            "userName": "Антон",
-            "userMail": "Aware444@gmail.com",
-    }
-    }
 
-    const meetings = [
-        { date: '12.09.2024', name: 'Белогорова Ирина' },
-        { date: '14.09.2024', name: 'Константинопольский Вар...' },
-        { date: '18.09.2024', name: 'Фёдоров Илья' },
-        { date: '19.09.2024', name: 'Васильева Светлана' },
-        { date: '22.09.2024', name: 'Колмановский Илья' },
-        { date: '24.09.2024', name: 'Ольшанская Инна' },
-        { date: '26.09.2024', name: 'Сидоров Алексей' }, // Добавьте больше встреч при необходимости
-    ];
+
+    useEffect(() => {
+        const fetchNotifications = async () => {
+            try {
+                let id = 1;
+                const response = await calendarService.getNotifications();
+                const serverData = response.data;
+                // Преобразуем данные встреч, если запрос успешен
+                const transformedMeetings = serverData.map((item: any) => ({
+                    date: new Date(item.dateFirstRequest).toLocaleDateString('ru-RU', {
+                        day: '2-digit',
+                        month: '2-digit',
+                        year: 'numeric',
+                    }),
+                    name: item.customerFullName,
+                }));
+                setMeetings(transformedMeetings);
+            } catch (error) {
+                console.error('Ошибка при загрузке уведомлений:', error);
+                // Здесь можно установить отображение ошибки для встреч
+            }
+        };
+
+        const fetchUserInfo = async () => {
+            try {
+                const response: any = await calendarService.getUserInfo();
+                setUserData(response.data.userData);
+            } catch (error) {
+                console.error('Ошибка при загрузке данных пользователя:', error);
+                // Здесь можно установить отображение ошибки для данных пользователя
+            }
+        };
+
+        fetchNotifications();
+        fetchUserInfo(); // Этот вызов теперь будет независимым от fetchNotifications
+    }, []);
+
+
+
+    // @ts-ignore
+    const userName = userData?.userName || 'не удалось загрузить';
+    // @ts-ignore
+    const userMail = userData?.userMail || 'не удалось загрузить';
+    // @ts-ignore
+    const userImage = userData?.userImage || PersonFoto;
+
+
 
     const displayedMeetings = showAll ? meetings : meetings.slice(0, 6);
 
+    const handleExitOut = () => {
+        authService.logout().then()
+    }
 
     return (
         <div className={styles.MainContainer}>
             <Image src={Logo} alt={"Logo company"} width={430}/>
             <div style={{borderBottom: '1px solid #D7D4D4', width: '90%', paddingTop: '5px'}}/>
-            <div className={styles.ImageContainer}>
-                <Image src={PersonFoto} alt={'Person Foto'} style={{borderRadius: '50%'}}/>
-            </div>
-            <div className={styles.UserNameContainer}>
-                Привет, {UserData.userData.userName}!
-            </div>
-            <div className={styles.EmailContainer}>
-                {UserData.userData.userMail} <Image src={ExitLogo} alt={'Out Button'}
-                                                    style={{paddingLeft: '4px', cursor: 'pointer'}}/>
-                <a href={"/auth"} className={styles.ButtonContainer}>
-                    Выйти
-                </a>
+            <div>
+                <div className={styles.ImageContainer}>
+                    <Image src={userImage} alt={'Person Foto'} style={{borderRadius: '50%'}}/>
+                </div>
+                <div className={styles.UserNameContainer}>
+                    Привет, {userName}!
+                </div>
+                <div className={styles.EmailContainer}>
+                    {userMail}
+                    <Image src={ExitLogo} alt={'Out Button'} style={{paddingLeft: '4px', cursor: 'pointer'}}/>
+                    <a href="/auth" onClick={handleExitOut} className={styles.ButtonContainer}>
+                        Выйти
+                    </a>
+                </div>
             </div>
             <div className={styles.NavigationButtons}>
                 <a href={'/clients'}
@@ -83,8 +119,8 @@ export default function CalendarSideBar({ children }: PropsWithChildren) {
             <div className={styles.container}>
                 {displayedMeetings.map((meeting, index) => (
                     <div key={index} className={styles.meeting}>
-                        <div className={styles.date}>{meeting.date}</div>
-                        <div className={styles.name}>{meeting.name}</div>
+                        <div className={styles.date}>{meeting["date"]}</div>
+                        <div className={styles.name}>{meeting["name"]}</div>
                     </div>
                 ))}
                 {/* Кнопка "Все" появляется только если встреч больше 6 */}
@@ -98,5 +134,5 @@ export default function CalendarSideBar({ children }: PropsWithChildren) {
                 {children}
             </div>
         </div>
-    )
+    );
 }

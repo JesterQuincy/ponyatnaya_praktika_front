@@ -24,6 +24,7 @@ export default function RootLayout({
       <body className={inter.className}>
       <Providers>
         {children}
+          {compareAsc}
       </Providers>
       </body>
     </html>

@@ -15,6 +15,69 @@
     color: black;
 }
 
+.modalContent {
+    width: 396px;
+    background-color: white;
+    border-radius: 6px;
+}
+.clientType {
+    display: flex;
+    gap: 20px;
+}
+
+.customRadio {
+    display: flex;
+    align-items: center;
+    position: relative;
+    padding-left: 25px;
+    cursor: pointer;
+
+    input[type="radio"] {
+        position: absolute;
+        opacity: 0;
+        pointer-events: none;
+    }
+
+    &::before {
+        content: '';
+        width: 16px;
+        height: 16px;
+        border: 2px solid #000; /* Цвет обводки кружка */
+        border-radius: 50%;
+        position: absolute;
+        left: 0;
+        top: 50%;
+        transform: translateY(-50%);
+        background-color: transparent;
+        transition: background-color 0.2s ease, border-color 0.2s ease;
+    }
+
+    &::after {
+        content: '';
+        width: 8px;
+        height: 8px;
+        background-color: transparent;
+        border-radius: 50%;
+        position: absolute;
+        left: 4px;
+        top: 50%;
+        transform: translateY(-50%);
+        transition: background-color 0.2s ease;
+    }
+
+    input[type="radio"]:checked + &::before {
+        border-color: orange; /* Оранжевый цвет обводки при выборе */
+    }
+
+    input[type="radio"]:checked + &::after {
+        background-color: orange; /* Оранжевый цвет внутренней точки при выборе */
+    }
+}
+
+.inContainer {
+    padding: 22px;
+}
+
 .modal {
     display: flex;
     flex-direction: column;

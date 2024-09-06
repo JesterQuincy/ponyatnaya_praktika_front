@@ -40,8 +40,104 @@ body {
 
 }
 
-.fc-timegrid-slot-label {
-  color: #000 !important; /* Установите нужный цвет */
-  font-weight: lighter !important; /* По желанию, сделайте текст жирным */
-  font-size: 0.875rem !important; /* Задайте размер шрифта */
+
+
+.fc .fc-timegrid-major {
+  border-bottom: 1px solid black !important;  /* Тонкая линия разделителя только для каждого часа */
 }
+
+.fc .fc-timegrid-slot-lane {
+  border: none !important;
+}
+
+/* Убираем внутренние разделители */
+.fc .fc-timegrid-divider, .fc .fc-timegrid-axis-frame {
+  display: none !important;  /* Отключаем разделители времени */
+}
+
+/* Стили для заголовков дней */
+.fc .fc-col-header-cell {
+  border-bottom: none !important;  /* Убираем границу между днями недели */
+}
+
+/* Оранжевая линия для текущего времени */
+.fc .fc-now-indicator {
+  background-color: orange !important;  /* Оранжевая линия для текущего времени */
+  height: 2px !important;  /* Задаем толщину линии */
+}
+
+/* Цвет текста времени */
+.fc .fc-timegrid-slot-label, .fc .fc-axis {
+  color: black !important;  /* Делаем текст времени черным */
+}
+
+/* Добавляем минимальную границу для событий */
+.fc-event {
+  border: 1px solid #ddd;  /* Легкая граница для визуального выделения событий */
+}
+
+/* Убираем границы для всех временных интервалов, кроме часовых */
+.fc .fc-timegrid-slot-lane {
+  border: none !important;  /* Убираем любые границы между временными интервалами */
+  padding-bottom: 0 !important;  /* Убираем отступы */
+}
+
+
+.fc-event {
+  margin: 0 !important;  /* Убираем внешние отступы у событий */
+  border: none !important;  /* Убираем границы вокруг события */
+  background-color: orange !important;  /* Пример цвета события */
+  box-shadow: none !important;  /* Убираем тени */
+  padding: 5px !important;  /* Добавляем внутренние отступы для события */
+  display: flex !important;
+  align-items: center !important;
+}
+
+/* Настройка временных меток */
+.fc .fc-timegrid-slot-label {
+  margin-right: 10px !important;  /* Отступ справа от времени для небольшого зазора */
+  color: black !important;  /* Цвет текста времени */
+  font-weight: lighter !important;  /* Жирный шрифт для времени */
+}
+
+.fc-timegrid-now-indicator-arrow {
+  display: none !important;
+}
+
+.fc-timegrid-now-indicator-line {
+  background-color: orange !important; /* Оранжевый цвет для текущего времени */
+  height: 2px !important; /* Толщина линии */
+  left: 0 !important; /* Начинаем линию с самого левого края */
+  right: 0 !important; /* Тянем линию до самого правого края */
+  position: absolute !important; /* Абсолютное позиционирование */
+  width: 100% !important; /* Растягиваем линию на всю ширину */
+  z-index: 999 !important; /* Поверх всех элементов */
+}
+
+/* Фиксируем позиционирование */
+.fc-timegrid-now-indicator {
+  position: absolute !important;
+  width: 100% !important;
+  left: 0;
+  right: 0;
+}
+
+.fc .fc-day-today {
+  background: none !important;
+  font-weight: normal !important;
+}
+
+/* Стиль для оранжевого залитого кружка вокруг числа */
+.current-day {
+  display: inline-block;
+  background-color: #EA660C;
+  border-radius: 50%;
+  padding: 5px;
+  width: 30px;
+  height: 30px;
+  text-align: center;
+  line-height: 20px;
+  color: #FFFFFF;  /* Цвет текста внутри кружка */
+}
+
+

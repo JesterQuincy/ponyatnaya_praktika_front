@@ -73,12 +73,12 @@ const AddClientModal = ({ isOpen, onClose }) => {
             className={styles.modalContent}
             overlayClassName={styles.modalOverlay}
         >
-            <div>
+            <div className={styles.inContainer}>
                 <h2>Добавить клиента</h2>
 
                 <form onSubmit={handleSubmit(onSubmit)}>
                     <div className={styles.clientType}>
-                        <label>
+                        <label className={styles.customRadio}>
                             <input
                                 type="radio"
                                 value="adult"
@@ -87,7 +87,7 @@ const AddClientModal = ({ isOpen, onClose }) => {
                             />
                             Взрослый
                         </label>
-                        <label>
+                        <label className={styles.customRadio}>
                             <input
                                 type="radio"
                                 value="child"
@@ -96,7 +96,7 @@ const AddClientModal = ({ isOpen, onClose }) => {
                             />
                             Ребёнок
                         </label>
-                        <label>
+                        <label className={styles.customRadio}>
                             <input
                                 type="radio"
                                 value="couple"
@@ -132,7 +132,8 @@ const AddClientModal = ({ isOpen, onClose }) => {
                             <input type="tel" placeholder="Введите номер телефона" required {...register('phone')} />
 
                             <label>Электронная почта</label>
-                            <input type="email" placeholder="Введите адрес электронной почты" required {...register('email')} />
+                            <input type="email" placeholder="Введите адрес электронной почты"
+                                   required {...register('email')} />
                         </div>
                     )}
 
@@ -161,13 +162,16 @@ const AddClientModal = ({ isOpen, onClose }) => {
                             <input type="tel" placeholder="Введите номер телефона" required {...register('phone')} />
 
                             <label>Электронная почта ребёнка</label>
-                            <input type="email" placeholder="Введите адрес электронной почты" required {...register('email')} />
+                            <input type="email" placeholder="Введите адрес электронной почты"
+                                   required {...register('email')} />
 
                             <label>ФИО родителя</label>
-                            <input type="text" placeholder="Введите ФИО родителя" required {...register('parentFullName')} />
+                            <input type="text" placeholder="Введите ФИО родителя"
+                                   required {...register('parentFullName')} />
 
                             <label>Телефон родителя</label>
-                            <input type="tel" placeholder="Введите номер телефона родителя" required {...register('parentPhone')} />
+                            <input type="tel" placeholder="Введите номер телефона родителя"
+                                   required {...register('parentPhone')} />
                         </div>
                     )}
 
@@ -176,7 +180,8 @@ const AddClientModal = ({ isOpen, onClose }) => {
                         <>
                             <div className={styles.formGroup}>
                                 <label>ФИО клиента №1</label>
-                                <input type="text" placeholder="Введите ФИО клиента №1" required {...register('fullName')} />
+                                <input type="text" placeholder="Введите ФИО клиента №1"
+                                       required {...register('fullName')} />
 
                                 <label>Дата рождения</label>
                                 <input type="date" required {...register('birthDate')} />
@@ -194,15 +199,18 @@ const AddClientModal = ({ isOpen, onClose }) => {
                                 </select>
 
                                 <label>Телефон клиента №1</label>
-                                <input type="tel" placeholder="Введите номер телефона" required {...register('phone')} />
+                                <input type="tel" placeholder="Введите номер телефона"
+                                       required {...register('phone')} />
 
                                 <label>Электронная почта клиента №1</label>
-                                <input type="email" placeholder="Введите адрес электронной почты" required {...register('email')} />
+                                <input type="email" placeholder="Введите адрес электронной почты"
+                                       required {...register('email')} />
                             </div>
 
                             <div className={styles.formGroup}>
                                 <label>ФИО клиента №2</label>
-                                <input type="text" placeholder="Введите ФИО клиента №2" required {...register('client2FullName')} />
+                                <input type="text" placeholder="Введите ФИО клиента №2"
+                                       required {...register('client2FullName')} />
 
                                 <label>Дата рождения</label>
                                 <input type="date" required {...register('client2BirthDate')} />
@@ -220,10 +228,12 @@ const AddClientModal = ({ isOpen, onClose }) => {
                                 </select>
 
                                 <label>Телефон клиента №2</label>
-                                <input type="tel" placeholder="Введите номер телефона" required {...register('client2Phone')} />
+                                <input type="tel" placeholder="Введите номер телефона"
+                                       required {...register('client2Phone')} />
 
                                 <label>Электронная почта клиента №2</label>
-                                <input type="email" placeholder="Введите адрес электронной почты" required {...register('client2Email')} />
+                                <input type="email" placeholder="Введите адрес электронной почты"
+                                       required {...register('client2Email')} />
                             </div>
                         </>
                     )}

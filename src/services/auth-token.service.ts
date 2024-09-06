@@ -5,16 +5,26 @@ export enum EnumTokens {
     'REFRESH_TOKEN' = 'refreshToken'
 }
 
-export const getAccessToken = () => {
+export const getTokens = () => {
     const accessToken = Cookies.get(EnumTokens.ACCESS_TOKEN);
-    return accessToken || null;
+    const refreshToken = Cookies.get(EnumTokens.REFRESH_TOKEN);
+
+    return {
+        accessToken: accessToken || null,
+        refreshToken: refreshToken || null
+    };
 }
 
-export const saveTokenStorage = (accessToken: string) => {
+export const saveTokenStorage = (accessToken: string, refreshToken:string) => {
     Cookies.set(EnumTokens.ACCESS_TOKEN, accessToken, {
         domain: 'localhost',
         sameSite: 'strict',
         expires: 1
+    });
+    Cookies.set(EnumTokens.REFRESH_TOKEN, refreshToken, {
+        domain: 'localhost',
+        sameSite: 'strict',
+        expires: 7 // Срок жизни 7 дней (обычно больше, чем у accessToken)
     });
 }
 

@@ -1,5 +1,5 @@
 export interface AuthForm {
-    email: string;
+    username: string;
     password: string;
 }
 
@@ -11,6 +11,7 @@ export interface User {
 }
 
 export interface AuthResponse {
-    accessToken: string;
+    access: string;
     user: User;
+    refresh:string
 }
