@@ -1,23 +1,30 @@
-import React, { useState, useEffect } from 'react';
+import React, {useState, useEffect} from 'react';
 import Modal from 'react-modal';
 import styles from '@/styles/AddClientModal.module.css';
-import { useForm, SubmitHandler } from "react-hook-form";
-import { useMutation } from "@tanstack/react-query";
-import { calendarService } from "@/services/calendar.service";
-import { toast } from "react-toastify";
+import {useForm, SubmitHandler} from "react-hook-form";
+import {useMutation} from "@tanstack/react-query";
+import {calendarService} from "@/services/calendar.service";
+import {toast} from "react-toastify";
 import {UserMeeting} from "@/types/calendar.types";
+import {Input} from "@/components/ui/input";
+import Select from "react-select";
+import {DropdownIndicator} from "@/components/ui/clients/Clients";
 
 // Определение типов формы
 interface ClientForm {
     clientType: string;
     fullName?: string;
-    birthDate?: string;
+    birth?: string;
     gender?: string;
     communicationFormat?: string;
-    phone?: string;
-    email?: string;
+    phoneNumber?: string;
+    mail?: string;
     parentFullName?: string;
     parentPhone?: string;
+    parentBirthDate?: string;
+    parentGender?: string;
+    parentCommunicationFormat?: string;
+    parentEmail?: string;
     client2FullName?: string;
     client2BirthDate?: string;
     client2Gender?: string;
@@ -27,9 +34,9 @@ interface ClientForm {
 }
 
 // @ts-ignore
-const AddClientModal = ({ isOpen, onClose }) => {
+const AddClientModal = ({isOpen, onClose}) => {
     const [clientType, setClientType] = useState('adult');
-    const { register, handleSubmit, reset } = useForm<ClientForm>();
+    const {register, handleSubmit, reset, setValue} = useForm<ClientForm>();
 
     // Устанавливаем рут для модалки в useEffect
     useEffect(() => {
@@ -43,12 +50,12 @@ const AddClientModal = ({ isOpen, onClose }) => {
     }, []);
 
     const handleCloseModal = () => {
-        reset();  // Сбрасываем значения формы
-        onClose();  // Закрываем модальное окно
+        reset();
+        onClose();
     };
 
-    const { mutate } = useMutation({
-        mutationKey: ['createMeeting'],
+    const {mutate} = useMutation({
+        mutationKey: ['addUser'],
         mutationFn: (data: UserMeeting) => calendarService.createUser(data),
         onSuccess: () => {
             toast.success('Клиент успешно добавлен!');
@@ -62,8 +69,18 @@ const AddClientModal = ({ isOpen, onClose }) => {
 
     const onSubmit: SubmitHandler<ClientForm> = (data) => {
         // @ts-ignore
-        mutate({ ...data, clientType });
+        mutate({...data});
     };
+
+    const genderOptions = [
+        {value: 'Мужской', label: 'Мужской'},
+        {value: 'Женский', label: 'Женский'}
+    ];
+
+    const communicationFormatOptions = [
+        {value: 'Офлайн', label: 'Офлайн'},
+        {value: 'Онлайн', label: 'Онлайн'}
+    ];
 
     return (
         <Modal
@@ -73,174 +90,413 @@ const AddClientModal = ({ isOpen, onClose }) => {
             className={styles.modalContent}
             overlayClassName={styles.modalOverlay}
         >
-            <div className={styles.inContainer}>
-                <h2>Добавить клиента</h2>
-
+            <div className="p-[26px]">
+                <div className="text-black font-ebgaramond font-bold text-[33px]">Добавить клиента</div>
                 <form onSubmit={handleSubmit(onSubmit)}>
-                    <div className={styles.clientType}>
-                        <label className={styles.customRadio}>
+                    <div className="flex my-[32px] space-x-[25px]">
+                        <div>
                             <input
                                 type="radio"
+                                className="mr-[5px]"
                                 value="adult"
                                 checked={clientType === 'adult'}
                                 onChange={(e) => setClientType(e.target.value)}
                             />
                             Взрослый
-                        </label>
-                        <label className={styles.customRadio}>
+                        </div>
+                        <div>
                             <input
                                 type="radio"
+                                className="mr-[5px]"
                                 value="child"
                                 checked={clientType === 'child'}
                                 onChange={(e) => setClientType(e.target.value)}
                             />
                             Ребёнок
-                        </label>
-                        <label className={styles.customRadio}>
+                        </div>
+                        <div>
                             <input
                                 type="radio"
+                                className="mr-[5px]"
                                 value="couple"
                                 checked={clientType === 'couple'}
                                 onChange={(e) => setClientType(e.target.value)}
                             />
                             Пара
-                        </label>
+                        </div>
                     </div>
 
-                    {/* Форма для взрослого */}
                     {clientType === 'adult' && (
-                        <div className={styles.formGroup}>
-                            <label>ФИО</label>
-                            <input type="text" placeholder="Введите ФИО клиента" required {...register('fullName')} />
-
-                            <label>Дата рождения</label>
-                            <input type="date" required {...register('birthDate')} />
-
-                            <label>Пол</label>
-                            <select required {...register('gender')}>
-                                <option value="male">Мужской</option>
-                                <option value="female">Женский</option>
-                            </select>
-
-                            <label>Формат коммуникации</label>
-                            <select required {...register('communicationFormat')}>
-                                <option value="offline">Офлайн</option>
-                                <option value="online">Онлайн</option>
-                            </select>
-
-                            <label>Телефон</label>
-                            <input type="tel" placeholder="Введите номер телефона" required {...register('phone')} />
-
-                            <label>Электронная почта</label>
-                            <input type="email" placeholder="Введите адрес электронной почты"
-                                   required {...register('email')} />
-                        </div>
-                    )}
-
-                    {/* Форма для ребенка */}
-                    {clientType === 'child' && (
-                        <div className={styles.formGroup}>
-                            <label>ФИО ребёнка</label>
-                            <input type="text" placeholder="Введите ФИО ребёнка" required {...register('fullName')} />
-
-                            <label>Дата рождения</label>
-                            <input type="date" required {...register('birthDate')} />
-
-                            <label>Пол</label>
-                            <select required {...register('gender')}>
-                                <option value="male">Мужской</option>
-                                <option value="female">Женский</option>
-                            </select>
-
-                            <label>Формат коммуникации</label>
-                            <select required {...register('communicationFormat')}>
-                                <option value="offline">Офлайн</option>
-                                <option value="online">Онлайн</option>
-                            </select>
-
-                            <label>Телефон ребёнка</label>
-                            <input type="tel" placeholder="Введите номер телефона" required {...register('phone')} />
-
-                            <label>Электронная почта ребёнка</label>
-                            <input type="email" placeholder="Введите адрес электронной почты"
-                                   required {...register('email')} />
-
-                            <label>ФИО родителя</label>
-                            <input type="text" placeholder="Введите ФИО родителя"
-                                   required {...register('parentFullName')} />
-
-                            <label>Телефон родителя</label>
-                            <input type="tel" placeholder="Введите номер телефона родителя"
-                                   required {...register('parentPhone')} />
-                        </div>
-                    )}
-
-                    {/* Форма для пары */}
-                    {clientType === 'couple' && (
-                        <>
-                            <div className={styles.formGroup}>
-                                <label>ФИО клиента №1</label>
-                                <input type="text" placeholder="Введите ФИО клиента №1"
+                        <div className="space-y-[13px]">
+                            <div className="space-y-[5px]">
+                                <label
+                                    className="font-montserrat text-xs font-medium">ФИО</label>
+                                <Input className="h-[31px] rounded-xl" type="text"
+                                       placeholder='Введите ФИО клиента'
                                        required {...register('fullName')} />
-
-                                <label>Дата рождения</label>
-                                <input type="date" required {...register('birthDate')} />
-
-                                <label>Пол</label>
-                                <select required {...register('gender')}>
-                                    <option value="male">Мужской</option>
-                                    <option value="female">Женский</option>
-                                </select>
-
-                                <label>Формат коммуникации</label>
-                                <select required {...register('communicationFormat')}>
-                                    <option value="offline">Офлайн</option>
-                                    <option value="online">Онлайн</option>
-                                </select>
-
-                                <label>Телефон клиента №1</label>
-                                <input type="tel" placeholder="Введите номер телефона"
+                            </div>
+                            <div className="flex flex-row w-full space-x-[10px]">
+                                <div className="flex flex-col space-y-[5px]">
+                                    <label className="font-montserrat text-xs font-medium">Дата рождения</label>
+                                    <input
+                                        className="flex h-[36px] w-full rounded-xl border border-gray bg-background px-3 py-2 text-sm"
+                                        type="date"
+                                        required {...register('birth')} />
+                                </div>
+                                <div className="flex flex-col w-full space-y-[5px]">
+                                    <label className="font-montserrat text-xs font-medium">Пол</label>
+                                    <Select
+                                        options={genderOptions}
+                                        onChange={(option) => setValue('gender', option?.value)}
+                                        placeholder="Выберите пол"
+                                        className="rounded-[6]"
+                                        components={{DropdownIndicator}}
+                                        styles={{
+                                            control: (base) => ({
+                                                ...base,
+                                                height: '36px',
+                                                minHeight: '36px',
+                                                padding: '0 0 5px 0',
+                                                borderRadius: '12px'
+                                            }),
+                                            indicatorSeparator: () => ({display: "none"}),
+                                        }}
+                                    />
+                                </div>
+                            </div>
+                            <div className="flex flex-col space-y-[5px]">
+                                <label className="font-montserrat text-xs font-medium">Формат коммуникации</label>
+                                <Select
+                                    options={communicationFormatOptions}
+                                    onChange={(option) => setValue('communicationFormat', option?.value)}
+                                    className="w-full"
+                                    placeholder="Выберите формат"
+                                    components={{DropdownIndicator}}
+                                    styles={{
+                                        control: (base) => ({
+                                            ...base,
+                                            height: '36px',
+                                            minHeight: '36px',
+                                            padding: '0 0 5px 0',
+                                            borderRadius: '12px'
+                                        }),
+                                        indicatorSeparator: () => ({display: "none"}),
+                                    }}
+                                />
+                            </div>
+                            <div>
+                                <label className="font-montserrat text-xs font-medium">Телефон</label>
+                                <Input type="tel" placeholder="Введите номер телефона"
                                        required {...register('phone')} />
+                            </div>
+                            <div>
+                                <label className="font-montserrat text-xs font-medium">Электронная почта</label>
+                                <Input type="email" placeholder="Введите адрес электронной почты"
+                                       required {...register('mail')} />
+                            </div>
+                        </div>
+                    )}
 
-                                <label>Электронная почта клиента №1</label>
-                                <input type="email" placeholder="Введите адрес электронной почты"
+                    {clientType === 'child' && (
+                        <div className="space-y-[40px]">
+                            <div className='space-y-[13px] '>
+                            <div>
+                                <label className="font-montserrat text-xs font-medium">ФИО ребёнка</label>
+                                <Input type="text" placeholder="Введите ФИО ребёнка"
+                                       required {...register('fullName')} />
+                            </div>
+
+                            <div className="flex flex-row w-full space-x-[10px]">
+                                <div className="flex flex-col space-y-[5px]">
+                                    <label className="font-montserrat text-xs font-medium">Дата рождения</label>
+                                    <input
+                                        className="flex h-[36px] w-full rounded-xl border border-gray bg-background px-3 py-2 text-sm"
+                                        type="date" required {...register('birth')} />
+                                </div>
+                                <div className="flex flex-col w-full space-y-[5px]">
+                                    <label className="font-montserrat text-xs font-medium">Пол</label>
+                                    <Select
+                                        options={genderOptions}
+                                        onChange={(option) => setValue('gender', option?.value)}
+                                        placeholder="Выберите пол"
+                                        className="rounded-[6]"
+                                        components={{DropdownIndicator}}
+                                        styles={{
+                                            control: (base) => ({
+                                                ...base,
+                                                height: '36px',
+                                                minHeight: '36px',
+                                                padding: '0 0 5px 0',
+                                                borderRadius: '12px'
+                                            }),
+                                            indicatorSeparator: () => ({display: "none"}),
+                                        }}
+                                    />
+                                </div>
+                            </div>
+                            <div className="flex flex-col space-y-[5px]">
+                                <label className="font-montserrat text-xs font-medium">Формат коммуникации</label>
+                                <Select
+                                    options={communicationFormatOptions}
+                                    onChange={(option) => setValue('communicationFormat', option?.value)}
+                                    className="w-full"
+                                    placeholder="Выберите формат"
+                                    components={{DropdownIndicator}}
+                                    styles={{
+                                        control: (base) => ({
+                                            ...base,
+                                            height: '36px',
+                                            minHeight: '36px',
+                                            padding: '0 0 5px 0',
+                                            borderRadius: '12px'
+                                        }),
+                                        indicatorSeparator: () => ({display: "none"}),
+                                    }}
+                                />
+                            </div>
+                            <div className="space-y-[5px]">
+                                <label className="font-montserrat text-xs font-medium">Телефон ребёнка</label>
+                                <Input type="tel" placeholder="Введите номер телефона"
+                                       required {...register('phone')} />
+                            </div>
+                            <div className="space-y-[5px]">
+                                <label className="font-montserrat text-xs font-medium">Электронная почта ребёнка</label>
+                                <Input type="email" placeholder="Введите адрес электронной почты"
                                        required {...register('email')} />
                             </div>
-
-                            <div className={styles.formGroup}>
-                                <label>ФИО клиента №2</label>
-                                <input type="text" placeholder="Введите ФИО клиента №2"
-                                       required {...register('client2FullName')} />
-
-                                <label>Дата рождения</label>
-                                <input type="date" required {...register('client2BirthDate')} />
-
-                                <label>Пол</label>
-                                <select required {...register('client2Gender')}>
-                                    <option value="male">Мужской</option>
-                                    <option value="female">Женский</option>
-                                </select>
-
-                                <label>Формат коммуникации</label>
-                                <select required {...register('client2CommunicationFormat')}>
-                                    <option value="offline">Офлайн</option>
-                                    <option value="online">Онлайн</option>
-                                </select>
-
-                                <label>Телефон клиента №2</label>
-                                <input type="tel" placeholder="Введите номер телефона"
-                                       required {...register('client2Phone')} />
-
-                                <label>Электронная почта клиента №2</label>
-                                <input type="email" placeholder="Введите адрес электронной почты"
-                                       required {...register('client2Email')} />
+                        </div>
+                            <div>
+                                <div className="space-y-[13px]">
+                                    <div className="space-y-[5px]">
+                                        <label
+                                            className="font-montserrat text-xs font-medium">ФИО Родителя</label>
+                                        <Input className="h-[31px] rounded-xl" type="text"
+                                               placeholder={"Введите ФИО родителя"}
+                                               required {...register('parentFullName')} />
+                                    </div>
+                                    <div className="flex flex-row w-full space-x-[10px]">
+                                        <div className="flex flex-col space-y-[5px]">
+                                            <label className="font-montserrat text-xs font-medium">Дата рождения</label>
+                                            <input
+                                                className="flex h-[36px] w-full rounded-xl border border-gray bg-background px-3 py-2 text-sm"
+                                                type="date"
+                                                required {...register('parentBirthDate')} />
+                                        </div>
+                                        <div className="flex flex-col w-full space-y-[5px]">
+                                            <label className="font-montserrat text-xs font-medium">Пол</label>
+                                            <Select
+                                                options={genderOptions}
+                                                onChange={(option) => setValue('parentGender', option?.value)}
+                                                placeholder="Выберите пол"
+                                                className="rounded-[6]"
+                                                components={{DropdownIndicator}}
+                                                styles={{
+                                                    control: (base) => ({
+                                                        ...base,
+                                                        height: '36px',
+                                                        minHeight: '36px',
+                                                        padding: '0 0 5px 0',
+                                                        borderRadius: '12px'
+                                                    }),
+                                                    indicatorSeparator: () => ({display: "none"}),
+                                                }}
+                                            />
+                                        </div>
+                                    </div>
+                                    <div className="flex flex-col space-y-[5px]">
+                                        <label className="font-montserrat text-xs font-medium">Формат
+                                            коммуникации</label>
+                                        <Select
+                                            options={communicationFormatOptions}
+                                            onChange={(option) => setValue('parentCommunicationFormat', option?.value)}
+                                            className="w-full"
+                                            placeholder="Выберите формат"
+                                            components={{DropdownIndicator}}
+                                            styles={{
+                                                control: (base) => ({
+                                                    ...base,
+                                                    height: '36px',
+                                                    minHeight: '36px',
+                                                    padding: '0 0 5px 0',
+                                                    borderRadius: '12px'
+                                                }),
+                                                indicatorSeparator: () => ({display: "none"}),
+                                            }}
+                                        />
+                                    </div>
+                                    <div className="space-y-[5px]">
+                                        <label className="font-montserrat text-xs font-medium">Телефон</label>
+                                        <Input type="tel" placeholder="Введите номер телефона"
+                                               required {...register('parentPhone')} />
+                                    </div>
+                                    <div className="space-y-[5px]">
+                                        <label className="font-montserrat text-xs font-medium">Электронная почта</label>
+                                        <Input type="email" placeholder="Введите адрес электронной почты"
+                                               required {...register('parentEmail')} />
+                                    </div>
+                                </div>
                             </div>
-                        </>
+                        </div>
                     )}
 
-                    <div className={styles.formActions}>
-                        <button type="button" onClick={handleCloseModal}>Отмена</button>
-                        <button type="submit">Готово</button>
+                    {clientType === 'couple' && (
+                        <div className="space-y-[40px]">
+                            <div className='space-y-[13px] '>
+                                <div>
+                                    <label className="font-montserrat text-xs font-medium">ФИО ребёнка</label>
+                                    <Input type="text" placeholder="ФИО клиента №1"
+                                           required {...register('fullName')} />
+                                </div>
+
+                                <div className="flex flex-row w-full space-x-[10px]">
+                                    <div className="flex flex-col space-y-[5px]">
+                                        <label className="font-montserrat text-xs font-medium">Дата рождения</label>
+                                        <input
+                                            className="flex h-[36px] w-full rounded-xl border border-gray bg-background px-3 py-2 text-sm"
+                                            type="date" required {...register('birth')} />
+                                    </div>
+                                    <div className="flex flex-col w-full space-y-[5px]">
+                                        <label className="font-montserrat text-xs font-medium">Пол</label>
+                                        <Select
+                                            options={genderOptions}
+                                            onChange={(option) => setValue('gender', option?.value)}
+                                            placeholder="Выберите пол"
+                                            className="rounded-[6]"
+                                            components={{DropdownIndicator}}
+                                            styles={{
+                                                control: (base) => ({
+                                                    ...base,
+                                                    height: '36px',
+                                                    minHeight: '36px',
+                                                    padding: '0 0 5px 0',
+                                                    borderRadius: '12px'
+                                                }),
+                                                indicatorSeparator: () => ({display: "none"}),
+                                            }}
+                                        />
+                                    </div>
+                                </div>
+                                <div className="flex flex-col space-y-[5px]">
+                                    <label className="font-montserrat text-xs font-medium">Формат коммуникации</label>
+                                    <Select
+                                        options={communicationFormatOptions}
+                                        onChange={(option) => setValue('communicationFormat', option?.value)}
+                                        className="w-full"
+                                        placeholder="Выберите формат"
+                                        components={{DropdownIndicator}}
+                                        styles={{
+                                            control: (base) => ({
+                                                ...base,
+                                                height: '36px',
+                                                minHeight: '36px',
+                                                padding: '0 0 5px 0',
+                                                borderRadius: '12px'
+                                            }),
+                                            indicatorSeparator: () => ({display: "none"}),
+                                        }}
+                                    />
+                                </div>
+                                <div className="space-y-[5px]">
+                                    <label className="font-montserrat text-xs font-medium">Телефон ребёнка</label>
+                                    <Input type="tel" placeholder="Телефон клиента №1"
+                                           required {...register('phone')} />
+                                </div>
+                                <div className="space-y-[5px]">
+                                    <label className="font-montserrat text-xs font-medium">Электронная почта
+                                        ребёнка</label>
+                                    <Input type="email" placeholder="Электронная почта клиента №1"
+                                           required {...register('email')} />
+                                </div>
+                            </div>
+                            <div>
+                                <div className="space-y-[13px]">
+                                    <div className="space-y-[5px]">
+                                        <label
+                                            className="font-montserrat text-xs font-medium">ФИО клиента №2</label>
+                                        <Input className="h-[31px] rounded-xl" type="text"
+                                               placeholder={"Введите ФИО клиента №2"}
+                                               required {...register('client2FullName')} />
+                                    </div>
+                                    <div className="flex flex-row w-full space-x-[10px]">
+                                        <div className="flex flex-col space-y-[5px]">
+                                            <label className="font-montserrat text-xs font-medium">Дата рождения</label>
+                                            <input
+                                                className="flex h-[36px] w-full rounded-xl border border-gray bg-background px-3 py-2 text-sm"
+                                                type="date"
+                                                required {...register('client2BirthDate')} />
+                                        </div>
+                                        <div className="flex flex-col w-full space-y-[5px]">
+                                            <label className="font-montserrat text-xs font-medium">Пол</label>
+                                            <Select
+                                                options={genderOptions}
+                                                onChange={(option) => setValue('client2Gender', option?.value)}
+                                                placeholder="Выберите пол"
+                                                className="rounded-[6]"
+                                                components={{DropdownIndicator}}
+                                                styles={{
+                                                    control: (base) => ({
+                                                        ...base,
+                                                        height: '36px',
+                                                        minHeight: '36px',
+                                                        padding: '0 0 5px 0',
+                                                        borderRadius: '12px'
+                                                    }),
+                                                    indicatorSeparator: () => ({display: "none"}),
+                                                }}
+                                            />
+                                        </div>
+                                    </div>
+                                    <div className="flex flex-col space-y-[5px]">
+                                        <label className="font-montserrat text-xs font-medium">Формат
+                                            коммуникации</label>
+                                        <Select
+                                            options={communicationFormatOptions}
+                                            onChange={(option) => setValue('client2CommunicationFormat', option?.value)}
+                                            className="w-full"
+                                            placeholder="Выберите формат"
+                                            components={{DropdownIndicator}}
+                                            styles={{
+                                                control: (base) => ({
+                                                    ...base,
+                                                    height: '36px',
+                                                    minHeight: '36px',
+                                                    padding: '0 0 5px 0',
+                                                    borderRadius: '12px'
+                                                }),
+                                                indicatorSeparator: () => ({display: "none"}),
+                                            }}
+                                        />
+                                    </div>
+                                    <div className="space-y-[5px]">
+                                        <label className="font-montserrat text-xs font-medium">Телефон клиента №2</label>
+                                        <Input type="tel" placeholder="Введите номер телефона"
+                                               required {...register('client2Phone')} />
+                                    </div>
+                                    <div className="space-y-[5px]">
+                                        <label className="font-montserrat text-xs font-medium">Электронная почта клиента №2</label>
+                                        <Input type="email" placeholder="Введите адрес электронной почты"
+                                               required {...register('client2Email')} />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        )}
+                    <div>
+                        <hr className="mb-2 mt-[32px] border-gray"/>
+                        <div className="w-full flex justify-end items-center space-x-3 font-montserrat text-xs">
+                            <div
+                                onClick={handleCloseModal}
+                                className="flex bg-transparent rounded-[4px] text-[12px] font-semibold cursor-pointer"
+                            >
+                                Отмена
+                            </div>
+                            <button
+                                type="submit"
+                                className="p-[9px] px-[20px] h-fit flex text-white bg-[#EA660C] rounded-[4px] text-xs font-semibold items-center"
+                            >
+                                Готово
+                            </button>
+                        </div>
                     </div>
                 </form>
             </div>

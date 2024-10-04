@@ -1,90 +1,125 @@
 'use client'
 
-import styles from '@/styles/calendarheader.module.css'
-import { useState, useEffect } from 'react'
-import {userService} from "@/services/user.service";
+import { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import Select from 'react-select';
+import { calendarService } from '@/services/calendar.service';
+import styles from '@/styles/calendarheader.module.css';
 
-interface Client {
-    personId: number;
-    fullName: string;
-    years: number;
-    clientType: string;
-    mail: string;
-    phone: string;
-    meetDate: string;
-    countMeet: number;
-    clientStatus: string;
-    meetingType: string;
+interface Option {
+    value: number;
+    label: string;
 }
 
+const customStyles = {
+    control: (provided: any, state: any) => ({
+        ...provided,
+        borderRadius: '20px',
+        backgroundColor: '#f3f4f6',
+        borderColor: '#d1d5db',
+        paddingLeft: '8px',
+        paddingRight: '8px',
+        height: '30px',
+        boxShadow: state.isFocused ? '0 0 0 2px #2563eb' : '',
+        '&:hover': {
+            borderColor: '#9ca3af',
+        },
+    }),
+    placeholder: (provided: any) => ({
+        ...provided,
+        color: '#6b7280',
+    }),
+    input: (provided: any) => ({
+        ...provided,
+        color: '#111827',
+    }),
+    singleValue: (provided: any) => ({
+        ...provided,
+        color: '#111827',
+    }),
+    indicatorSeparator: () => ({
+        display: 'none',
+    }),
+    dropdownIndicator: (provided: any) => ({
+        ...provided,
+        color: '#6b7280',
+        '&:hover': {
+            color: '#4b5563',
+        },
+    }),
+    menu: (provided: any) => ({
+        ...provided,
+        borderRadius: '8px',
+        boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
+        backgroundColor: '#fff',
+        marginTop: '4px',
+    }),
+    option: (provided: any, state: any) => ({
+        ...provided,
+        backgroundColor: state.isSelected ? '#2563eb' : state.isFocused ? '#e5e7eb' : '#fff',
+        color: state.isSelected ? '#fff' : '#111827',
+        '&:active': {
+            backgroundColor: '#2563eb',
+            color: '#fff',
+        },
+    }),
+};
 
 // @ts-ignore
-export default function CalendarHeader({ onOpenModal, onOpenModalMeet }) {
-
-    const [searchTerm, setSearchTerm] = useState('');
-    const [clients, setClients] = useState<Client[]>([]);
+export default function Header({ onOpenModal, onOpenModalMeet }) {
+    const [selectedOption, setSelectedOption] = useState<Option | null>(null);
+    const [options, setOptions] = useState<Option[]>([]);
     const [isLoading, setIsLoading] = useState(false);
+    const router = useRouter();
 
-    const fetchClients = async (searchTerm: string) => {
+    const fetchClients = async (inputValue: string) => {
         setIsLoading(true);
         try {
-            const response = await userService.searchPerson(searchTerm);
-            const data = await response.json();
-            setClients(data);
+            const response = await calendarService.getUsersByName(inputValue);
+            const data = response.data;
+            const formattedOptions = data.map((client: { personId: number; fullName: string }) => ({
+                value: client.personId,
+                label: client.fullName,
+            }));
+            setOptions(formattedOptions);
         } catch (error) {
-            console.error('Ошибка при получении данных клиентов:', error);
+            console.error('Ошибка при поиске клиентов:', error);
         } finally {
             setIsLoading(false);
         }
-    }
-
-    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setSearchTerm(e.target.value);
     };
 
-    const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-        // Логируем нажатую клавишу
-        console.log('Клавиша:', e.key);
+    const handleInputChange = (inputValue: string) => {
+        if (inputValue.trim()) {
+            fetchClients(inputValue);
+        }
+    };
 
-        // Проверяем, что нажата клавиша Enter
-        if (e.key === 'Enter' && searchTerm.trim()) {
-            e.preventDefault(); // Отменяем стандартное поведение, если оно мешает
-            console.log("Нажал Enter");
-            fetchClients(searchTerm);
+    const handleChange = (selected: Option | null) => {
+        setSelectedOption(selected);
+        if (selected) {
+            router.push(`/client/${selected.value}`);а
         }
     };
 
     return (
         <div className={styles.MainContainer}>
-            <input
-                className={styles.Input}
-                placeholder={'Найти клиента'}
-                value={searchTerm}
-                onChange={handleInputChange}
-                onKeyDown={handleKeyDown}
+            <Select
+                value={selectedOption}
+                onChange={handleChange}
+                onInputChange={handleInputChange}
+                options={options}
+                isLoading={isLoading}
+                styles={customStyles}
+                placeholder="Найти клиента"
+                className="w-full max-w-xs"
+                isSearchable
             />
-            {isLoading && <p>Загрузка...</p>}
-            <div className={styles.ClientList}>
-                {clients.length > 0 ? (
-                    <ul>
-                        {clients.map((client) => (
-                            <li key={client.personId}>
-                                <p><strong>{client.fullName}</strong></p>
-                                <p>Телефон: {client.phone}</p>
-                                <p>Тип клиента: {client.clientType}</p>
-                                <p>Дата встречи: {client.meetDate}</p>
-                            </li>
-                        ))}
-                    </ul>
-                ) : (
-                    <p>Клиенты не найдены</p>
-                )}
-            </div>
             <div className={styles.buttonsGroup}>
                 <button onClick={onOpenModal} className={styles.addClient}>Добавить клиента</button>
                 <button className={styles.newEvent} onClick={onOpenModalMeet}>Назначить встречу</button>
                 <button className={styles.addDayOff}>Нерабочие дни</button>
             </div>
         </div>
-    )
+    );
 }

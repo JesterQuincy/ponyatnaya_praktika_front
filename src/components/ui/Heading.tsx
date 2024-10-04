@@ -8,7 +8,7 @@ interface HeadingProps {
 export function Heading({ title }: HeadingProps) {
     return (
         <div>
-            <h1 className={styles.ContainerText}>{title}</h1>
+            <h1 className="text-4xl font-ebgaramond font-bold">{title}</h1>
         </div>
     )
 }

@@ -24,7 +24,7 @@ export const saveTokenStorage = (accessToken: string, refreshToken:string) => {
     Cookies.set(EnumTokens.REFRESH_TOKEN, refreshToken, {
         domain: 'localhost',
         sameSite: 'strict',
-        expires: 7 // Срок жизни 7 дней (обычно больше, чем у accessToken)
+        expires: 7,
     });
 }
 

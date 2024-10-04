@@ -1,5 +1,4 @@
 'use client'
-
 import {Input} from "@/components/ui/input"
 import {SubmitHandler, useForm} from "react-hook-form"
 import {AuthForm} from "@/types/auth.types";
@@ -14,7 +13,7 @@ import Image from "next/image";
 import {Checkbox} from "@/components/ui/checkbox";
 import {Button} from "@/components/ui/button";
 
-export function Auth() {
+export function Registration() {
     const {register, handleSubmit, reset} = useForm<AuthForm>({
         mode: 'onChange',
     })
@@ -41,8 +40,15 @@ export function Auth() {
                 <div className="flex justify-center mb-6 pt-12">
                     <Image src={Logo} alt="Logo company" width={201} height={145}/>
                 </div>
-                <div className="flex justify-center mt-32 font-bold mb-3 text-xl font-ebgaramond">Вход</div>
+                <div className="flex justify-center mt-32 font-bold mb-3 text-xl font-ebgaramond">Регистрация</div>
                 <form className="space-y-3" onSubmit={handleSubmit(onSubmit)}>
+                    <Input
+                        className='w-full'
+                        id='username'
+                        placeholder='Фамилия'
+                        type='text'
+                        {...register('username', {required: 'Username is required'})}
+                    />
                     <Input
                         className='w-full'
                         id='username'
@@ -51,8 +57,34 @@ export function Auth() {
                         {...register('username', {required: 'Username is required'})}
                     />
                     <Input
+                        className='w-full'
+                        id='username'
+                        placeholder='Имя'
+                        type='text'
+                        {...register('username', {required: 'Username is required'})}
+                    />
+                    <Input
+                        className='w-full'
+                        id='username'
+                        placeholder='Отчество'
+                        type='text'
+                        {...register('username', {required: 'Username is required'})}
+                    />
+                    <Input
+                        id='password'
+                        placeholder='Электронная почта или телефон'
+                        type='password'
+                        {...register('password', {required: 'Password is required'})}
+                    />
+                    <Input
                         id='password'
                         placeholder='Пароль'
+                        type='password'
+                        {...register('password', {required: 'Password is required'})}
+                    />
+                    <Input
+                        id='password'
+                        placeholder='Повторите пароль'
                         type='password'
                         {...register('password', {required: 'Password is required'})}
                     />
@@ -64,11 +96,10 @@ export function Auth() {
                         <a href="/forgot-password" className="text-orange underline text-xs">Забыли пароль?</a>
                     </div>
                     <div className="flex justify-center">
-                        <Button className="w-full" onClick={() => setIsLoginForm(true)}>Войти</Button>
+                        <Button className="w-full" onClick={() => setIsLoginForm(true)}>Зарегистрироваться</Button>
                     </div>
                     <div className="flex justify-center text-sm text-gray-600 mb-32">
-                        <a href="/registration" className="text-orange underline text-xs">Регистрация нового
-                            пользователя</a>
+                        <a href="/auth" className="text-orange underline text-xs">Уже зарегестрирован</a>
                     </div>
                 </form>
                 <div className="flex flex-row justify-center mt-52">

@@ -1,22 +1,27 @@
 'use client'
 
-import styles from '@/styles/calendarsidebar.module.css'
 import React, {PropsWithChildren, useEffect, useState} from "react";
-import Image from "next/image"
-import Logo from "@/public/LogoSVG.svg"
-import PersonFoto from "@/public/Ellipse 1.png"
-import ExitLogo from "@/public/Out.png"
-import Client from "@/public/icon/client.png"
-import CalendarIcon from "@/public/icon/calendar.png"
+import Image from "next/image";
+import Logo from "@/public/LogoSVG.svg";
+import PersonFoto from "@/public/Ellipse 1.png";
+import ExitLogo from "@/public/Out.png";
+import Client from "@/public/img/clientDocsLogo.svg";
+import CalendarLogo from "@/public/img/calendarLogo.svg";
+import InboxLogo from "@/public/img/inbox.svg";
+import AnaliticLogo from "@/public/img/analiticsLogo.svg"
+import LetterLogo from "@/public/img/letterLogo.svg"
+import CheckListLogo from "@/public/img/checkListLogo.svg";
+import CalendarIcon from "@/public/icon/calendar.png";
 import {calendarService} from "@/services/calendar.service";
 import {authService} from "@/services/auth.service";
+import {Button} from "@/components/ui/button";
 
-export default function CalendarSideBar({ children }: PropsWithChildren) {
+
+export default function SideBar({children}: PropsWithChildren) {
     const [currentPath, setCurrentPath] = useState('');
     const [showAll, setShowAll] = useState(false);
     const [meetings, setMeetings] = useState([]);
     const [userData, setUserData] = useState(null);
-
 
     useEffect(() => {
         if (typeof window !== 'undefined') {
@@ -24,15 +29,11 @@ export default function CalendarSideBar({ children }: PropsWithChildren) {
         }
     }, []);
 
-
-
     useEffect(() => {
         const fetchNotifications = async () => {
             try {
-                let id = 1;
                 const response = await calendarService.getNotifications();
                 const serverData = response.data;
-                // Преобразуем данные встреч, если запрос успешен
                 const transformedMeetings = serverData.map((item: any) => ({
                     date: new Date(item.dateFirstRequest).toLocaleDateString('ru-RU', {
                         day: '2-digit',
@@ -44,25 +45,20 @@ export default function CalendarSideBar({ children }: PropsWithChildren) {
                 setMeetings(transformedMeetings);
             } catch (error) {
                 console.error('Ошибка при загрузке уведомлений:', error);
-                // Здесь можно установить отображение ошибки для встреч
             }
         };
-
         const fetchUserInfo = async () => {
             try {
                 const response: any = await calendarService.getUserInfo();
                 setUserData(response.data.userData);
             } catch (error) {
                 console.error('Ошибка при загрузке данных пользователя:', error);
-                // Здесь можно установить отображение ошибки для данных пользователя
             }
         };
 
         fetchNotifications();
-        fetchUserInfo(); // Этот вызов теперь будет независимым от fetchNotifications
+        fetchUserInfo();
     }, []);
-
-
 
     // @ts-ignore
     const userName = userData?.userName || 'не удалось загрузить';
@@ -71,67 +67,83 @@ export default function CalendarSideBar({ children }: PropsWithChildren) {
     // @ts-ignore
     const userImage = userData?.userImage || PersonFoto;
 
-
-
     const displayedMeetings = showAll ? meetings : meetings.slice(0, 6);
 
-    const handleExitOut = () => {
-        authService.logout().then()
-    }
+    console.log(displayedMeetings)
 
+    const handleExitOut = () => {
+        authService.logout().then();
+    };
+
+    // @ts-ignore
     return (
-        <div className={styles.MainContainer}>
-            <Image src={Logo} alt={"Logo company"} width={430}/>
-            <div style={{borderBottom: '1px solid #D7D4D4', width: '90%', paddingTop: '5px'}}/>
-            <div>
-                <div className={styles.ImageContainer}>
-                    <Image src={userImage} alt={'Person Foto'} style={{borderRadius: '50%'}}/>
+        <div className="flex flex-col w-[35vw] rounded-xl mt-3 ml-3 items-center bg-white shadow-lg p-4">
+            <Image src={Logo} alt="Logo company" width={400}/>
+            <hr className="my-4 h-0.5 w-full border-gray"/>
+            <div className="flex flex-col items-center">
+                <div className="rounded-full overflow-hidden">
+                    <Image src={userImage} alt="Person Foto" width={100} height={100}/>
                 </div>
-                <div className={styles.UserNameContainer}>
-                    Привет, {userName}!
-                </div>
-                <div className={styles.EmailContainer}>
+                <div className="text-xl font-semibold mb-1">Привет, {userName}!</div>
+                <div className="text-sm text-gray-600 flex items-center">
                     {userMail}
-                    <Image src={ExitLogo} alt={'Out Button'} style={{paddingLeft: '4px', cursor: 'pointer'}}/>
-                    <a href="/auth" onClick={handleExitOut} className={styles.ButtonContainer}>
-                        Выйти
-                    </a>
+                    <Image src={ExitLogo} alt="Выйти" className="ml-2 cursor-pointer" onClick={handleExitOut}/>
                 </div>
             </div>
-            <div className={styles.NavigationButtons}>
-                <a href={'/clients'}
-                   className={currentPath === '/clients' ? styles.activeButton : styles.inactiveButton}> <Image
-                    src={Client} alt={'Client'}/>Клиенты</a>
-                <a href={'/calendar'}
-                   className={currentPath === '/calendar' ? styles.activeButton : styles.inactiveButton}><Image
-                    src={CalendarIcon} alt={'Calendar'}/>Календарь</a>
-                <a href={'/notification'}
-                   className={currentPath === '/notification' ? styles.activeButton : styles.inactiveButton}>Уведомления</a>
-                <a href={'/analytic'}
-                   className={currentPath === '/analytic' ? styles.activeButton : styles.inactiveButton}>Аналитика</a>
-                <a href={'/tests'} className={currentPath === '/tests' ? styles.activeButton : styles.inactiveButton}>Опросы
-                    и тесты</a>
-            </div>
-            <div className={styles.notificantion}>
-                <div className={styles.countOfNotification}>У вас <a className={styles.action}>25</a> новых заявок:
+            <nav className="mt-[50px] flex flex-col space-y-2 w-full">
+                <a href="/clients">
+                    <Button variant='link'
+                            className={`p-2 flex w-full border-[1px] justify-start ${currentPath === '/нф' ? 'bg-orange-200' : 'hover:bg-gray-200'} transition-colors`}>
+                        <Image src={Client} alt="Client" className="mr-2"/> Клиенты
+                    </Button>
+                </a>
+                <a href="/calendar">
+                    <Button variant='link'
+                            className={`p-2 flex w-full border-[1px] justify-start ${currentPath === '/calendar' ? 'bg-hoverButton text-orange ' : 'hover:bg-hoverButton'} transition-colors`}>
+                        <Image src={CalendarIcon} alt="Calendar" className="mr-2"/> Календарь
+                    </Button>
+                </a>
+                <a href="/notification">
+                    <Button variant='link'
+                            className={`p-2 flex w-full border-[1px] justify-start ${currentPath === '/notification' ? 'bg-orange-200' : 'hover:bg-gray-200'} transition-colors`}><Image
+                        src={InboxLogo} alt="Client" className="mr-2"/>Уведомления</Button>
+                </a>
+                <a href="/analytic">
+                    <Button variant='link'
+                            className={`p-2 flex w-full border-[1px] justify-start ${currentPath === '/analytic' ? 'bg-orange-200' : 'hover:bg-gray-200'} transition-colors`}><Image
+                        src={AnaliticLogo} alt="Client" className="mr-2"/> Клиенты</Button>
+                </a>
+                <a href="/tests">
+                    <Button variant='link'
+                            className={`p-2 flex  w-full border-[1px] justify-start ${currentPath === '/tests' ? 'bg-orange-200' : 'hover:bg-gray-200'} transition-colors`}><Image
+                        src={CheckListLogo} alt="Client" className="mr-2"/>Опросы
+                        и тесты</Button>
+                </a>
+            </nav>
+            <div className="mt-6 w-full bg-gray-100">
+                <div className="text-sm mb-4">
+                    У вас <span className="text-orange-500 font-semibold">{meetings.length}</span> новых заявок:
                 </div>
-            </div>
-            <div className={styles.container}>
-                {displayedMeetings.map((meeting, index) => (
-                    <div key={index} className={styles.meeting}>
-                        <div className={styles.date}>{meeting["date"]}</div>
-                        <div className={styles.name}>{meeting["name"]}</div>
-                    </div>
-                ))}
-                {/* Кнопка "Все" появляется только если встреч больше 6 */}
+                <div className="relative">
+                    {displayedMeetings.map((meeting, index) => (
+                        <div
+                            key={index}
+                            style={{zIndex: index}}
+                            className={`flex relative gap-[6px] shadow-[0px_-5px_11px_0px_#0000002E] items-center rounded-t-[8px] flex-row py-[8px] pl-[8px]`}
+                        >
+                            <div
+                                className="text-[9px] rounded-[8px] text-white bg-[#6E6E6E] px-[3px]">{meeting.date}</div>
+                            <Image src={LetterLogo} alt="Calendar"/>
+                            <div className="text-[12px] font-montserrat text-black font-normal">{meeting.name}</div>
+                        </div>
+                    ))}
+                </div>
+
                 {meetings.length > 6 && (
-                    <button onClick={() => setShowAll(!showAll)} className={styles.showAllButton}>
+                    <button onClick={() => setShowAll(!showAll)} className="text-orange-500 mt-4 underline">
                         {showAll ? 'Скрыть' : 'Все'}
                     </button>
                 )}
-            </div>
-            <div>
-                {children}
             </div>
         </div>
     );

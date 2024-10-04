@@ -1,6 +1,6 @@
 .MainContainer {
     width: 100%;
-   height: 964px;
+    height: 100%;
     border-radius: 6px;
     background: white;
 }
@@ -25,6 +25,8 @@
 .calendarButton:hover {
     background-color: #0056b3;
 }
+
+.fc-scrollgrid-sync-inner
 
 /* Стили для дней недели (шапка таблицы) */
 .calendarHeader {

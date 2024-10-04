@@ -1,8 +1,6 @@
 .MainContainer {
     width: clamp(21.5rem, 1.625rem + 22.08vw, 28.125rem);
     background: white;
-    height: 1040px;
-    margin-bottom: 20px;
     margin-top:20px;
     margin-left: 10px;
     border-radius: 6px;

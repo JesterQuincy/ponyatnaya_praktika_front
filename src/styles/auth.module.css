@@ -2,11 +2,18 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    align-content: center;
-    text-align: center;
+    justify-content: center;
+    min-height: 100vh;
 }
 
-.formContainer {
+.form {
+    background: #FFFFFF;
+    padding: 50px 21px;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 400px;
     display: flex;
     flex-direction: column;
+    gap: 20px;
 }
