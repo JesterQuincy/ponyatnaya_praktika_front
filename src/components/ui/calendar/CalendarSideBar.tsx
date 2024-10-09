@@ -29,36 +29,36 @@ export default function SideBar({children}: PropsWithChildren) {
         }
     }, []);
 
-    useEffect(() => {
-        const fetchNotifications = async () => {
-            try {
-                const response = await calendarService.getNotifications();
-                const serverData = response.data;
-                const transformedMeetings = serverData.map((item: any) => ({
-                    date: new Date(item.dateFirstRequest).toLocaleDateString('ru-RU', {
-                        day: '2-digit',
-                        month: '2-digit',
-                        year: 'numeric',
-                    }),
-                    name: item.customerFullName,
-                }));
-                setMeetings(transformedMeetings);
-            } catch (error) {
-                console.error('Ошибка при загрузке уведомлений:', error);
-            }
-        };
-        const fetchUserInfo = async () => {
-            try {
-                const response: any = await calendarService.getUserInfo();
-                setUserData(response.data.userData);
-            } catch (error) {
-                console.error('Ошибка при загрузке данных пользователя:', error);
-            }
-        };
+    // useEffect(() => {
+    //     const fetchNotifications = async () => {
+    //         try {
+    //             const response = await calendarService.getNotifications();
+    //             const serverData = response.data;
+    //             const transformedMeetings = serverData.map((item: any) => ({
+    //                 date: new Date(item.dateFirstRequest).toLocaleDateString('ru-RU', {
+    //                     day: '2-digit',
+    //                     month: '2-digit',
+    //                     year: 'numeric',
+    //                 }),
+    //                 name: item.customerFullName,
+    //             }));
+    //             setMeetings(transformedMeetings);
+    //         } catch (error) {
+    //             console.error('Ошибка при загрузке уведомлений:', error);
+    //         }
+    //     };
+    //     const fetchUserInfo = async () => {
+    //         try {
+    //             const response: any = await calendarService.getUserInfo();
+    //             setUserData(response.data.userData);
+    //         } catch (error) {
+    //             console.error('Ошибка при загрузке данных пользователя:', error);
+    //         }
+    //     };
 
-        fetchNotifications();
-        fetchUserInfo();
-    }, []);
+    //     fetchNotifications();
+    //     fetchUserInfo();
+    // }, []);
 
     // @ts-ignore
     const userName = userData?.userName || 'не удалось загрузить';
@@ -132,9 +132,20 @@ export default function SideBar({children}: PropsWithChildren) {
                             className={`flex relative gap-[6px] shadow-[0px_-5px_11px_0px_#0000002E] items-center rounded-t-[8px] flex-row py-[8px] pl-[8px]`}
                         >
                             <div
-                                className="text-[9px] rounded-[8px] text-white bg-[#6E6E6E] px-[3px]">{meeting.date}</div>
+                                className="text-[9px] rounded-[8px] text-white bg-[#6E6E6E] px-[3px]">
+                                    
+                                    {
+                                        //@ts-ignore
+                                        meeting.date
+                                    }
+                            </div>
                             <Image src={LetterLogo} alt="Calendar"/>
-                            <div className="text-[12px] font-montserrat text-black font-normal">{meeting.name}</div>
+                            <div className="text-[12px] font-montserrat text-black font-normal">
+                                {
+                                    //@ts-ignore
+                                    meeting.name
+                                }
+                            </div>
                         </div>
                     ))}
                 </div>
