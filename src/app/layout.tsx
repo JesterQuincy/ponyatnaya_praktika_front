@@ -4,7 +4,8 @@ import "./globals.scss";
 import React from "react";
 import {Providers} from "@/app/providers";
 import { Theme } from '@radix-ui/themes';
-import {  } from "next/font/google";
+import { UserProvider } from "./context/userContext";
+import { MeetProvider } from "./context/meetContext";
 
 
 const inter = Inter({ subsets: ["latin"] });
@@ -38,7 +39,11 @@ export default function RootLayout({
       <body className={`${inter.className} ${montserrat.variable} ${ebGaramond.variable}`}>
       <Providers>
           <Theme>
-              {children}
+            <UserProvider>
+              <MeetProvider>
+                {children}
+              </MeetProvider>
+            </UserProvider>
           </Theme>
       </Providers>
       </body>

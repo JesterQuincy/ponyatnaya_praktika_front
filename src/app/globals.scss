@@ -1,4 +1,3 @@
-@import url('https://fonts.googleapis.com/css2?family=EB+Garamond:wght@400;500;700&display=swap');
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -26,14 +25,11 @@
 }
 
 body {
-  @apply text-base overflow-hidden;
   font-family: var(--font-family-body), sans-serif;
-  color: rgb(var(--foreground-rgb));
   margin: 0;
   padding: 0;
   height: 100%;
   width: 100%;
-  overflow: hidden;
 
   @media (max-width: 1200px) {
     font-size: 16px;
@@ -46,7 +42,17 @@ body {
 
 }
 
+.fc-v-event {
+  background-color: #00000000 !important;
+}
 
+.fc .fc-timegrid-slot {
+  min-height: 40px !important;
+}
+
+.fc .fc-timegrid-slot-minor {
+  border-top: none;
+}
 
 .fc .fc-timegrid-major {
   border-bottom: 1px solid black !important;  /* Тонкая линия разделителя только для каждого часа */
@@ -61,10 +67,6 @@ body {
   display: none !important;  /* Отключаем разделители времени */
 }
 
-/* Стили для заголовков дней */
-.fc .fc-col-header-cell {
-  border-bottom:  1px solid red; /* Убираем границу между днями недели */
-}
 
 /* Оранжевая линия для текущего времени */
 .fc .fc-now-indicator {
@@ -79,7 +81,7 @@ body {
 
 /* Добавляем минимальную границу для событий */
 .fc-event {
-  border: 1px solid #ddd;  /* Легкая граница для визуального выделения событий */
+  border: none;  /* Легкая граница для визуального выделения событий */
 }
 
 /* Убираем границы для всех временных интервалов, кроме часовых */
@@ -89,15 +91,15 @@ body {
 }
 
 
-.fc-event {
-  margin: 0 !important;  /* Убираем внешние отступы у событий */
-  border: none !important;  /* Убираем границы вокруг события */
-  background-color: orange !important;  /* Пример цвета события */
-  box-shadow: none !important;  /* Убираем тени */
-  padding: 5px !important;  /* Добавляем внутренние отступы для события */
-  display: flex !important;
-  align-items: center !important;
-}
+// .fc-event {
+//   margin: 0 !important;  /* Убираем внешние отступы у событий */
+//   border: none !important;  /* Убираем границы вокруг события */
+//   background-color: orange !important;  /* Пример цвета события */
+//   box-shadow: none !important;  /* Убираем тени */
+//   padding: 5px !important;  /* Добавляем внутренние отступы для события */
+//   display: flex !important;
+//   align-items: center !important;
+// }
 
 /* Настройка временных меток */
 .fc .fc-timegrid-slot-label {
@@ -148,7 +150,7 @@ body {
 
 .fc-col-header-cell-cushion {
   display: flex;
-  color: red;
+  color: #272727;
 }
 
 .fc .fc-toolbar.fc-header-toolbar {
@@ -188,5 +190,25 @@ body {
 }
 
 .css-1wy0on6 {
+  display: none;
+}
+
+
+.fc .fc-timegrid-slot-minor {
+  border-top: none;
+  border-bottom: 1px solid #ddd !important;
+  height: 75px;
+}
+
+
+.fc-direction-ltr .fc-timegrid-col-events {
+  margin: 0 !important;
+}
+
+.fc-timegrid-event-harness-inset .fc-timegrid-event, .fc-timegrid-event.fc-event-mirror, .fc-timegrid-more-link {
+  box-shadow: none !important;
+}
+
+.fc .fc-scrollgrid-sync-table tr:first-child {
   display: none;
 }

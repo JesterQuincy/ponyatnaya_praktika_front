@@ -71,27 +71,27 @@ const AddMeetModal = ({ isOpen, onClose }) => {
             overlayClassName={styles.modalOverlay}
         >
             <div>
-                <h2>Назначить встречу</h2>
+                <div className="text-black font-ebgaramond font-bold text-[33px] mb-[34px]">Назначить встречу</div>
 
                 <form onSubmit={handleSubmit(onSubmit)}>
-                    <div className={styles.typeSelector}>
-                        <label>
+                    <div className='flex gap-[20px] font-montserrat mb-[28px]'>
+                        <label className='flex gap-[5px] items-center'>
                             <input
                                 type="radio"
                                 value="client"
                                 checked={watchType === 'client'}
                                 {...register('type')}
                             />
-                            Встреча с клиентом
+                            <span>Встреча с клиентом</span>
                         </label>
-                        <label>
+                        <label className='flex gap-[5px] items-center'>
                             <input
                                 type="radio"
                                 value="other"
                                 checked={watchType === 'other'}
                                 {...register('type')}
                             />
-                            Иное
+                            <span>Иное</span>
                         </label>
                     </div>
 
@@ -109,42 +109,74 @@ const AddMeetModal = ({ isOpen, onClose }) => {
                         />
                     )}
 
-                    <div className={styles.dateTime}>
-                        <input
-                            type="date"
-                            {...register('date', { required: true })}
-                        />
-                        <input
-                            type="time"
-                            {...register('time', { required: true })}
-                        />
-                        <input
-                            type="number"
-                            placeholder="минут"
-                            {...register('duration')}
-                        />
+                    <div className={`${styles.dateTime} flex mb-[15px] items-end`}>
+                        <div className='flex flex-col'>
+                            <label className='font-montserrat text-[13px]'>
+                                Дата
+                            </label>
+                            <input
+                                type="date"
+                                className='min-w-[120px]'
+                                {...register('date', { required: true })}
+                            />
+                        </div>
+                        <div className='flex flex-col'>
+                            <label className='font-montserrat text-[13px]'>
+                                Время
+                            </label>
+                            <input
+                                type="time"
+                                className='min-w-[80px]'
+                                {...register('time', { required: true })}
+                            />
+                        </div>
+
+                        <div className='flex gap-[4px] items-center'>
+                            <input
+                                className='max-w-[50px]'
+                                placeholder="минут"
+                                {...register('duration')}
+                            />
+                            <span className='font-montserrat text-[14px]'>минут</span>
+                        </div>
+
                     </div>
 
-                    <select
-                        className={styles.select}
-                        {...register('format', { required: true })}
-                    >
-                        <option value="offline">Офлайн</option>
-                        <option value="online">Онлайн</option>
-                    </select>
+                    <div className='flex flex-col'>
+                        <label className='font-montserrat text-[13px]'>
+                            Формат встречи
+                        </label>
+                        <select
+                            className={`${styles.select} max-w-[200px]`}
+                            {...register('format', { required: true })}
+                        >
+                            <option value="offline">Офлайн</option>
+                            <option value="online">Онлайн</option>
+                        </select>
+                    </div>
 
                     {watchFormat === 'offline' ? (
-                        <input
-                            className={styles.input}
-                            placeholder="Введите адрес"
-                            {...register('location')}
-                        />
+                        <div className='flex flex-col'>
+                            <label className='font-montserrat text-[13px]'>
+                                Место встречи
+                            </label>
+                            <input
+                                className={styles.input}
+                                placeholder="Введите адрес"
+                                {...register('location')}
+                            />
+                        </div>
                     ) : (
-                        <input
-                            className={styles.input}
-                            placeholder="Введите ссылку"
-                            {...register('location')}
-                        />
+                        <div className='flex flex-col'>
+                            <label className='font-montserrat text-[13px]'>
+                                Место встречи
+                            </label>
+                            <input
+                                className={styles.input}
+                                placeholder="Введите ссылку"
+                                {...register('location')}
+                            />
+                        </div>
                     )}
 
                     {watchType === 'other' && (
@@ -156,7 +188,7 @@ const AddMeetModal = ({ isOpen, onClose }) => {
                     )}
 
                     <div className={styles.checkboxGroup}>
-                        <label>
+                        <label className='font-montserrat text-[13px]'>
                             <input
                                 type="checkbox"
                                 checked={repeatChecked}
@@ -165,30 +197,66 @@ const AddMeetModal = ({ isOpen, onClose }) => {
                             Повторять
                         </label>
                         {repeatChecked && (
-                            <div className={styles.repeatOptions}>
-                                <div className={styles.repeatFrequency}>
-                                    <select {...register('repeatFrequency')}>
-                                        <option value="day">день</option>
-                                        <option value="week">неделя</option>
-                                        <option value="month">месяц</option>
-                                    </select>
-                                    <input
-                                        type="number"
-                                        min="1"
-                                        defaultValue={1}
-                                        {...register('repeatInterval')}
-                                    />
+                            <div className='bg-[#F3F3F3] p-[10px] rounded-[6px] mt-[10px]'>
+                                <div className='flex items-center gap-2 mb-4 justify-between px-[20px]'>
+                                    <label className="font-montserrat text-[13px]">Каждый</label>
+                                    <div className='flex justify-end gap-[7px]'>
+                                        <select className="p-2 border border-[#D9D9D9] rounded-[6px] text-sm" {...register('repeatInterval')}>
+                                            <option value="1">1</option>
+                                            <option value="2">2</option>
+                                            <option value="3">3</option>
+                                        </select>
+                                        <select className="p-2 border border-[#D9D9D9] rounded-[6px] text-sm" {...register('repeatFrequency')}>
+                                            <option value="день">день</option>
+                                            <option value="неделя">неделя</option>
+                                            <option value="месяц">месяц</option>
+                                        </select>
+                                    </div>
                                 </div>
-                                <input
+                                <div className="bg-[#F1F1F1] px-[20px] rounded-[#D9D9D9] w-full max-w-lg my-[10px] flex justify-end">
+                                    {/* Ряд с выбором дней недели */}
+                                    <div className="flex">
+                                        {["Пн.", "Вт.", "Ср.", "Чт.", "Пт.", "Сб.", "Вс."].map((day, index) => (
+                                            <button
+                                                key={index}
+                                                className={`p-2 border border-[#D9D9D9] text-sm ${
+                                                    day === "Чт." ? "bg-[#EA660C] text-white" : "bg-white text-gray-700"
+                                                } ${
+                                                    index === 0 ? "rounded-l-[6px]" : index === 6 ? "rounded-r-[6px]" : ""
+                                                }`}
+                                            >
+                                                {day}
+                                            </button>
+                                        ))}
+                                    </div>
+                                </div>
+                                
+                                {/* <input
                                     type="date"
                                     {...register('repeatEnd')}
-                                />
+                                /> */}
+                                {/** Поменяй тут регистр формы, неправильно заданы регистры, надо для двух полей, а не для одного */}
+                                <div className="flex items-center gap-2 justify-between px-[20px]">
+                                    <label className="font-montserrat text-[13px]">Закончить</label>
+                                    <div className='flex gap-[10px]'>
+                                        <select className="p-2 border border-[#D9D9D9] rounded-[6px] text-sm">
+                                            <option value="в день">в день</option>
+                                            <option value="через">через</option>
+                                            <option value="никогда">никогда</option>
+                                        </select>
+                                        <input
+                                            type="date"
+                                            className="p-2 border border-[#D9D9D9] rounded-[6px] text-sm"
+                                            defaultValue="2025-05-02"
+                                        />
+                                    </div>
+                                </div>
                             </div>
                         )}
                     </div>
 
                     <div className={styles.checkboxGroup}>
-                        <label>
+                        <label className='font-montserrat text-[13px]'>
                             <input
                                 type="checkbox"
                                 checked={remindChecked}
@@ -197,25 +265,43 @@ const AddMeetModal = ({ isOpen, onClose }) => {
                             Напомнить
                         </label>
                         {remindChecked && (
-                            <div className={styles.remindOptions}>
-                                <select {...register('remindUnit')}>
-                                    <option value="minutes">минуты</option>
-                                    <option value="hours">часы</option>
-                                    <option value="days">дни</option>
-                                </select>
-                                <input
-                                    type="number"
-                                    min="1"
-                                    defaultValue={1}
-                                    {...register('remindBefore')}
-                                />
+                            // <div className={styles.remindOptions}>
+                            //     <select {...register('remindUnit')}>
+                            //         <option value="minutes">минуты</option>
+                            //         <option value="hours">часы</option>
+                            //         <option value="days">дни</option>
+                            //     </select>
+                            //     <input
+                            //         type="number"
+                            //         min="1"
+                            //         defaultValue={1}
+                            //         {...register('remindBefore')}
+                            //     />
+                            // </div>
+                            //
+                            //   Здесь тоже регистр неправильный, на макете 2 селекта, отредачь
+                            //
+                            <div className='bg-[#F3F3F3] rounded-[6px] mt-[10px] flex justify-between py-[10px] px-[30px]'>
+                                <label className="font-montserrat text-[13px]">За</label>
+                                <div className='flex gap-[10px]'>
+                                    <select className="p-2 border border-[#D9D9D9] rounded-[6px] text-sm" {...register('repeatInterval')}>
+                                        <option value="1">1</option>
+                                        <option value="2">2</option>
+                                        <option value="3">3</option>
+                                    </select>
+                                    <select className="p-2 border border-[#D9D9D9] rounded-[6px] text-sm" {...register('remindBefore')}>
+                                        <option value="день">дня</option>
+                                        <option value="неделя">недели</option>
+                                        <option value="месяц">месяца</option>
+                                    </select>
+                                </div>
                             </div>
                         )}
                     </div>
 
-                    <div className={styles.formActions}>
-                        <button type="button" onClick={onClose}>Отмена</button>
-                        <button type="submit">Готово</button>
+                    <div className='flex mt-[20px] justify-end gap-[10px] border-t border-[#CACACA] pt-[10px] font-montserrat font-semibold'>
+                        <button className='px-[20px] py-[10px] text-[16px] text-[#525252] text' type="button" onClick={onClose}>Отмена</button>
+                        <button className='px-[20px] py-[10px] text-[16px] text-white bg-[#EA660C] rounded-[6px]' type="submit">Готово</button>
                     </div>
                 </form>
             </div>

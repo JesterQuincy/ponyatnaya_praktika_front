@@ -43,11 +43,11 @@ const AddClientModal = ({isOpen, onClose}) => {
         Modal.setAppElement(document.body);
     }, []);
 
-    useEffect(() => {
-        setTimeout(() => {
-            Modal.setAppElement('#__next');
-        }, 0);
-    }, []);
+    // useEffect(() => {
+    //     setTimeout(() => {
+    //         Modal.setAppElement('#__next');
+    //     }, 0);
+    // }, []);
 
     const handleCloseModal = () => {
         reset();
@@ -187,7 +187,9 @@ const AddClientModal = ({isOpen, onClose}) => {
                             <div>
                                 <label className="font-montserrat text-xs font-medium">Телефон</label>
                                 <Input type="tel" placeholder="Введите номер телефона"
-                                       required {...register('phone')} />
+                                       required {
+                                        //@ts-ignore
+                                        ...register('phone')} />
                             </div>
                             <div>
                                 <label className="font-montserrat text-xs font-medium">Электронная почта</label>
@@ -257,12 +259,16 @@ const AddClientModal = ({isOpen, onClose}) => {
                             <div className="space-y-[5px]">
                                 <label className="font-montserrat text-xs font-medium">Телефон ребёнка</label>
                                 <Input type="tel" placeholder="Введите номер телефона"
-                                       required {...register('phone')} />
+                                       required {
+                                        //@ts-ignore
+                                        ...register('phone')} />
                             </div>
                             <div className="space-y-[5px]">
                                 <label className="font-montserrat text-xs font-medium">Электронная почта ребёнка</label>
                                 <Input type="email" placeholder="Введите адрес электронной почты"
-                                       required {...register('email')} />
+                                       required {
+                                        //@ts-ignore
+                                        ...register('email')} />
                             </div>
                         </div>
                             <div>
@@ -399,13 +405,17 @@ const AddClientModal = ({isOpen, onClose}) => {
                                 <div className="space-y-[5px]">
                                     <label className="font-montserrat text-xs font-medium">Телефон ребёнка</label>
                                     <Input type="tel" placeholder="Телефон клиента №1"
-                                           required {...register('phone')} />
+                                           required {
+                                            //@ts-ignore
+                                            ...register('phone')} />
                                 </div>
                                 <div className="space-y-[5px]">
                                     <label className="font-montserrat text-xs font-medium">Электронная почта
                                         ребёнка</label>
                                     <Input type="email" placeholder="Электронная почта клиента №1"
-                                           required {...register('email')} />
+                                           required {
+                                            //@ts-ignore
+                                            ...register('email')} />
                                 </div>
                             </div>
                             <div>

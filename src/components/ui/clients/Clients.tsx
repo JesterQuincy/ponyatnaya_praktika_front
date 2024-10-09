@@ -1,6 +1,7 @@
 'use client'
 
 import React, {useState, useMemo, useEffect} from 'react';
+import { useRouter } from 'next/navigation';
 import Image from 'next/image'
 import {Heading} from "@/components/ui/Heading";
 import Select from 'react-select';
@@ -15,6 +16,8 @@ import PhoneIcon from "@/public/icon/telephoneIcon.svg"
 import PairIcon from '@/public/icon/pair.svg'
 import BottomArrow from "@/public/icon/bottomArrow.svg"
 import {clientService} from "@/services/clients.service";
+import { useUser } from '@/app/context/userContext';
+
 
 export const DropdownIndicator = (props: any) => {
     return (
@@ -38,6 +41,14 @@ function Clients() {
     const [currentPage, setCurrentPage] = useState(1);
     const [clients, setClients] = useState([]);
     const clientsPerPage = 5;
+
+    const router = useRouter();
+    const { setUser } = useUser();
+
+    const handleClick = (client: any): void => {
+        setUser(client);
+        router.push('card');
+    };
 
 
 
@@ -93,28 +104,37 @@ function Clients() {
         return clients
             .filter(client => {
                 // Фильтрация по имени (поиск)
+                //@ts-ignore
                 const matchesSearch = client.fullName.toLowerCase().includes(searchQuery.toLowerCase());
 
                 // Фильтрация по типу клиента
+                //@ts-ignore
                 const matchesClientType = filterClientType.value === "Нет" || client.clientType === filterClientType.value;
 
                 // Фильтрация по статусу клиента
+                //@ts-ignore
                 const matchesClientStatus = filterClientStatus.value === "Нет" || client.clientStatus === filterClientStatus.value;
 
                 // Фильтрация по дате встречи
                 const matchesDateOrder = filterDateOrder.value === "Нет" ||
+                    //@ts-ignore
                     (filterDateOrder.value === "Раньше" && new Date(client.meetDate) <= new Date()) ||
+                    //@ts-ignore
                     (filterDateOrder.value === "Позже" && new Date(client.meetDate) > new Date());
 
                 // Фильтрация по интенсивности встреч
                 const matchesFrequency = filterMeetingFrequency.value === "Нет" ||
+                    //@ts-ignore
                     (filterMeetingFrequency.value === "Чаще" && client.countMeet >= 10) ||
+                    //@ts-ignore
                     (filterMeetingFrequency.value === "Реже" && client.countMeet < 10);
 
                 return matchesSearch && matchesClientType && matchesClientStatus && matchesDateOrder && matchesFrequency;
             })
             .sort((a, b) => filterDateOrder.value === "Раньше"
+                //@ts-ignore
                 ? new Date(a.meetDate) - new Date(b.meetDate)
+                //@ts-ignore
                 : new Date(b.meetDate) - new Date(a.meetDate)
             );
     }, [searchQuery, filterClientType, filterClientStatus, filterDateOrder, filterMeetingFrequency]);
@@ -219,51 +239,87 @@ function Clients() {
             </div>
             <div>
                 {currentClients.map(client => (
-                    <div key={client.personId} className="border-t border-[#6A6A6A] py-[10px]">
+                    <div key={
+                        //@ts-ignore
+                        client.personId} className="border-t border-[#6A6A6A] py-[10px]">
                         <div className="flex justify-between items-start">
                             <div>
-                                <h2 className="text-[18px] font-semibold underline text-orange mb-[10px]">{client.fullName}</h2>
-                                <div className="font-montserrat flex gap-[5px]">
-                                    <div
-                                        className={`text-[11px] px-[11px] rounded-[4px] ${
+                                <h2
+                                    onClick={(): void => handleClick(client)}
+                                    className="text-[18px] font-semibold underline text-orange mb-[10px]">
+                                        {
+                                            //@ts-ignore
+                                            client.fullName}
+                                </h2>
+                            <div className="font-montserrat flex gap-[5px]">
+                                <div
+                                    className={`text-[11px] px-[11px] rounded-[4px] ${
+                                            //@ts-ignore
                                             client.clientStatus === 'Онлайн' ? 'bg-[#CFEFFD]' : 'bg-[#FDDCC6]'
                                         }`}
                                     >
-                                        {client.clientStatus}
+                                        {
+                                            //@ts-ignore
+                                        client.clientStatus}
                                     </div>
-                                    <div
-                                        className="text-[11px] bg-[#E4E4E4] px-[11px] rounded-[4px]">{client.meetingType}</div>
-                                    <div className="text-[11px] text-[#E4E4E4] rounded-[4px] flex gap-[4px]"> Всего
-                                        встреч: <div className="text-black">{client.countMeet}</div></div>
-                                    <div
-                                        className="text-[11px] text-[#E4E4E4] rounded-[4px] flex gap-[4px]">Последняя: <div
-                                        className="text-black">{client.meetDate}</div></div>
+                                    <div className="text-[11px] bg-[#E4E4E4] px-[11px] rounded-[4px]">
+                                        {
+                                        //@ts-ignore
+                                        client.meetingType
+                                        }
+                                    </div>
+                                    <div className="text-[11px] text-[#E4E4E4] rounded-[4px] flex gap-[4px]">
+                                        Всего встреч: 
+                                        <div className="text-black">
+                                            {
+                                            //@ts-ignore
+                                            client.countMeet
+                                            }
+                                        </div></div>
+                                    <div className="text-[11px] text-[#E4E4E4] rounded-[4px] flex gap-[4px]">Последняя: <div
+                                        className="text-black">
+                                            {
+                                            //@ts-ignore
+                                            client.meetDate
+                                            }</div></div>
                                 </div>
                             </div>
                             <div className="flex justify-between w-1/3">
                                 <div className="flex flex-row align-center items-start text-[11px] gap-[8px]">
                                     <div
                                         className="flex flex-row items-center bg-[#E4E4E4] px-[12px] py-[3px] rounded-[30px] gap-[4px]">
-                                        <Image src={iconMap[client.clientType] || HumanIcon} alt='logo' width={8}
+                                        <Image 
+                                            src={
+                                                //@ts-ignore
+                                                iconMap[client.clientType] || HumanIcon} alt='logo' width={8}
                                                height={8}/>
-                                        {client.clientType}
+                                        {
+                                            //@ts-ignore
+                                        client.clientType}
                                     </div>
                                     <div
                                         className="text-[11px] text-[#E4E4E4] rounded-[4px] flex gap-[4px] mt-[4px]"> Возраст: <div
-                                        className="text-black">{client.years}</div></div>
+                                        className="text-black">{
+                                            //@ts-ignore
+                                            client.years
+                                            }</div></div>
                                 </div>
                                 <div className="flex flex-col">
                                     <div
                                         className="flex flex-row items-center  text-[11px] px-[12px] py-[3px] rounded-[30px] gap-[4px]">
                                         <Image src={PhoneIcon} alt='logo' width={12}
                                                height={12}/>
-                                        {client.phone}
+                                        {
+                                        //@ts-ignore
+                                        client.phone}
                                     </div>
                                     <div
                                         className="flex flex-row items-center text-[11px] underline px-[12px] py-[3px] rounded-[30px] gap-[4px]">
                                         <Image src={MailIcon} alt='logo' width={12}
                                                height={12}/>
-                                        {client.mail}
+                                        {
+                                        //@ts-ignore
+                                        client.mail}
                                     </div>
                                 </div>
                             </div>
