@@ -6,16 +6,19 @@ import { useMutation } from "@tanstack/react-query";
 import { calendarService } from "@/services/calendar.service";
 import { toast } from "react-toastify";
 import { UserMeeting } from '@/types/calendar.types';
+import Select from 'react-select';
+import { useRouter } from 'next/navigation';
+import { customSelectStyles } from '@/constants/customStyles';
 
-// Определение типов формы
 interface MeetForm {
+    id: string;
     type: string;
     clientName?: string;
     meetingName?: string;
-    date: string;
+    dateMeet: string;
     time: string;
     duration: number;
-    format: string;
+    formatMeet: string;
     location?: string;
     note?: string;
     repeat?: boolean;
@@ -25,25 +28,36 @@ interface MeetForm {
     remind?: boolean;
     remindBefore?: number;
     remindUnit?: string;
+    paymentType?: string;
+}
+
+interface Option {
+    value: number;
+    label: string;
 }
 
 // @ts-ignore
 const AddMeetModal = ({ isOpen, onClose }) => {
-    const { register, handleSubmit, reset, watch } = useForm<MeetForm>({
+    const { register, handleSubmit, reset, watch, setValue } = useForm<MeetForm>({
         defaultValues: {
             type: 'client',
-            format: 'offline',
+            formatMeet: 'offline',
             duration: 60,
         }
     });
+    const [selectedOption, setSelectedOption] = useState<Option | null>(null);
+
+    const [options, setOptions] = useState<Option[]>([]);
+    const [isLoading, setIsLoading] = useState(false);
 
     const [repeatChecked, setRepeatChecked] = useState(false);
     const [remindChecked, setRemindChecked] = useState(false);
 
     const watchType = watch("type");
-    const watchFormat = watch("format");
+    const watchFormat = watch("formatMeet");
 
-    // @ts-ignore
+    const router = useRouter();
+
     const { mutate } = useMutation({
         mutationKey: ['createMeeting'],
         mutationFn: (data: UserMeeting) => calendarService.createMeeting(data),
@@ -57,9 +71,62 @@ const AddMeetModal = ({ isOpen, onClose }) => {
         }
     });
 
+    const fetchClients = async (inputValue: string) => {
+        setIsLoading(true);
+        try {
+            const response = await calendarService.getUsersByName(inputValue);
+            const data = response.data;
+            const formattedOptions = data.map((client: { personId: number; fullName: string }) => ({
+                value: client.personId,
+                label: client.fullName,
+            }));
+            setOptions(formattedOptions);
+        } catch (error) {
+            console.error('Ошибка при поиске клиентов:', error);
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
+    const handleInputChange = (inputValue: string) => {
+        if (inputValue.trim()) {
+            fetchClients(inputValue);
+        }
+    };
+
+    const handleChange = (selected: Option | null) => {
+        setSelectedOption(selected);
+        setValue('id', selected?.value);
+        setValue('clientName', selected?.label);
+    };
+
     const onSubmit: SubmitHandler<MeetForm> = (data) => {
-        // @ts-ignore
-        mutate(data);
+        const { id, clientName, dateMeet, time, duration, formatMeet, location, paymentType, meetingName } = data;
+
+        const [hours, minutes] = time.split(':').map(Number);
+
+        const payload: UserMeeting = {
+            person: {
+                id: id || 0,
+                fullName: clientName || '',
+            },
+            nameMeet: meetingName || 'Без названия',
+            dateMeet,
+            startMeet: {
+                hour: hours,
+                minute: minutes,
+                second: 0,
+                nano: 0
+            },
+            endMeet: {
+                hour: hours + Math.floor(duration / 60),
+                minute: minutes + (duration % 60),
+            },
+            formatMeet,
+            paymentType: paymentType || '',
+        };
+
+        mutate(payload);
     };
 
     return (
@@ -74,7 +141,7 @@ const AddMeetModal = ({ isOpen, onClose }) => {
                 <div className="text-black font-ebgaramond font-bold text-[33px] mb-[34px]">Назначить встречу</div>
 
                 <form onSubmit={handleSubmit(onSubmit)}>
-                    <div className='flex gap-[20px] font-montserrat mb-[28px]'>
+                    <div className='flex gap-[20px] font-montserrat'>
                         <label className='flex gap-[5px] items-center'>
                             <input
                                 type="radio"
@@ -96,11 +163,19 @@ const AddMeetModal = ({ isOpen, onClose }) => {
                     </div>
 
                     {watchType === 'client' ? (
-                        <input
-                            className={styles.input}
-                            placeholder="Найти клиента"
-                            {...register('clientName')}
-                        />
+                        <div className='pb-[21px] pt-[25px]'>
+                            <Select
+                                value={selectedOption}
+                                onChange={handleChange}
+                                onInputChange={handleInputChange}
+                                options={options}
+                                isLoading={isLoading}
+                                styles={customSelectStyles}
+                                placeholder="Найти клиента"
+                                className="w-full max-w-xs"
+                                isSearchable
+                            />
+                        </div>
                     ) : (
                         <input
                             className={styles.input}
@@ -117,7 +192,7 @@ const AddMeetModal = ({ isOpen, onClose }) => {
                             <input
                                 type="date"
                                 className='min-w-[120px]'
-                                {...register('date', { required: true })}
+                                {...register('dateMeet', { required: true })}
                             />
                         </div>
                         <div className='flex flex-col'>
@@ -148,7 +223,7 @@ const AddMeetModal = ({ isOpen, onClose }) => {
                         </label>
                         <select
                             className={`${styles.select} max-w-[200px]`}
-                            {...register('format', { required: true })}
+                            {...register('formatMeet', { required: true })}
                         >
                             <option value="offline">Офлайн</option>
                             <option value="online">Онлайн</option>
@@ -178,6 +253,17 @@ const AddMeetModal = ({ isOpen, onClose }) => {
                             />
                         </div>
                     )}
+
+                    <div>
+                        <label className='font-montserrat text-[13px]'>
+                            Метод оплаты
+                        </label>
+                        <input
+                            className={styles.input}
+                            placeholder="Введите метод оплаты"
+                            {...register('paymentType')}
+                        />
+                    </div>
 
                     {watchType === 'other' && (
                         <textarea
@@ -230,7 +316,7 @@ const AddMeetModal = ({ isOpen, onClose }) => {
                                         ))}
                                     </div>
                                 </div>
-                                
+
                                 {/* <input
                                     type="date"
                                     {...register('repeatEnd')}
