@@ -16,7 +16,7 @@ interface ClientForm {
     fullName?: string;
     birth?: string;
     gender?: string;
-    communicationFormat?: string;
+    meetingFormat?: string;
     phoneNumber?: string;
     mail?: string;
     parentFullName?: string;
@@ -38,16 +38,10 @@ const AddClientModal = ({isOpen, onClose}) => {
     const [clientType, setClientType] = useState('adult');
     const {register, handleSubmit, reset, setValue} = useForm<ClientForm>();
 
-    // Устанавливаем рут для модалки в useEffect
     useEffect(() => {
         Modal.setAppElement(document.body);
     }, []);
 
-    // useEffect(() => {
-    //     setTimeout(() => {
-    //         Modal.setAppElement('#__next');
-    //     }, 0);
-    // }, []);
 
     const handleCloseModal = () => {
         reset();
@@ -66,6 +60,11 @@ const AddClientModal = ({isOpen, onClose}) => {
             toast.error('Ошибка при добавлении клиента');
         }
     });
+
+    const formatDate = (dateString) => {
+        const options = { year: "numeric", month: "long", day: "numeric"}
+        return new Date(dateString).toLocaleDateString(undefined, options)
+    }
 
     const onSubmit: SubmitHandler<ClientForm> = (data) => {
         // @ts-ignore
@@ -168,7 +167,7 @@ const AddClientModal = ({isOpen, onClose}) => {
                                 <label className="font-montserrat text-xs font-medium">Формат коммуникации</label>
                                 <Select
                                     options={communicationFormatOptions}
-                                    onChange={(option) => setValue('communicationFormat', option?.value)}
+                                    onChange={(option) => setValue('meetingFormat', option?.value)}
                                     className="w-full"
                                     placeholder="Выберите формат"
                                     components={{DropdownIndicator}}
@@ -188,8 +187,8 @@ const AddClientModal = ({isOpen, onClose}) => {
                                 <label className="font-montserrat text-xs font-medium">Телефон</label>
                                 <Input type="tel" placeholder="Введите номер телефона"
                                        required {
-                                        //@ts-ignore
-                                        ...register('phone')} />
+                                           //@ts-ignore
+                                           ...register('phoneNumber')} />
                             </div>
                             <div>
                                 <label className="font-montserrat text-xs font-medium">Электронная почта</label>
@@ -202,26 +201,47 @@ const AddClientModal = ({isOpen, onClose}) => {
                     {clientType === 'child' && (
                         <div className="space-y-[40px]">
                             <div className='space-y-[13px] '>
-                            <div>
-                                <label className="font-montserrat text-xs font-medium">ФИО ребёнка</label>
-                                <Input type="text" placeholder="Введите ФИО ребёнка"
-                                       required {...register('fullName')} />
-                            </div>
-
-                            <div className="flex flex-row w-full space-x-[10px]">
-                                <div className="flex flex-col space-y-[5px]">
-                                    <label className="font-montserrat text-xs font-medium">Дата рождения</label>
-                                    <input
-                                        className="flex h-[36px] w-full rounded-xl border border-gray bg-background px-3 py-2 text-sm"
-                                        type="date" required {...register('birth')} />
+                                <div>
+                                    <label className="font-montserrat text-xs font-medium">ФИО ребёнка</label>
+                                    <Input type="text" placeholder="Введите ФИО ребёнка"
+                                           required {...register('fullName')} />
                                 </div>
-                                <div className="flex flex-col w-full space-y-[5px]">
-                                    <label className="font-montserrat text-xs font-medium">Пол</label>
+
+                                <div className="flex flex-row w-full space-x-[10px]">
+                                    <div className="flex flex-col space-y-[5px]">
+                                        <label className="font-montserrat text-xs font-medium">Дата рождения</label>
+                                        <input
+                                            className="flex h-[36px] w-full rounded-xl border border-gray bg-background px-3 py-2 text-sm"
+                                            type="date" required {...register('birth')} />
+                                    </div>
+                                    <div className="flex flex-col w-full space-y-[5px]">
+                                        <label className="font-montserrat text-xs font-medium">Пол</label>
+                                        <Select
+                                            options={genderOptions}
+                                            onChange={(option) => setValue('gender', option?.value)}
+                                            placeholder="Выберите пол"
+                                            className="rounded-[6]"
+                                            components={{DropdownIndicator}}
+                                            styles={{
+                                                control: (base) => ({
+                                                    ...base,
+                                                    height: '36px',
+                                                    minHeight: '36px',
+                                                    padding: '0 0 5px 0',
+                                                    borderRadius: '12px'
+                                                }),
+                                                indicatorSeparator: () => ({display: "none"}),
+                                            }}
+                                        />
+                                    </div>
+                                </div>
+                                <div className="flex flex-col space-y-[5px]">
+                                    <label className="font-montserrat text-xs font-medium">Формат коммуникации</label>
                                     <Select
-                                        options={genderOptions}
-                                        onChange={(option) => setValue('gender', option?.value)}
-                                        placeholder="Выберите пол"
-                                        className="rounded-[6]"
+                                        options={communicationFormatOptions}
+                                        onChange={(option) => setValue('meetingFormat', option?.value)}
+                                        className="w-full"
+                                        placeholder="Выберите формат"
                                         components={{DropdownIndicator}}
                                         styles={{
                                             control: (base) => ({
@@ -235,42 +255,21 @@ const AddClientModal = ({isOpen, onClose}) => {
                                         }}
                                     />
                                 </div>
+                                <div className="space-y-[5px]">
+                                    <label className="font-montserrat text-xs font-medium">Телефон ребёнка</label>
+                                    <Input type="tel" placeholder="Введите номер телефона"
+                                           required {
+                                               //@ts-ignore
+                                               ...register('phoneNumber')} />
+                                </div>
+                                <div className="space-y-[5px]">
+                                    <label className="font-montserrat text-xs font-medium">Электронная почта ребёнка</label>
+                                    <Input type="email" placeholder="Введите адрес электронной почты"
+                                           required {
+                                               //@ts-ignore
+                                               ...register('email')} />
+                                </div>
                             </div>
-                            <div className="flex flex-col space-y-[5px]">
-                                <label className="font-montserrat text-xs font-medium">Формат коммуникации</label>
-                                <Select
-                                    options={communicationFormatOptions}
-                                    onChange={(option) => setValue('communicationFormat', option?.value)}
-                                    className="w-full"
-                                    placeholder="Выберите формат"
-                                    components={{DropdownIndicator}}
-                                    styles={{
-                                        control: (base) => ({
-                                            ...base,
-                                            height: '36px',
-                                            minHeight: '36px',
-                                            padding: '0 0 5px 0',
-                                            borderRadius: '12px'
-                                        }),
-                                        indicatorSeparator: () => ({display: "none"}),
-                                    }}
-                                />
-                            </div>
-                            <div className="space-y-[5px]">
-                                <label className="font-montserrat text-xs font-medium">Телефон ребёнка</label>
-                                <Input type="tel" placeholder="Введите номер телефона"
-                                       required {
-                                        //@ts-ignore
-                                        ...register('phone')} />
-                            </div>
-                            <div className="space-y-[5px]">
-                                <label className="font-montserrat text-xs font-medium">Электронная почта ребёнка</label>
-                                <Input type="email" placeholder="Введите адрес электронной почты"
-                                       required {
-                                        //@ts-ignore
-                                        ...register('email')} />
-                            </div>
-                        </div>
                             <div>
                                 <div className="space-y-[13px]">
                                     <div className="space-y-[5px]">
@@ -406,16 +405,16 @@ const AddClientModal = ({isOpen, onClose}) => {
                                     <label className="font-montserrat text-xs font-medium">Телефон ребёнка</label>
                                     <Input type="tel" placeholder="Телефон клиента №1"
                                            required {
-                                            //@ts-ignore
-                                            ...register('phone')} />
+                                               //@ts-ignore
+                                               ...register('phoneNumber')} />
                                 </div>
                                 <div className="space-y-[5px]">
                                     <label className="font-montserrat text-xs font-medium">Электронная почта
                                         ребёнка</label>
                                     <Input type="email" placeholder="Электронная почта клиента №1"
                                            required {
-                                            //@ts-ignore
-                                            ...register('email')} />
+                                               //@ts-ignore
+                                               ...register('email')} />
                                 </div>
                             </div>
                             <div>
@@ -490,7 +489,7 @@ const AddClientModal = ({isOpen, onClose}) => {
                                 </div>
                             </div>
                         </div>
-                        )}
+                    )}
                     <div>
                         <hr className="mb-2 mt-[32px] border-gray"/>
                         <div className="w-full flex justify-end items-center space-x-3 font-montserrat text-xs">

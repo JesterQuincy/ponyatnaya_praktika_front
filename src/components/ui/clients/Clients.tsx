@@ -40,6 +40,7 @@ function Clients() {
     const [filterMeetingFrequency, setFilterMeetingFrequency] = useState({ value: "Нет", label: "Нет" });
     const [currentPage, setCurrentPage] = useState(1);
     const [clients, setClients] = useState([]);
+    const [isLoading, setIsLoading] = useState(true); // Новое состояние для отслеживания загрузки
     const clientsPerPage = 5;
 
     const router = useRouter();
@@ -50,21 +51,46 @@ function Clients() {
         router.push('card');
     };
 
-
-
     async function fetchClients() {
         try {
+            setIsLoading(true); // Устанавливаем флаг загрузки
             const data = await clientService.getClientByName(clientsPerPage, (currentPage - 1) * clientsPerPage, searchQuery);
-            console.log("Полученные данные:", data.data); // Добавьте этот лог
+            console.log("Полученные данные:", data.data);
             setClients(data.data);
         } catch (error) {
             console.error("Ошибка загрузки данных:", error);
+        } finally {
+            setIsLoading(false);
         }
     }
 
     useEffect(() => {
         fetchClients();
     }, []);
+
+    const filteredClients = useMemo(() => {
+        return clients
+            .filter(client => {
+                const matchesSearch = client.fullName.toLowerCase().includes(searchQuery.toLowerCase());
+                const matchesClientType = filterClientType.value === "Нет" || client.clientType === filterClientType.value;
+                const matchesClientStatus = filterClientStatus.value === "Нет" || client.clientStatus === filterClientStatus.value;
+                const matchesDateOrder = filterDateOrder.value === "Нет" ||
+                    (filterDateOrder.value === "Раньше" && new Date(client.meetDate) <= new Date()) ||
+                    (filterDateOrder.value === "Позже" && new Date(client.meetDate) > new Date());
+                const matchesFrequency = filterMeetingFrequency.value === "Нет" ||
+                    (filterMeetingFrequency.value === "Чаще" && client.countMeet >= 10) ||
+                    (filterMeetingFrequency.value === "Реже" && client.countMeet < 10);
+
+                return matchesSearch && matchesClientType && matchesClientStatus && matchesDateOrder && matchesFrequency;
+            })
+            .sort((a, b) => filterDateOrder.value === "Раньше"
+                ? new Date(a.meetDate) - new Date(b.meetDate)
+                : new Date(b.meetDate) - new Date(a.meetDate)
+            );
+    }, [clients, searchQuery, filterClientType, filterClientStatus, filterDateOrder, filterMeetingFrequency]);
+
+    const totalPages = Math.ceil(filteredClients.length / clientsPerPage);
+    const currentClients = filteredClients.slice((currentPage - 1) * clientsPerPage, currentPage * clientsPerPage);
 
     const clientTypeOptions = [
         {value: "Нет", label: "Нет"},
@@ -98,50 +124,6 @@ function Clients() {
         Взрослый: HumanIcon,
         Ребенок: ChildrenIcon,
     };
-
-    // Фильтрация клиентов
-    const filteredClients = useMemo(() => {
-        return clients
-            .filter(client => {
-                // Фильтрация по имени (поиск)
-                //@ts-ignore
-                const matchesSearch = client.fullName.toLowerCase().includes(searchQuery.toLowerCase());
-
-                // Фильтрация по типу клиента
-                //@ts-ignore
-                const matchesClientType = filterClientType.value === "Нет" || client.clientType === filterClientType.value;
-
-                // Фильтрация по статусу клиента
-                //@ts-ignore
-                const matchesClientStatus = filterClientStatus.value === "Нет" || client.clientStatus === filterClientStatus.value;
-
-                // Фильтрация по дате встречи
-                const matchesDateOrder = filterDateOrder.value === "Нет" ||
-                    //@ts-ignore
-                    (filterDateOrder.value === "Раньше" && new Date(client.meetDate) <= new Date()) ||
-                    //@ts-ignore
-                    (filterDateOrder.value === "Позже" && new Date(client.meetDate) > new Date());
-
-                // Фильтрация по интенсивности встреч
-                const matchesFrequency = filterMeetingFrequency.value === "Нет" ||
-                    //@ts-ignore
-                    (filterMeetingFrequency.value === "Чаще" && client.countMeet >= 10) ||
-                    //@ts-ignore
-                    (filterMeetingFrequency.value === "Реже" && client.countMeet < 10);
-
-                return matchesSearch && matchesClientType && matchesClientStatus && matchesDateOrder && matchesFrequency;
-            })
-            .sort((a, b) => filterDateOrder.value === "Раньше"
-                //@ts-ignore
-                ? new Date(a.meetDate) - new Date(b.meetDate)
-                //@ts-ignore
-                : new Date(b.meetDate) - new Date(a.meetDate)
-            );
-    }, [searchQuery, filterClientType, filterClientStatus, filterDateOrder, filterMeetingFrequency]);
-
-    const totalPages = Math.ceil(filteredClients.length / clientsPerPage);
-    const currentClients = filteredClients.slice((currentPage - 1) * clientsPerPage, currentPage * clientsPerPage);
-
 
     // @ts-ignore
     return (
@@ -269,7 +251,7 @@ function Clients() {
                                         }
                                     </div>
                                     <div className="text-[11px] text-[#E4E4E4] rounded-[4px] flex gap-[4px]">
-                                        Всего встреч: 
+                                        Всего встреч:
                                         <div className="text-black">
                                             {
                                             //@ts-ignore
@@ -288,7 +270,7 @@ function Clients() {
                                 <div className="flex flex-row align-center items-start text-[11px] gap-[8px]">
                                     <div
                                         className="flex flex-row items-center bg-[#E4E4E4] px-[12px] py-[3px] rounded-[30px] gap-[4px]">
-                                        <Image 
+                                        <Image
                                             src={
                                                 //@ts-ignore
                                                 iconMap[client.clientType] || HumanIcon} alt='logo' width={8}

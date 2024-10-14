@@ -13,12 +13,11 @@ import {useEffect, useState} from "react";
 moment.locale('ru');
 
 export default function CalendarBody() {
-    const [data, setData] = useState<any>([]);
     const [events, setEvents] = useState<any[]>([]);
     const [viewType, setViewType] = useState('');
 
     const generateEvents = (serverData: { clientsData: any[]; }) => {
-        const eventsArray = serverData.clientsData.flatMap(client =>
+        return serverData.clientsData.flatMap(client =>
             client.meetings.map((meeting: { startTime: moment.MomentInput; endTime: any; formatMeet: any; }) => ({
                 title: `${client.fullName} - ${moment(meeting.startTime).format('HH:mm')}`,
                 start: meeting.startTime,
@@ -29,17 +28,13 @@ export default function CalendarBody() {
                 }
             }))
         );
-        return eventsArray;
     };
 
     const fetchData = async () => {
         try {
-            // Заменяем реальный вызов API моковыми данными
-            const serverData = { clientsData: [] };
-            setData(serverData);
-
+            const serverData = await calendarService.getCalendarData(2024);
             const generatedEvents = generateEvents(serverData);
-            setEvents([...generatedEvents, ...mockEvents]); // Добавляем моковое событие
+            setEvents([...generatedEvents]);
         } catch (error) {
             console.error('Ошибка при загрузке данных:', error);
         }
@@ -49,53 +44,10 @@ export default function CalendarBody() {
         fetchData();
     }, []);
 
-    const mockEvents = [
-        // Сегодня
-        {
-            title: 'Тестовое событие - Сегодня (утро) Тестовое событие - Сегодня (утро)',
-            start: moment().startOf('day').add(10, 'hours').toISOString(), // Сегодня в 10:00
-            end: moment().startOf('day').add(11, 'hours').toISOString(), // Заканчивается в 11:00
-            allDay: false,
-            extendedProps: { formatMeet: 'online' }
-        },
-        {
-            title: 'Тестовое событие - Сегодня (день)',
-            start: moment().startOf('day').add(14, 'hours').toISOString(), // Сегодня в 14:00
-            end: moment().startOf('day').add(15, 'hours').toISOString(), // Заканчивается в 15:00
-            allDay: false,
-            extendedProps: { formatMeet: 'other' }
-        },
-        // Завтра
-        {
-            title: 'Тестовое событие - Завтра (утро)',
-            start: moment().add(1, 'days').startOf('day').add(9, 'hours').toISOString(), // Завтра в 09:00
-            end: moment().add(1, 'days').startOf('day').add(10, 'hours').toISOString(), // Заканчивается в 10:00
-            allDay: false,
-            extendedProps: { formatMeet: 'online' }
-        },
-        {
-            title: 'Тестовое событие - Завтра (день)',
-            start: moment().add(1, 'days').startOf('day').add(16, 'hours').toISOString(), // Завтра в 16:00
-            end: moment().add(1, 'days').startOf('day').add(17, 'hours').toISOString(), // Заканчивается в 17:00
-            allDay: false,
-            extendedProps: { formatMeet: 'offline' }
-        },
-        // Послезавтра
-        {
-            title: 'Тестовое событие - Послезавтра (утро)',
-            start: moment().add(2, 'days').startOf('day').add(8, 'hours').toISOString(), // Послезавтра в 08:00
-            end: moment().add(2, 'days').startOf('day').add(8, 'hours').add(30, 'minutes').toISOString(), // Заканчивается в 08:30
-            allDay: false,
-            extendedProps: { formatMeet: 'offline' }
-        },
-        {
-            title: 'Тестовое событие - Послезавтра (день)',
-            start: moment().add(2, 'days').startOf('day').add(15, 'hours').toISOString(), // Послезавтра в 15:00
-            end: moment().add(2, 'days').startOf('day').add(16, 'hours').toISOString(), // Заканчивается в 16:00
-            allDay: false,
-            extendedProps: { formatMeet: 'other' }
-        }
-    ];
+    console.log(events)
+
+
+
 
     return (
         <div className={styles.MainContainer}>
@@ -110,8 +62,8 @@ export default function CalendarBody() {
                     }}
                     initialDate={new Date()}
                     height={954}
-                    slotMinTime="08:00:00"
-                    slotMaxTime="18:00:00"
+                    slotMinTime="00:00:00"
+                    slotMaxTime="24:00:00"
                     slotDuration='00:30:00'
                     locale="ru"
                     titleFormat={{year: 'numeric', month: 'long'}}
@@ -171,7 +123,7 @@ export default function CalendarBody() {
                             badgeText = 'Офлайн';
                         }
                         if (viewType === 'timeGridWeek' || viewType === 'timeGridDay') {
-                            
+
 
                             return (
                                 <div className={`w-full h-full p-2 flex flex-col gap-[10px] ${bgColor}`}>

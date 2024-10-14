@@ -3,7 +3,7 @@ import {UserMeeting} from "@/types/calendar.types";
 
 export const calendarService = {
     async createMeeting(data: UserMeeting): Promise<any> {
-        return await axiosClassic.post('meet', data);
+        return await axiosWithAuth.post('/api/meet', data);
     },
     async getMeetingById(id: number): Promise<any> {
         return await axiosClassic.get(`meet/get/${id}`);
