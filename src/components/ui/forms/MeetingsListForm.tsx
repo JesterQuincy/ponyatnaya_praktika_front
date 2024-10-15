@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 
@@ -15,7 +15,7 @@ import { Pagination } from "../Pagination";
 import { DropdownMenu } from "./DropDownMenu";
 
 import { projectMetodics } from "./mocks/projectMetodics";
-import { meetsList } from "./mocks/meetsList";
+import { clientService } from "@/services/clients.service";
 
 interface ICardFormProps {
     user: any,
@@ -24,18 +24,28 @@ interface ICardFormProps {
 export function MeetingsListForm({ user }: ICardFormProps) {
     const router = useRouter();
     const { setMeet } = useMeet();
-    const [ currentPage, setCurrentPage ] = useState(1);
-    const [ activeDropdown, setActiveDropdown ] = useState<number | null>(null);
+    const [currentPage, setCurrentPage] = useState(1);
+    const [activeDropdown, setActiveDropdown] = useState<number | null>(null);
+    const [meetsList, setMeetsList] = useState<any[]>([]); // Состояние для хранения встреч
     const itemsPerPage = 7;
 
     const indexOfLastItem = currentPage * itemsPerPage;
     const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+
+    useEffect(() => {
+        clientService.getUserMeets(0, 5, user.id)
+            .then(response => {
+                setMeetsList(response.data);
+            })
+            .catch(error => {
+                console.error("Ошибка при получении встреч:", error);
+            });
+    }, [user?.id]);
+
     const currentMeets = meetsList.slice(indexOfFirstItem, indexOfLastItem);
 
-    // Определение количества страниц
     const totalPages = Math.ceil(meetsList.length / itemsPerPage);
 
-    // Функция для смены страницы
     const paginate = (pageNumber: number) => setCurrentPage(pageNumber);
 
     const handleClick = (meet: any): void => {
@@ -50,7 +60,7 @@ export function MeetingsListForm({ user }: ICardFormProps) {
             setActiveDropdown(id);
         }
     };
-    
+
     return (
         <div className="flex gap-[15px]">
             <div className="bg-[#F1F1F1] w-[60%] px-[16px] py-[25px] rounded-tr-[4px] rounded-br-[4px] rounded-bl-[4px] flex flex-col gap-[25px] relative">
@@ -58,26 +68,26 @@ export function MeetingsListForm({ user }: ICardFormProps) {
                     <div key={meet.id} className="bg-white rounded-[6px] flex gap-[10px] px-[10px] py-[11px] relative">
                         <div className="flex flex-col gap-[4px]">
                             <span onClick={(): void => handleClick(meet)} className="text-[#EA660C] text-[22px] underline underline-offset-[2.5px]">
-                                {meet.title}
+                                {meet.nameMeet}
                             </span>
                                <span className="text-[12px] flex gap-[5px]">
                                 <span className="text-[#7E7E7E]">Дата:</span>
                                 <span className="font-semibold">
-                                    {meet.date}
+                                    {meet.dateMeet}
                                 </span>
                             </span>
                         </div>
                         <div className="flex flex-col gap-[5px]">
                             <div className="flex gap-[5px] items-center">
                                 <span className={meet.status === 'Онлайн' ? 'bg-[#CFEFFD] max-w-fit rounded-[4px] text-[13px] px-[11px] py-[5px]' : 'bg-[#FDDCC6] max-w-fit rounded-[4px] text-[13px] px-[11px] py-[5px]'}>
-                                    {meet.status}
+                                    {meet.formatMeet}
                                 </span>
                                 <span className="text-[#7E7E7E] text-[13px]">
                                     Основные темы:
                                 </span>
                             </div>
                             <span className="text-[13px]">
-                                {meet.themes.join('. ')}
+                                {meet.clientSessionRequest?.join('. ')}
                             </span>
                         </div>
                         <Button onClick={() => handleDropdownToggle(meet.id)} className="absolute bg-[#E4E4E4] right-[20px] text-[#7E7E7E] text-[20px] flex items-center p-[10px] rounded-[6px]">

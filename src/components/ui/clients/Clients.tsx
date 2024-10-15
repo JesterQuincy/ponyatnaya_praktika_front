@@ -47,8 +47,9 @@ function Clients() {
     const { setUser } = useUser();
 
     const handleClick = (client: any): void => {
+        console.log(client)
         setUser(client);
-        router.push('card');
+        router.push(`card/${client.personId}`);
     };
 
     async function fetchClients() {

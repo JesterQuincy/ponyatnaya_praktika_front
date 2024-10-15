@@ -28,12 +28,13 @@ export default function CalendarBody() {
                 }
             }))
         );
-    };
+    }
 
     const fetchData = async () => {
         try {
             const serverData = await calendarService.getCalendarData(2024);
-            const generatedEvents = generateEvents(serverData);
+            const generatedEvents = generateEvents(serverData.data);
+
             setEvents([...generatedEvents]);
         } catch (error) {
             console.error('Ошибка при загрузке данных:', error);
@@ -43,10 +44,6 @@ export default function CalendarBody() {
     useEffect(() => {
         fetchData();
     }, []);
-
-    console.log(events)
-
-
 
 
     return (
@@ -61,7 +58,6 @@ export default function CalendarBody() {
                         right: 'prev,today,next'
                     }}
                     initialDate={new Date()}
-                    height={954}
                     slotMinTime="00:00:00"
                     slotMaxTime="24:00:00"
                     slotDuration='00:30:00'
