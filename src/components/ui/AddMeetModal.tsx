@@ -1,14 +1,14 @@
-import React, { useState } from 'react';
+import React, {useState} from 'react';
 import Modal from 'react-modal';
 import styles from '@/styles/AddMeetModal.module.css';
-import { useForm, SubmitHandler } from "react-hook-form";
-import { useMutation } from "@tanstack/react-query";
-import { calendarService } from "@/services/calendar.service";
-import { toast } from "react-toastify";
-import { UserMeeting } from '@/types/calendar.types';
+import {useForm, SubmitHandler} from "react-hook-form";
+import {useMutation} from "@tanstack/react-query";
+import {calendarService} from "@/services/calendar.service";
+import {toast} from "react-toastify";
+import {UserMeeting} from '@/types/calendar.types';
 import Select from 'react-select';
-import { useRouter } from 'next/navigation';
-import { customSelectStyles } from '@/constants/customStyles';
+import {useRouter} from 'next/navigation';
+import {customSelectStyles} from '@/constants/customStyles';
 
 interface MeetForm {
     id: string;
@@ -16,6 +16,7 @@ interface MeetForm {
     clientName?: string;
     meetingName?: string;
     dateMeet: string;
+    startMeet: string;
     time: string;
     duration: number;
     formatMeet: string;
@@ -37,8 +38,8 @@ interface Option {
 }
 
 // @ts-ignore
-const AddMeetModal = ({ isOpen, onClose }) => {
-    const { register, handleSubmit, reset, watch, setValue } = useForm<MeetForm>({
+const AddMeetModal = ({isOpen, onClose}) => {
+    const {register, handleSubmit, reset, watch, setValue} = useForm<MeetForm>({
         defaultValues: {
             type: 'client',
             formatMeet: 'offline',
@@ -58,7 +59,7 @@ const AddMeetModal = ({ isOpen, onClose }) => {
 
     const router = useRouter();
 
-    const { mutate } = useMutation({
+    const {mutate} = useMutation({
         mutationKey: ['createMeeting'],
         mutationFn: (data: UserMeeting) => calendarService.createMeeting(data),
         onSuccess: () => {
@@ -96,12 +97,13 @@ const AddMeetModal = ({ isOpen, onClose }) => {
 
     const handleChange = (selected: Option | null) => {
         setSelectedOption(selected);
+        // @ts-ignore
         setValue('id', selected?.value);
         setValue('clientName', selected?.label);
     };
 
     const onSubmit: SubmitHandler<MeetForm> = (data) => {
-        const { id, clientName, dateMeet, time, duration, formatMeet, location, paymentType, meetingName } = data;
+        const {id, clientName, dateMeet, time, duration, formatMeet, location, paymentType, meetingName} = data;
 
         const [hours, minutes] = time.split(':').map(Number);
 
@@ -112,16 +114,8 @@ const AddMeetModal = ({ isOpen, onClose }) => {
             },
             nameMeet: meetingName || 'Без названия',
             dateMeet,
-            startMeet: {
-                hour: hours,
-                minute: minutes,
-                second: 0,
-                nano: 0
-            },
-            endMeet: {
-                hour: hours + Math.floor(duration / 60),
-                minute: minutes + (duration % 60),
-            },
+            startMeet: `${hours}:${minutes}0`,
+            endMeet: `${hours + Math.floor(duration / 60)}:${minutes + (duration % 60)}0`,
             formatMeet,
             paymentType: paymentType || '',
         };
@@ -177,11 +171,13 @@ const AddMeetModal = ({ isOpen, onClose }) => {
                             />
                         </div>
                     ) : (
-                        <input
-                            className={styles.input}
-                            placeholder="Введите название"
-                            {...register('meetingName')}
-                        />
+                        <div className='pt-[25px]'>
+                            <input
+                                className={styles.input}
+                                placeholder="Введите название"
+                                {...register('meetingName')}
+                            />
+                        </div>
                     )}
 
                     <div className={`${styles.dateTime} flex mb-[15px] items-end`}>
@@ -192,7 +188,7 @@ const AddMeetModal = ({ isOpen, onClose }) => {
                             <input
                                 type="date"
                                 className='min-w-[120px]'
-                                {...register('dateMeet', { required: true })}
+                                {...register('dateMeet', {required: true})}
                             />
                         </div>
                         <div className='flex flex-col'>
@@ -202,7 +198,7 @@ const AddMeetModal = ({ isOpen, onClose }) => {
                             <input
                                 type="time"
                                 className='min-w-[80px]'
-                                {...register('time', { required: true })}
+                                {...register('time', {required: true})}
                             />
                         </div>
 
@@ -223,7 +219,7 @@ const AddMeetModal = ({ isOpen, onClose }) => {
                         </label>
                         <select
                             className={`${styles.select} max-w-[200px]`}
-                            {...register('formatMeet', { required: true })}
+                            {...register('formatMeet', {required: true})}
                         >
                             <option value="offline">Офлайн</option>
                             <option value="online">Онлайн</option>
@@ -258,11 +254,13 @@ const AddMeetModal = ({ isOpen, onClose }) => {
                         <label className='font-montserrat text-[13px]'>
                             Метод оплаты
                         </label>
-                        <input
+                        <select
                             className={styles.input}
-                            placeholder="Введите метод оплаты"
                             {...register('paymentType')}
-                        />
+                        >
+                            <option value="offline">Наличная</option>
+                            <option value="online">Безналичная</option>
+                        </select>
                     </div>
 
                     {watchType === 'other' && (
@@ -287,19 +285,22 @@ const AddMeetModal = ({ isOpen, onClose }) => {
                                 <div className='flex items-center gap-2 mb-4 justify-between px-[20px]'>
                                     <label className="font-montserrat text-[13px]">Каждый</label>
                                     <div className='flex justify-end gap-[7px]'>
-                                        <select className="p-2 border border-[#D9D9D9] rounded-[6px] text-sm" {...register('repeatInterval')}>
+                                        <select
+                                            className="p-2 border border-[#D9D9D9] rounded-[6px] text-sm" {...register('repeatInterval')}>
                                             <option value="1">1</option>
                                             <option value="2">2</option>
                                             <option value="3">3</option>
                                         </select>
-                                        <select className="p-2 border border-[#D9D9D9] rounded-[6px] text-sm" {...register('repeatFrequency')}>
+                                        <select
+                                            className="p-2 border border-[#D9D9D9] rounded-[6px] text-sm" {...register('repeatFrequency')}>
                                             <option value="день">день</option>
                                             <option value="неделя">неделя</option>
                                             <option value="месяц">месяц</option>
                                         </select>
                                     </div>
                                 </div>
-                                <div className="bg-[#F1F1F1] px-[20px] rounded-[#D9D9D9] w-full max-w-lg my-[10px] flex justify-end">
+                                <div
+                                    className="bg-[#F1F1F1] px-[20px] rounded-[#D9D9D9] w-full max-w-lg my-[10px] flex justify-end">
                                     {/* Ряд с выбором дней недели */}
                                     <div className="flex">
                                         {["Пн.", "Вт.", "Ср.", "Чт.", "Пт.", "Сб.", "Вс."].map((day, index) => (
@@ -367,15 +368,18 @@ const AddMeetModal = ({ isOpen, onClose }) => {
                             //
                             //   Здесь тоже регистр неправильный, на макете 2 селекта, отредачь
                             //
-                            <div className='bg-[#F3F3F3] rounded-[6px] mt-[10px] flex justify-between py-[10px] px-[30px]'>
+                            <div
+                                className='bg-[#F3F3F3] rounded-[6px] mt-[10px] flex justify-between py-[10px] px-[30px]'>
                                 <label className="font-montserrat text-[13px]">За</label>
                                 <div className='flex gap-[10px]'>
-                                    <select className="p-2 border border-[#D9D9D9] rounded-[6px] text-sm" {...register('repeatInterval')}>
+                                    <select
+                                        className="p-2 border border-[#D9D9D9] rounded-[6px] text-sm" {...register('repeatInterval')}>
                                         <option value="1">1</option>
                                         <option value="2">2</option>
                                         <option value="3">3</option>
                                     </select>
-                                    <select className="p-2 border border-[#D9D9D9] rounded-[6px] text-sm" {...register('remindBefore')}>
+                                    <select
+                                        className="p-2 border border-[#D9D9D9] rounded-[6px] text-sm" {...register('remindBefore')}>
                                         <option value="день">дня</option>
                                         <option value="неделя">недели</option>
                                         <option value="месяц">месяца</option>
@@ -385,9 +389,14 @@ const AddMeetModal = ({ isOpen, onClose }) => {
                         )}
                     </div>
 
-                    <div className='flex mt-[20px] justify-end gap-[10px] border-t border-[#CACACA] pt-[10px] font-montserrat font-semibold'>
-                        <button className='px-[20px] py-[10px] text-[16px] text-[#525252] text' type="button" onClick={onClose}>Отмена</button>
-                        <button className='px-[20px] py-[10px] text-[16px] text-white bg-[#EA660C] rounded-[6px]' type="submit">Готово</button>
+                    <div
+                        className='flex mt-[20px] justify-end gap-[10px] border-t border-[#CACACA] pt-[10px] font-montserrat font-semibold'>
+                        <button className='px-[20px] py-[10px] text-[16px] text-[#525252] text' type="button"
+                                onClick={onClose}>Отмена
+                        </button>
+                        <button className='px-[20px] py-[10px] text-[16px] text-white bg-[#EA660C] rounded-[6px]'
+                                type="submit">Готово
+                        </button>
                     </div>
                 </form>
             </div>
