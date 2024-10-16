@@ -28,7 +28,7 @@ export function Meet() {
 
     return (
         <div className={styles.card}>
-            <Heading title={meet.title || null}/>
+            <Heading title={meet?.title}/>
             <MeetForm meetData={meet} />
         </div>
     );

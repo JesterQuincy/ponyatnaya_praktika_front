@@ -17,9 +17,9 @@ import styles from "@/styles/card.module.css";
 import {clientService} from "@/services/clients.service";
 
 
-export function Card(id: string) {
+export function Card(id: any) {
     const { user } = useUser();
-    const [client, setClient] = useState(null);
+    const [client, setClient] = useState<any>(null);
     const [activeTab, setActiveTab] = useState('card');
 
     useEffect(() => {

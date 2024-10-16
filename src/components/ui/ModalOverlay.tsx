@@ -10,7 +10,7 @@ import {Input} from "@/components/ui/input";
 import Select from "react-select";
 import {DropdownIndicator} from "@/components/ui/clients/Clients";
 
-// Определение типов формы
+
 interface ClientForm {
     clientType: string;
     fullName?: string;
@@ -22,6 +22,7 @@ interface ClientForm {
     parentFullName?: string;
     parentPhone?: string;
     parentBirthDate?: string;
+    communicationFormat: string;
     parentGender?: string;
     parentCommunicationFormat?: string;
     parentEmail?: string;
@@ -61,8 +62,9 @@ const AddClientModal = ({isOpen, onClose}) => {
         }
     });
 
-    const formatDate = (dateString) => {
+    const formatDate = (dateString: string | number | Date) => {
         const options = { year: "numeric", month: "long", day: "numeric"}
+        // @ts-ignore
         return new Date(dateString).toLocaleDateString(undefined, options)
     }
 
@@ -385,6 +387,7 @@ const AddClientModal = ({isOpen, onClose}) => {
                                     <label className="font-montserrat text-xs font-medium">Формат коммуникации</label>
                                     <Select
                                         options={communicationFormatOptions}
+                                        // @ts-ignore
                                         onChange={(option) => setValue('communicationFormat', option?.value)}
                                         className="w-full"
                                         placeholder="Выберите формат"

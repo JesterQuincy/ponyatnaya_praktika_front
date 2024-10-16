@@ -40,7 +40,7 @@ function Clients() {
     const [filterMeetingFrequency, setFilterMeetingFrequency] = useState({ value: "Нет", label: "Нет" });
     const [currentPage, setCurrentPage] = useState(1);
     const [clients, setClients] = useState([]);
-    const [isLoading, setIsLoading] = useState(true); // Новое состояние для отслеживания загрузки
+    const [isLoading, setIsLoading] = useState(true);
     const clientsPerPage = 5;
 
     const router = useRouter();
@@ -54,7 +54,7 @@ function Clients() {
 
     async function fetchClients() {
         try {
-            setIsLoading(true); // Устанавливаем флаг загрузки
+            setIsLoading(true);
             const data = await clientService.getClientByName(clientsPerPage, (currentPage - 1) * clientsPerPage, searchQuery);
             console.log("Полученные данные:", data.data);
             setClients(data.data);
@@ -72,20 +72,29 @@ function Clients() {
     const filteredClients = useMemo(() => {
         return clients
             .filter(client => {
+                // @ts-ignore
                 const matchesSearch = client.fullName.toLowerCase().includes(searchQuery.toLowerCase());
+                // @ts-ignore
                 const matchesClientType = filterClientType.value === "Нет" || client.clientType === filterClientType.value;
+                // @ts-ignore
                 const matchesClientStatus = filterClientStatus.value === "Нет" || client.clientStatus === filterClientStatus.value;
                 const matchesDateOrder = filterDateOrder.value === "Нет" ||
+                    // @ts-ignore
                     (filterDateOrder.value === "Раньше" && new Date(client.meetDate) <= new Date()) ||
+                    // @ts-ignore
                     (filterDateOrder.value === "Позже" && new Date(client.meetDate) > new Date());
                 const matchesFrequency = filterMeetingFrequency.value === "Нет" ||
+                    // @ts-ignore
                     (filterMeetingFrequency.value === "Чаще" && client.countMeet >= 10) ||
+                    // @ts-ignore
                     (filterMeetingFrequency.value === "Реже" && client.countMeet < 10);
 
                 return matchesSearch && matchesClientType && matchesClientStatus && matchesDateOrder && matchesFrequency;
             })
             .sort((a, b) => filterDateOrder.value === "Раньше"
+                // @ts-ignore
                 ? new Date(a.meetDate) - new Date(b.meetDate)
+                // @ts-ignore
                 : new Date(b.meetDate) - new Date(a.meetDate)
             );
     }, [clients, searchQuery, filterClientType, filterClientStatus, filterDateOrder, filterMeetingFrequency]);
