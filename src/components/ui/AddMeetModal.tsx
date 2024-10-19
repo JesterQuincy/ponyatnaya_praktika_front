@@ -102,10 +102,25 @@ const AddMeetModal = ({isOpen, onClose}) => {
         setValue('clientName', selected?.label);
     };
 
+    const formatTime = (time: string) => {
+        const [hours, minutes] = time.split(':').map(Number);
+        const formattedMinutes = minutes < 10 ? `0${minutes}` : `${minutes}`;
+        return `${hours}:${formattedMinutes}`;
+    };
+
     const onSubmit: SubmitHandler<MeetForm> = (data) => {
         const {id, clientName, dateMeet, time, duration, formatMeet, location, paymentType, meetingName} = data;
 
-        const [hours, minutes] = time.split(':').map(Number);
+        const formattedTime = formatTime(time);
+        const [hours, minutes] = formattedTime.split(':').map(Number);
+
+        const endHours = hours + Math.floor(duration / 60);
+        const endMinutes = minutes + (duration % 60);
+
+        const adjustedEndHours = endHours + Math.floor(endMinutes / 60);
+        const adjustedEndMinutes = endMinutes % 60;
+
+        const formattedEndTime = `${adjustedEndHours}:${adjustedEndMinutes < 10 ? '0' : ''}${adjustedEndMinutes}`;
 
         const payload: UserMeeting = {
             person: {
@@ -114,8 +129,8 @@ const AddMeetModal = ({isOpen, onClose}) => {
             },
             nameMeet: meetingName || 'Без названия',
             dateMeet,
-            startMeet: `${hours}:${minutes}0`,
-            endMeet: `${hours + Math.floor(duration / 60)}:${minutes + (duration % 60)}0`,
+            startMeet: formattedTime,
+            endMeet: formattedEndTime,
             formatMeet,
             paymentType: paymentType || '',
         };
@@ -197,7 +212,7 @@ const AddMeetModal = ({isOpen, onClose}) => {
                             </label>
                             <input
                                 type="time"
-                                className='min-w-[80px]'
+                                className='min-w-[88px]'
                                 {...register('time', {required: true})}
                             />
                         </div>

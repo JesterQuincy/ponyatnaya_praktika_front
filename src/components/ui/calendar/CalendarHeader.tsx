@@ -45,7 +45,7 @@ export default function Header({ onOpenModal, onOpenModalMeet }) {
     const handleChange = (selected: Option | null) => {
         setSelectedOption(selected);
         if (selected) {
-            router.push(`/client/${selected.value}`);
+            router.push(`/card/${selected.value}`);
         }
     };
 
