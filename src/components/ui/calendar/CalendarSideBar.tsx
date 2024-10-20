@@ -15,6 +15,7 @@ import CalendarIcon from "@/public/icon/calendar.png";
 import {calendarService} from "@/services/calendar.service";
 import {authService} from "@/services/auth.service";
 import {Button} from "@/components/ui/button";
+import {useRouter} from "next/navigation";
 
 
 export default function SideBar({children}: PropsWithChildren) {
@@ -23,49 +24,56 @@ export default function SideBar({children}: PropsWithChildren) {
     const [meetings, setMeetings] = useState([]);
     const [userData, setUserData] = useState(null);
 
+    const router = useRouter();
+    const handleEventClick = (id: any) => {
+        router.push(`/card/${id}`);
+    };
+
+
     useEffect(() => {
         if (typeof window !== 'undefined') {
             setCurrentPath(window.location.pathname);
         }
     }, []);
 
-    // useEffect(() => {
-    //     const fetchNotifications = async () => {
-    //         try {
-    //             const response = await calendarService.getNotifications();
-    //             const serverData = response.data;
-    //             const transformedMeetings = serverData.map((item: any) => ({
-    //                 date: new Date(item.dateFirstRequest).toLocaleDateString('ru-RU', {
-    //                     day: '2-digit',
-    //                     month: '2-digit',
-    //                     year: 'numeric',
-    //                 }),
-    //                 name: item.customerFullName,
-    //             }));
-    //             setMeetings(transformedMeetings);
-    //         } catch (error) {
-    //             console.error('Ошибка при загрузке уведомлений:', error);
-    //         }
-    //     };
-    //     const fetchUserInfo = async () => {
-    //         try {
-    //             const response: any = await calendarService.getUserInfo();
-    //             setUserData(response.data.userData);
-    //         } catch (error) {
-    //             console.error('Ошибка при загрузке данных пользователя:', error);
-    //         }
-    //     };
+    useEffect(() => {
+        const fetchNotifications = async () => {
+            try {
+                const response = await calendarService.getNotifications();
+                const serverData = response.data.notificationResponseList;
+                const transformedMeetings = serverData.map((item: any) => ({
+                    date: new Date(item.dateFirstRequest).toLocaleDateString('ru-RU', {
+                        day: '2-digit',
+                        month: '2-digit',
+                        year: 'numeric',
+                    }),
+                    name: item.customerFullName,
+                    id: item.customerId
+                }));
+                setMeetings(transformedMeetings);
+            } catch (error) {
+                console.error('Ошибка при загрузке уведомлений:', error);
+            }
+        };
+        const fetchUserInfo = async () => {
+            try {
+                const response: any = await calendarService.getUserInfo();
+                setUserData(response.data);
+            } catch (error) {
+                console.error('Ошибка при загрузке данных пользователя:', error);
+            }
+        };
 
-    //     fetchNotifications();
-    //     fetchUserInfo();
-    // }, []);
+        fetchNotifications();
+        fetchUserInfo();
+    }, []);
 
     // @ts-ignore
     const userName = userData?.userName || 'не удалось загрузить';
     // @ts-ignore
     const userMail = userData?.userMail || 'не удалось загрузить';
     // @ts-ignore
-    const userImage = userData?.userImage || PersonFoto;
+    const userImage = userData?.userPicture || PersonFoto;
 
     const displayedMeetings = showAll ? meetings : meetings.slice(0, 6);
 
@@ -75,6 +83,7 @@ export default function SideBar({children}: PropsWithChildren) {
         authService.logout().then();
     };
 
+    // @ts-ignore
     // @ts-ignore
     return (
         <div className="flex flex-col w-[35vw] rounded-xl mt-3 ml-3 items-center bg-white shadow-lg p-4">
@@ -128,8 +137,10 @@ export default function SideBar({children}: PropsWithChildren) {
                     {displayedMeetings.map((meeting, index) => (
                         <div
                             key={index}
+                            //@ts-ignore
+                            onClick={() => handleEventClick(meeting.id)}
                             style={{zIndex: index}}
-                            className={`flex relative gap-[6px] shadow-[0px_-5px_11px_0px_#0000002E] items-center rounded-t-[8px] flex-row py-[8px] pl-[8px]`}
+                            className={`flex relative gap-[6px] shadow-[0px_-5px_11px_0px_#0000002E] items-center rounded-t-[8px] flex-row py-[8px] pl-[8px] hover:cursor-pointer`}
                         >
                             <div
                                 className="text-[9px] rounded-[8px] text-white bg-[#6E6E6E] px-[3px]">

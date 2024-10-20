@@ -46,7 +46,7 @@ export const removeTokenStorage = () => {
     Cookies.remove(EnumTokens.REFRESH_TOKEN, { domain: 'xn----7sbba3blbsaikfnxh3rd.xn--p1ai' });
 }
 
-//
+
 // export const removeTokenStorage = () => {
 //     Cookies.remove('access_token');
 // }

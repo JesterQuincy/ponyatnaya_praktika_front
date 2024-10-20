@@ -9,12 +9,14 @@ import {calendarService} from "@/services/calendar.service";
 import moment from 'moment';
 import 'moment/locale/ru';
 import {useEffect, useState} from "react";
+import {useRouter} from "next/navigation";
 
 moment.locale('ru');
 
 export default function CalendarBody() {
     const [events, setEvents] = useState<any[]>([]);
     const [viewType, setViewType] = useState('');
+    const router = useRouter();
 
     const generateEvents = (serverData: { clientsData: any[]; }) => {
         return serverData.clientsData.flatMap(client =>
@@ -44,6 +46,11 @@ export default function CalendarBody() {
     useEffect(() => {
         fetchData();
     }, []);
+
+
+    const handleEventClick = (info: any) => {
+        router.push('/meet');
+    };
 
 
     return (
@@ -147,7 +154,8 @@ export default function CalendarBody() {
                             </div>
                         )
                     }}
-                    eventClassNames='w-full h-full'
+                    eventClassNames='w-full h-full hover:cursor-pointer'
+                    eventClick={handleEventClick}
                 />
             </div>
         </div>

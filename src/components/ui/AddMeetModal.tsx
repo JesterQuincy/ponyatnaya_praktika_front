@@ -122,21 +122,38 @@ const AddMeetModal = ({isOpen, onClose}) => {
 
         const formattedEndTime = `${adjustedEndHours}:${adjustedEndMinutes < 10 ? '0' : ''}${adjustedEndMinutes}`;
 
-        const payload: UserMeeting = {
-            person: {
-                id: id || 0,
-                fullName: clientName || '',
-            },
-            nameMeet: meetingName || 'Без названия',
-            dateMeet,
-            startMeet: formattedTime,
-            endMeet: formattedEndTime,
-            formatMeet,
-            paymentType: paymentType || '',
-        };
+        let payload: UserMeeting;
+
+        if (watchType === 'client') {
+            payload = {
+                person: {
+                    id: id || 0,
+                    fullName: clientName || '',
+                },
+                nameMeet: meetingName || 'Без названия',
+                dateMeet,
+                startMeet: formattedTime,
+                endMeet: formattedEndTime,
+                formatMeet,
+                paymentType: paymentType || '',
+            };
+        } else if (watchType === 'other') {
+            payload = {
+                nameMeet: meetingName || 'Без названия',
+                dateMeet,
+                startMeet: formattedTime,
+                endMeet: formattedEndTime,
+                formatMeet,
+            };
+        } else {
+            console.error('Неизвестный тип встречи');
+            return;
+        }
 
         mutate(payload);
     };
+
+    console.log(watchType)
 
     return (
         <Modal
@@ -264,7 +281,7 @@ const AddMeetModal = ({isOpen, onClose}) => {
                             />
                         </div>
                     )}
-
+                    {watchType === 'client' && (
                     <div>
                         <label className='font-montserrat text-[13px]'>
                             Метод оплаты
@@ -277,7 +294,8 @@ const AddMeetModal = ({isOpen, onClose}) => {
                             <option value="online">Безналичная</option>
                         </select>
                     </div>
-
+                    )
+            }
                     {watchType === 'other' && (
                         <textarea
                             className={styles.textarea}

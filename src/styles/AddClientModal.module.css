@@ -13,12 +13,14 @@
     justify-content: center;
     align-items: center;
     color: black;
+    overflow: auto;
 }
 
 .modalContent {
     width: 396px;
     background-color: white;
     border-radius: 6px;
+
 }
 .clientType {
     display: flex;

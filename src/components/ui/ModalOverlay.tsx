@@ -32,6 +32,7 @@ interface ClientForm {
     client2CommunicationFormat?: string;
     client2Phone?: string;
     client2Email?: string;
+    firstParent?: any;
 }
 
 // @ts-ignore
@@ -51,7 +52,16 @@ const AddClientModal = ({isOpen, onClose}) => {
 
     const {mutate} = useMutation({
         mutationKey: ['addUser'],
-        mutationFn: (data: UserMeeting) => calendarService.createUser(data),
+        mutationFn: (data: UserMeeting) => {
+            if (clientType === 'adult') {
+                return calendarService.createAdultUser(data);
+            } else if (clientType === 'child') {
+                return calendarService.createChildUser(data);
+            } else if (clientType === 'couple') {
+                return calendarService.createCoupleUser(data);
+            }
+            throw new Error('Неизвестный тип клиента');
+        },
         onSuccess: () => {
             toast.success('Клиент успешно добавлен!');
             reset();
@@ -69,8 +79,47 @@ const AddClientModal = ({isOpen, onClose}) => {
     }
 
     const onSubmit: SubmitHandler<ClientForm> = (data) => {
-        // @ts-ignore
-        mutate({...data});
+        if (clientType === 'child') {
+            // @ts-ignore
+            mutate({
+                fullName: data.fullName,
+                birth: data.birth,
+                phoneNumber: data.phoneNumber,
+                mail: data.mail,
+                gender: data.gender,
+                meetingFormat: data.meetingFormat,
+                // @ts-ignore
+                firstParent: {
+                    fullName: data.parentFullName,
+                    gender: data.parentGender,
+                    birth: data.parentBirthDate,
+                    phoneNumber: data.parentPhone,
+                    meetingFormat: data.parentCommunicationFormat,
+                    mail: data.parentEmail,
+                }
+        })}
+        if (clientType === 'couple') {
+            mutate({
+                fullName: data.fullName,
+                birth: data.birth,
+                phoneNumber: data.phoneNumber,
+                mail: data.mail,
+                gender: data.gender,
+                meetingFormat: data.communicationFormat,
+                // @ts-ignore
+                secondCustomer: {
+                    fullName: data.client2FullName,
+                    gender: data.client2Gender,
+                    birth: data.client2BirthDate,
+                    phoneNumber: data.client2Phone,
+                    meetingFormat: data.client2CommunicationFormat,
+                    mail: data.client2Email,
+                }
+            })
+            }
+        if (clientType === 'adult') {
+            mutate({...data});
+        }
     };
 
     const genderOptions = [
@@ -93,7 +142,8 @@ const AddClientModal = ({isOpen, onClose}) => {
         >
             <div className="p-[26px]">
                 <div className="text-black font-ebgaramond font-bold text-[33px]">Добавить клиента</div>
-                <form onSubmit={handleSubmit(onSubmit)}>
+                <div className="h-[550px] overflow-y-auto">
+                <form onSubmit={handleSubmit(onSubmit)} >
                     <div className="flex my-[32px] space-x-[25px]">
                         <div>
                             <input
@@ -269,7 +319,7 @@ const AddClientModal = ({isOpen, onClose}) => {
                                     <Input type="email" placeholder="Введите адрес электронной почты"
                                            required {
                                                //@ts-ignore
-                                               ...register('email')} />
+                                               ...register('mail')} />
                                 </div>
                             </div>
                             <div>
@@ -350,7 +400,7 @@ const AddClientModal = ({isOpen, onClose}) => {
                         <div className="space-y-[40px]">
                             <div className='space-y-[13px] '>
                                 <div>
-                                    <label className="font-montserrat text-xs font-medium">ФИО ребёнка</label>
+                                    <label className="font-montserrat text-xs font-medium">ФИО клиента №1</label>
                                     <Input type="text" placeholder="ФИО клиента №1"
                                            required {...register('fullName')} />
                                 </div>
@@ -405,7 +455,7 @@ const AddClientModal = ({isOpen, onClose}) => {
                                     />
                                 </div>
                                 <div className="space-y-[5px]">
-                                    <label className="font-montserrat text-xs font-medium">Телефон ребёнка</label>
+                                    <label className="font-montserrat text-xs font-medium">Телефон клиента №1</label>
                                     <Input type="tel" placeholder="Телефон клиента №1"
                                            required {
                                                //@ts-ignore
@@ -413,11 +463,11 @@ const AddClientModal = ({isOpen, onClose}) => {
                                 </div>
                                 <div className="space-y-[5px]">
                                     <label className="font-montserrat text-xs font-medium">Электронная почта
-                                        ребёнка</label>
+                                        клиента №1</label>
                                     <Input type="email" placeholder="Электронная почта клиента №1"
                                            required {
                                                //@ts-ignore
-                                               ...register('email')} />
+                                               ...register('mail')} />
                                 </div>
                             </div>
                             <div>
@@ -511,6 +561,7 @@ const AddClientModal = ({isOpen, onClose}) => {
                         </div>
                     </div>
                 </form>
+                </div>
             </div>
         </Modal>
     );
