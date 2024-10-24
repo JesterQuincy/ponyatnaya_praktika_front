@@ -42,7 +42,7 @@ const AddMeetModal = ({isOpen, onClose}) => {
     const {register, handleSubmit, reset, watch, setValue} = useForm<MeetForm>({
         defaultValues: {
             type: 'client',
-            formatMeet: 'offline',
+            formatMeet: 'Онлайн',
             duration: 60,
         }
     });
@@ -253,8 +253,8 @@ const AddMeetModal = ({isOpen, onClose}) => {
                             className={`${styles.select} max-w-[200px]`}
                             {...register('formatMeet', {required: true})}
                         >
-                            <option value="offline">Офлайн</option>
-                            <option value="online">Онлайн</option>
+                            <option value="Офлайн">Офлайн</option>
+                            <option value="Онлайн">Онлайн</option>
                         </select>
                     </div>
 
@@ -290,8 +290,8 @@ const AddMeetModal = ({isOpen, onClose}) => {
                             className={styles.input}
                             {...register('paymentType')}
                         >
-                            <option value="offline">Наличная</option>
-                            <option value="online">Безналичная</option>
+                            <option value="Наличная">Наличная</option>
+                            <option value="Безналичная">Безналичная</option>
                         </select>
                     </div>
                     )
