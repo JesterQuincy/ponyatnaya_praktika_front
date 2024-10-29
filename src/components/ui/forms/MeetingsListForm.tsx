@@ -33,7 +33,7 @@ export function MeetingsListForm({ user }: ICardFormProps) {
     const indexOfFirstItem = indexOfLastItem - itemsPerPage;
 
     useEffect(() => {
-        clientService.getUserMeets(0, 5, user.id)
+        clientService.getUserMeets(0, 150, user.id)
             .then(response => {
                 setMeetsList(response.data);
             })

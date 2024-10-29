@@ -15,24 +15,46 @@ import { SurveysListForm } from "@/components/ui/forms/SurveysListForm";
 
 import styles from "@/styles/card.module.css";
 import {clientService} from "@/services/clients.service";
+import {useRouter, useSearchParams} from "next/navigation";
 
 
 export function Card(id: any) {
-    const { user } = useUser();
+    const searchParams = useSearchParams();
+    const clientType = searchParams.get('clientType');
     const [client, setClient] = useState<any>(null);
     const [activeTab, setActiveTab] = useState('card');
 
     useEffect(() => {
-        clientService.getClientById(id.id)
-            .then(data => {
-                setClient(data.data);
-            })
-            .catch(error => {
-                console.error("Ошибка при получении данных клиента:", error);
-            });
+        if (clientType === 'Взрослый') {
+            clientService.getClientById(id.id)
+                .then(data => {
+                    setClient(data.data);
+                })
+                .catch(error => {
+                    console.error("Ошибка при получении данных клиента:", error);
+                });
+        }
+        if (clientType === 'Ребенок') {
+            clientService.getChildById(id.id)
+                .then(data => {
+                    setClient(data.data);
+                })
+                .catch(error => {
+                    console.error("Ошибка при получении данных клиента:", error);
+                });
+        }
+        if (clientType === 'Пара') {
+            clientService.getPairById(id.id)
+                .then(data => {
+                    setClient(data.data);
+                })
+                .catch(error => {
+                    console.error("Ошибка при получении данных клиента:", error);
+                });
+        }
+
     }, [id]);
 
-    console.log(client);
     return (
         <div className={styles.card}>
             <Heading title={client?.fullName}/>

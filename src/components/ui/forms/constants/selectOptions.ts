@@ -19,9 +19,15 @@ export const ageOptions = [
     {value: 'Ребёнок', label: 'Ребёнок'},
 ];
 
+export const typeOptions = [
+    {value: 'Взрослый', label: 'Взрослый'},
+    {value: 'Пара', label: 'Пара'},
+    {value: 'Ребенок', label: 'Ребенок'},
+]
+
 export const genderOptions = [
-    {value: 'Женщина', label: 'Женщина'},
-    {value: 'Мужчина', label: 'Мужчина'},
+    {value: 'Женский', label: 'Женский'},
+    {value: 'Мужской', label: 'Мужской'},
 ]
 
 export const statusOptions = [

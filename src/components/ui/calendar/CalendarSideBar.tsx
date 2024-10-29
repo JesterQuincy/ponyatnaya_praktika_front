@@ -24,6 +24,7 @@ export default function SideBar({children}: PropsWithChildren) {
     const [meetings, setMeetings] = useState([]);
     const [userData, setUserData] = useState(null);
 
+
     const router = useRouter();
     const handleEventClick = (id: any) => {
         router.push(`/card/${id}`);
@@ -68,6 +69,11 @@ export default function SideBar({children}: PropsWithChildren) {
         fetchUserInfo();
     }, []);
 
+    const returnToCalendar = () => {
+        router.push('/calendar');
+    };
+
+
     // @ts-ignore
     const userName = userData?.userName || 'не удалось загрузить';
     // @ts-ignore
@@ -87,7 +93,7 @@ export default function SideBar({children}: PropsWithChildren) {
     // @ts-ignore
     return (
         <div className="flex flex-col w-[35vw] rounded-xl mt-3 ml-3 items-center bg-white shadow-lg p-4">
-            <Image src={Logo} alt="Logo company" width={400}/>
+            <Image src={Logo} alt="Logo company" width={400} onClick={returnToCalendar} className="hover:cursor-pointer"/>
             <hr className="my-4 h-0.5 w-full border-gray"/>
             <div className="flex flex-col items-center">
                 <div className="rounded-full overflow-hidden">

@@ -11,7 +11,7 @@ import {
     firstRequestOptions,
     genderOptions,
     serviceOptions,
-    statusOptions
+    statusOptions, typeOptions
 } from "./constants/selectOptions";
 import { cardFields } from "./constants/cardFields";
 
@@ -20,7 +20,7 @@ interface ICardFormProps {
 }
 
 export function CardForm({ user }: ICardFormProps) {
-    
+
     return (
         <>
             <div className="bg-[#F1F1F1] px-[16px] py-[25px] rounded-tr-[4px] rounded-br-[4px] rounded-bl-[4px]">
@@ -32,22 +32,32 @@ export function CardForm({ user }: ICardFormProps) {
                             ))}
                         </div>
                         <div className="flex flex-col gap-y-[10px]">
-                            <SelectHandler options={ageOptions} />
-                            <input type="text" className="p-2 border rounded-xl border-[#D9D9D9] text-sm" placeholder="Введите" />
-                            <input type="text" className="p-2 border rounded-xl border-[#D9D9D9] text-sm" placeholder="Введите" />
-                            <input type="text" className="p-2 border rounded-xl border-[#D9D9D9] text-sm" placeholder="Введите" />
-                            <input type="text" className="p-2 border rounded-xl border-[#D9D9D9] max-w-[129px] text-sm" placeholder="Введите" />
-                            <input type="text" className="p-2 border rounded-xl border-[#D9D9D9] text-sm" placeholder="Введите" />
-                            <SelectHandler options={genderOptions} />
-                            <SelectHandler options={statusOptions} />
-                            <SelectHandler options={appealOptions} />
-                            <SelectHandler options={firstDateAppealOptions} />
-                            <SelectHandler options={firstDateAdviceOptions} />
-                            <SelectHandler options={communicationFormatOptions} />
-                            <SelectHandler options={serviceOptions} />
-                            <SelectHandler options={firstRequestOptions} />
-                            <input type="text" className="p-2 border rounded-xl border-[#D9D9D9] text-sm" placeholder="Введите" />
-                            <input type="text" className="p-2 border rounded-xl border-[#D9D9D9] text-sm" placeholder="Введите" />
+                            <SelectHandler options={typeOptions} defaultValue={user?.clientType}/>
+                            <input type="text" className="p-2 border rounded-xl border-[#D9D9D9] text-sm"
+                                   placeholder="Введите" defaultValue={user?.lastName}/>
+                            <input type="text" className="p-2 border rounded-xl border-[#D9D9D9] text-sm"
+                                   placeholder="Введите" defaultValue={user?.firstName}/>
+                            <input type="text" className="p-2 border rounded-xl border-[#D9D9D9] text-sm"
+                                   placeholder="Введите" defaultValue={user?.middleName}/>
+                            <input type="text" className="p-2 border rounded-xl border-[#D9D9D9] text-sm"
+                                   placeholder="Введите" defaultValue={user?.phoneNumber}/>
+                            <input type="email" className="p-2 border rounded-xl border-[#D9D9D9] text-sm"
+                                   placeholder="Введите" defaultValue={user?.mail}/>
+                            <SelectHandler options={genderOptions} defaultValue={user?.gender}/>
+                            <SelectHandler options={statusOptions} defaultValue={user?.clientStatus}/>
+                            <SelectHandler options={appealOptions} defaultValue={user?.contactMethod}/>
+                            <input type="date" className="p-2 border rounded-xl border-[#D9D9D9] text-sm"
+                                   defaultValue={user?.dateFirstRequest}/>
+                            <input type="date" className="p-2 border rounded-xl border-[#D9D9D9] text-sm"
+                                   defaultValue={user?.dateFirstConsultation}/>
+                            <SelectHandler options={communicationFormatOptions} defaultValue={user?.meetingFormat}/>
+                            <SelectHandler options={serviceOptions} defaultValue={user?.onlinePlatform}/>
+                            <input type="text" className="p-2 border rounded-xl border-[#D9D9D9] text-sm"
+                                   placeholder="Введите" defaultValue={user?.offlineAddress}/>
+                            <input type="text" className="p-2 border rounded-xl border-[#D9D9D9] text-sm"
+                                   placeholder="Введите" defaultValue={user?.clientTherapyRequest}/>
+                            <input type="text" className="p-2 border rounded-xl border-[#D9D9D9] text-sm"
+                                   placeholder="Введите" defaultValue={user?.clientTherapyRequest}/>
                         </div>
                     </div>
                     <div className="ml-[20px]">

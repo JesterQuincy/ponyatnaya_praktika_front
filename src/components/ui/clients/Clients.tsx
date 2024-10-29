@@ -1,12 +1,12 @@
 'use client'
 
-import React, {useState, useMemo, useEffect} from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image'
-import {Heading} from "@/components/ui/Heading";
+import { Heading } from "@/components/ui/Heading";
 import Select from 'react-select';
-import {components} from "react-select";
-import {Input} from "@/components/ui/input";
+import { components } from "react-select";
+import { Input } from "@/components/ui/input";
 import SearchUserIcon from "@/public/icon/searchUser.svg"
 import FilterIcon from "@/public/icon/filterIcon.svg"
 import ChildrenIcon from '@/public/icon/childrenIcon.svg'
@@ -15,9 +15,9 @@ import MailIcon from "@/public/icon/mailIcon.svg"
 import PhoneIcon from "@/public/icon/telephoneIcon.svg"
 import PairIcon from '@/public/icon/pair.svg'
 import BottomArrow from "@/public/icon/bottomArrow.svg"
-import {clientService} from "@/services/clients.service";
+import { clientService } from "@/services/clients.service";
 import { useUser } from '@/app/context/userContext';
-
+import {Pagination} from "@/components/ui/Pagination";
 
 export const DropdownIndicator = (props: any) => {
     return (
@@ -41,15 +41,12 @@ function Clients() {
     const [currentPage, setCurrentPage] = useState(1);
     const [clients, setClients] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
-    const clientsPerPage = 5;
+    const clientsPerPage = 10;
 
     const router = useRouter();
-    const { setUser } = useUser();
 
     const handleClick = (client: any): void => {
-        console.log(client)
-        setUser(client);
-        router.push(`card/${client.personId}`);
+        router.push(`card/${client.personId}?clientType=${client.clientType}`);
     };
 
     async function fetchClients() {
@@ -67,7 +64,7 @@ function Clients() {
 
     useEffect(() => {
         fetchClients();
-    }, []);
+    }, [currentPage, searchQuery]);
 
     const filteredClients = useMemo(() => {
         return clients
@@ -77,7 +74,7 @@ function Clients() {
                 // @ts-ignore
                 const matchesClientType = filterClientType.value === "Нет" || client.clientType === filterClientType.value;
                 // @ts-ignore
-                const matchesClientStatus = filterClientStatus.value === "Нет" || client.clientStatus === filterClientStatus.value;
+                const matchesClientStatus = filterClientStatus.value === "Нет" || client.meetingType === filterClientStatus.value;
                 const matchesDateOrder = filterDateOrder.value === "Нет" ||
                     // @ts-ignore
                     (filterDateOrder.value === "Раньше" && new Date(client.meetDate) <= new Date()) ||
@@ -103,30 +100,29 @@ function Clients() {
     const currentClients = filteredClients.slice((currentPage - 1) * clientsPerPage, currentPage * clientsPerPage);
 
     const clientTypeOptions = [
-        {value: "Нет", label: "Нет"},
-        {value: "Взрослый", label: "Взрослый"},
-        {value: "Пара", label: "Пара"},
-        {value: "Ребёнок", label: "Ребёнок"}
+        { value: "Нет", label: "Нет" },
+        { value: "Взрослый", label: "Взрослый" },
+        { value: "Пара", label: "Пара" },
+        { value: "Ребенок", label: "Ребенок" }
     ];
 
     const clientStatusOptions = [
-        {value: "Нет", label: "Нет"},
-        {value: "Онлайн", label: "Онлайн"},
-        {value: "Офлайн", label: "Офлайн"},
-        {value: "Заявка", label: "Заявка"},
-        {value: "Завершён", label: "Завершён"}
+        { value: "Нет", label: "Нет" },
+        { value: "Онлайн", label: "Онлайн" },
+        { value: "Офлайн", label: "Офлайн" },
+        { value: "Заявка", label: "Заявка" },
+        { value: "Завершён", label: "Завершён" }
     ];
 
     const dateOrderOptions = [
-        {value: "Нет", label: "Нет"},
-        {value: "Раньше", label: "Раньше"},
-        {value: "Позже", label: "Позже"}
+        { value: "Нет", label: "Нет" },
+        { value: "Раньше", label: "Раньше" },
     ];
 
     const meetingFrequencyOptions = [
-        {value: "Нет", label: "Нет"},
-        {value: "Чаще", label: "Чаще"},
-        {value: "Реже", label: "Реже"}
+        { value: "Нет", label: "Нет" },
+        { value: "Чаще", label: "Чаще" },
+        { value: "Реже", label: "Реже" }
     ];
 
     const iconMap = {
@@ -134,6 +130,8 @@ function Clients() {
         Взрослый: HumanIcon,
         Ребенок: ChildrenIcon,
     };
+
+    const paginate = (pageNumber: number) => setCurrentPage(pageNumber);
 
     // @ts-ignore
     return (
@@ -239,41 +237,42 @@ function Clients() {
                                 <h2
                                     onClick={(): void => handleClick(client)}
                                     className="text-[18px] font-semibold underline text-orange mb-[10px]">
-                                        {
-                                            //@ts-ignore
-                                            client.fullName}
+                                    {
+                                        //@ts-ignore
+                                        client.fullName}
                                 </h2>
-                            <div className="font-montserrat flex gap-[5px]">
-                                <div
-                                    className={`text-[11px] px-[11px] rounded-[4px] ${
+                                <div className="font-montserrat flex gap-[5px]">
+                                    <div
+                                        className={`text-[11px] px-[11px] rounded-[4px] ${
                                             //@ts-ignore
                                             client.clientStatus === 'Онлайн' ? 'bg-[#CFEFFD]' : 'bg-[#FDDCC6]'
                                         }`}
                                     >
                                         {
                                             //@ts-ignore
-                                        client.clientStatus}
+                                            client.clientStatus}
                                     </div>
                                     <div className="text-[11px] bg-[#E4E4E4] px-[11px] rounded-[4px]">
                                         {
-                                        //@ts-ignore
-                                        client.meetingType
+                                            //@ts-ignore
+                                            client.meetingType
                                         }
                                     </div>
                                     <div className="text-[11px] text-[#E4E4E4] rounded-[4px] flex gap-[4px]">
                                         Всего встреч:
                                         <div className="text-black">
                                             {
-                                            //@ts-ignore
-                                            client.countMeet
+                                                //@ts-ignore
+                                                client.countMeet
                                             }
                                         </div></div>
-                                    <div className="text-[11px] text-[#E4E4E4] rounded-[4px] flex gap-[4px]">Последняя: <div
+                                    <div
+                                        className="text-[11px] text-[#E4E4E4] rounded-[4px] flex gap-[4px]">Последняя: <div
                                         className="text-black">
-                                            {
+                                        {
                                             //@ts-ignore
                                             client.meetDate
-                                            }</div></div>
+                                        }</div></div>
                                 </div>
                             </div>
                             <div className="flex justify-between w-1/3">
@@ -284,17 +283,17 @@ function Clients() {
                                             src={
                                                 //@ts-ignore
                                                 iconMap[client.clientType] || HumanIcon} alt='logo' width={8}
-                                               height={8}/>
+                                            height={8}/>
                                         {
                                             //@ts-ignore
-                                        client.clientType}
+                                            client.clientType}
                                     </div>
                                     <div
                                         className="text-[11px] text-[#E4E4E4] rounded-[4px] flex gap-[4px] mt-[4px]"> Возраст: <div
                                         className="text-black">{
-                                            //@ts-ignore
-                                            client.years
-                                            }</div></div>
+                                        //@ts-ignore
+                                        client.years
+                                    }</div></div>
                                 </div>
                                 <div className="flex flex-col">
                                     <div
@@ -302,23 +301,31 @@ function Clients() {
                                         <Image src={PhoneIcon} alt='logo' width={12}
                                                height={12}/>
                                         {
-                                        //@ts-ignore
-                                        client.phone}
+                                            //@ts-ignore
+                                            client.phone}
                                     </div>
                                     <div
                                         className="flex flex-row items-center text-[11px] underline px-[12px] py-[3px] rounded-[30px] gap-[4px]">
                                         <Image src={MailIcon} alt='logo' width={12}
                                                height={12}/>
                                         {
-                                        //@ts-ignore
-                                        client.mail}
+                                            //@ts-ignore
+                                            client.mail}
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 ))}
+                <div className="bottom-[30px] left-[50%] right-[50%]">
+                    <Pagination
+                        currentPage={currentPage}
+                        totalPages={totalPages}
+                        paginate={paginate}
+                    />
+                </div>
             </div>
+
         </div>
     );
 }

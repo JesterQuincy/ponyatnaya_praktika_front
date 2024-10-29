@@ -18,6 +18,7 @@ export default function CalendarBody() {
     const [viewType, setViewType] = useState('');
     const router = useRouter();
 
+
     const generateEvents = (serverData: { clientsData: any[]; }) => {
         return serverData.clientsData.flatMap(client =>
             client.meetings.map((meeting: { startTime: moment.MomentInput; endTime: any; formatMeet: any; }) => ({

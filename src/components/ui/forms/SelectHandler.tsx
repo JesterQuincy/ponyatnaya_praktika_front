@@ -3,15 +3,19 @@ import Select from "react-select";
 import { IValueLabelModel } from "@/models/ILabelValueModel";
 
 interface ISelectHandlerProps {
-    options: IValueLabelModel[]
+    options: IValueLabelModel[],
+    defaultValue: any,
 }
 
-export function SelectHandler({ options }: ISelectHandlerProps) {
+export function SelectHandler({ options, defaultValue }: ISelectHandlerProps) {
+
+    const defaultVal = typeof defaultValue === 'string' ? { value: defaultValue, label: defaultValue } : defaultValue;
 
     return (
         <Select
             options={options}
             placeholder='Выберете'
+            defaultValue={defaultVal}
             styles={{
                 control: (base) => ({
                     ...base,
