@@ -4,13 +4,12 @@ import {errorCatch} from "@/api/error";
 import {authService} from "@/services/auth.service";
 
 const options: CreateAxiosDefaults = {
-    baseURL: window.location.protocol+ window.location. hostname + ':3330/',
+    baseURL: 'http://195.151.1.151:3330/',
     headers: {
         "Content-Type": "application/json",
     },
     withCredentials: true,
 }
-
 const axiosClassic = axios.create(options)
 
 const axiosWithAuth = axios.create(options)
