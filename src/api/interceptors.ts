@@ -4,7 +4,7 @@ import {errorCatch} from "@/api/error";
 import {authService} from "@/services/auth.service";
 
 const options: CreateAxiosDefaults = {
-    baseURL: (typeof window !== 'undefined') ? window?.location.protocol+ window.location. hostname + ':3330/' : 'http://195.151.1.151:3330/',
+    baseURL: 'http://195.151.1.151:3330/',
     headers: {
         "Content-Type": "application/json",
     },
