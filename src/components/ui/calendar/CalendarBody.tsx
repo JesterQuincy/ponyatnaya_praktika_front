@@ -117,18 +117,16 @@ export default function CalendarBody() {
                         let badgeColor = 'bg-[#6E6E6E]';
                         let badgeText = 'Другое';
 
-                        if (formatMeet === 'online') {
+                        if (formatMeet === 'Онлайн') {
                             bgColor = 'bg-[#86DAFF4D]';
                             badgeColor = 'bg-[#049ADB]';
                             badgeText = 'Онлайн';
-                        } else if (formatMeet === 'offline') {
+                        } else if (formatMeet === 'Офлайн') {
                             bgColor = 'bg-[#EA660C33]';
                             badgeColor = 'bg-[#EA660C]';
                             badgeText = 'Офлайн';
                         }
                         if (viewType === 'timeGridWeek' || viewType === 'timeGridDay') {
-
-
                             return (
                                 <div className={`w-full h-full p-2 flex flex-col gap-[10px] ${bgColor}`}>
                                     <div className="flex justifty-start items-center gap-[5px] w-full">
