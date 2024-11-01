@@ -21,8 +21,8 @@ export default function CalendarBody() {
 
     const generateEvents = (serverData: { clientsData: any[]; }) => {
         return serverData.clientsData.flatMap(client =>
-            client.meetings.map((meeting: { startTime: moment.MomentInput; endTime: any; formatMeet: any; }) => ({
-                title: `${client.fullName} - ${moment(meeting.startTime).format('HH:mm')}`,
+            client.meetings.map((meeting: { startTime: moment.MomentInput; endTime: any; formatMeet: any; title: any}) => ({
+                title: `${client.fullName || meeting.title} - ${moment(meeting.startTime).format('HH:mm')}`,
                 start: meeting.startTime,
                 end: meeting.endTime,
                 allDay: false,
