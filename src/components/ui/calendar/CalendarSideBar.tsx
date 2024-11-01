@@ -26,8 +26,9 @@ export default function SideBar({children}: PropsWithChildren) {
 
 
     const router = useRouter();
-    const handleEventClick = (id: any) => {
-        router.push(`/card/${id}`);
+    const handleEventClick = (meeting: any) => {
+        console.log(meeting)
+        router.push(`/card/${meeting.id}?clientType=${meeting.clientType}`);
     };
 
 
@@ -49,7 +50,8 @@ export default function SideBar({children}: PropsWithChildren) {
                         year: 'numeric',
                     }),
                     name: item.customerFullName,
-                    id: item.customerId
+                    id: item.customerId,
+                    clientType: item.clientType
                 }));
                 setMeetings(transformedMeetings);
             } catch (error) {
@@ -83,7 +85,6 @@ export default function SideBar({children}: PropsWithChildren) {
 
     const displayedMeetings = showAll ? meetings : meetings.slice(0, 6);
 
-    console.log(displayedMeetings)
 
     const handleExitOut = () => {
         authService.logout().then();
@@ -144,7 +145,7 @@ export default function SideBar({children}: PropsWithChildren) {
                         <div
                             key={index}
                             //@ts-ignore
-                            onClick={() => handleEventClick(meeting.id)}
+                            onClick={() => handleEventClick(meeting)}
                             style={{zIndex: index}}
                             className={`flex relative gap-[6px] shadow-[0px_-5px_11px_0px_#0000002E] items-center rounded-t-[8px] flex-row py-[8px] pl-[8px] hover:cursor-pointer`}
                         >

@@ -130,7 +130,6 @@ const AddMeetModal = ({isOpen, onClose}) => {
                     id: id || 0,
                     fullName: clientName || '',
                 },
-                nameMeet: meetingName || 'Без названия',
                 dateMeet,
                 startMeet: formattedTime,
                 endMeet: formattedEndTime,

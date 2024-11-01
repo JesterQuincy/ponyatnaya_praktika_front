@@ -70,7 +70,7 @@ function Clients() {
         return clients
             .filter(client => {
                 // @ts-ignore
-                const matchesSearch = client.fullName.toLowerCase().includes(searchQuery.toLowerCase());
+                const matchesSearch = client.fullName?.toLowerCase().includes(searchQuery.toLowerCase());
                 // @ts-ignore
                 const matchesClientType = filterClientType.value === "Нет" || client.clientType === filterClientType.value;
                 // @ts-ignore
@@ -82,18 +82,29 @@ function Clients() {
                     (filterDateOrder.value === "Позже" && new Date(client.meetDate) > new Date());
                 const matchesFrequency = filterMeetingFrequency.value === "Нет" ||
                     // @ts-ignore
-                    (filterMeetingFrequency.value === "Чаще" && client.countMeet >= 10) ||
+                    (filterMeetingFrequency.value === "Чаще" ) ||
                     // @ts-ignore
-                    (filterMeetingFrequency.value === "Реже" && client.countMeet < 10);
+                    (filterMeetingFrequency.value === "Реже");
 
                 return matchesSearch && matchesClientType && matchesClientStatus && matchesDateOrder && matchesFrequency;
             })
-            .sort((a, b) => filterDateOrder.value === "Раньше"
-                // @ts-ignore
-                ? new Date(a.meetDate) - new Date(b.meetDate)
-                // @ts-ignore
-                : new Date(b.meetDate) - new Date(a.meetDate)
-            );
+            .sort((a, b) => {
+                if (filterDateOrder.value === "Раньше") {
+                    // @ts-ignore
+                    return new Date(a.meetDate) - new Date(b.meetDate);
+                } else if (filterDateOrder.value === "Позже") {
+                    // @ts-ignore
+                    return new Date(b.meetDate) - new Date(a.meetDate);
+                } else if (filterMeetingFrequency.value === "Чаще") {
+                    // @ts-ignore
+                    return b.countMeet - a.countMeet;
+                } else if (filterMeetingFrequency.value === "Реже") {
+                    // @ts-ignore
+                    return a.countMeet - b.countMeet;
+                } else {
+                    return 0;
+                }
+            });
     }, [clients, searchQuery, filterClientType, filterClientStatus, filterDateOrder, filterMeetingFrequency]);
 
     const totalPages = Math.ceil(filteredClients.length / clientsPerPage);
@@ -135,7 +146,7 @@ function Clients() {
 
     // @ts-ignore
     return (
-        <div className="w-full h-full rounded-[6px] bg-white px-10 pt-[30px]">
+        <div className="w-full h-full rounded-[6px] bg-white px-10 pt-[30px] relative">
             <Heading title="Клиенты"/>
             <div className="flex flex-col items-start mb-4 mt-[10px]">
                 <div className="relative flex flex-row">
@@ -317,13 +328,14 @@ function Clients() {
                         </div>
                     </div>
                 ))}
-                <div className="bottom-[30px] left-[50%] right-[50%]">
-                    <Pagination
-                        currentPage={currentPage}
-                        totalPages={totalPages}
-                        paginate={paginate}
-                    />
-                </div>
+
+            </div>
+            <div style={{ position: 'absolute', bottom: '30px', left: '50%', transform: 'translateX(-50%)'}}>
+                <Pagination
+                    currentPage={currentPage}
+                    totalPages={totalPages}
+                    paginate={paginate}
+                />
             </div>
 
         </div>

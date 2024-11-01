@@ -38,7 +38,7 @@ export function CardForm({ user }: ICardFormProps) {
                             <input type="text" className="p-2 border rounded-xl border-[#D9D9D9] text-sm"
                                    placeholder="Введите" defaultValue={user?.firstName}/>
                             <input type="text" className="p-2 border rounded-xl border-[#D9D9D9] text-sm"
-                                   placeholder="Введите" defaultValue={user?.middleName}/>
+                                   placeholder="Введите" defaultValue={user?.secondName}/>
                             <input type="text" className="p-2 border rounded-xl border-[#D9D9D9] text-sm"
                                    placeholder="Введите" defaultValue={user?.phoneNumber}/>
                             <input type="email" className="p-2 border rounded-xl border-[#D9D9D9] text-sm"
