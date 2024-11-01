@@ -1,199 +1,179 @@
-import React, {useState, useEffect} from 'react';
-import Modal from 'react-modal';
-import styles from '@/styles/AddClientModal.module.css';
-import {useForm, SubmitHandler} from "react-hook-form";
-import {useMutation} from "@tanstack/react-query";
-import {calendarService} from "@/services/calendar.service";
-import {toast} from "react-toastify";
-import {UserMeeting} from "@/types/calendar.types";
-import {Input} from "@/components/ui/input";
-import Select from "react-select";
-import {DropdownIndicator} from "@/components/ui/clients/Clients";
-
+import React, { useState, useEffect } from 'react'
+import Modal from 'react-modal'
+import styles from '@/styles/AddClientModal.module.css'
+import { useForm, SubmitHandler } from 'react-hook-form'
+import { useMutation } from '@tanstack/react-query'
+import { calendarService } from '@/services/calendar.service'
+import { toast } from 'react-toastify'
+import { UserMeeting } from '@/types/calendar.types'
+import { Input } from '@/components/ui/input'
+import Select from 'react-select'
+import { DropdownIndicator } from '@/components/ui/clients/Clients'
 
 interface ClientForm {
-    clientType: string;
-    firstName?: string;
-    lastName?: string;
-    secondName?: string;
-    birth?: string;
-    gender?: string;
-    meetingFormat?: string;
-    phoneNumber?: string;
-    mail?: string;
-    parentFullName?: string;
-    parentFirstName?: string;
-    parentLastName?: string;
-    parentSecondName?: string
-    parentPhone?: string;
-    parentBirthDate?: string;
-    communicationFormat: string;
-    parentGender?: string;
-    parentCommunicationFormat?: string;
-    parentEmail?: string;
-    client2FirstName?: string;
-    client2LastName?: string;
-    client2SecondName?: string;
-    client2BirthDate?: string;
-    client2Gender?: string;
-    client2CommunicationFormat?: string;
-    client2Phone?: string;
-    client2Email?: string;
-    firstParent?: any;
+  clientType: string
+  fullName?: string
+  birth?: string
+  gender?: string
+  meetingFormat?: string
+  phoneNumber?: string
+  mail?: string
+  parentFullName?: string
+  parentPhone?: string
+  parentBirthDate?: string
+  communicationFormat: string
+  parentGender?: string
+  parentCommunicationFormat?: string
+  parentEmail?: string
+  client2FullName?: string
+  client2BirthDate?: string
+  client2Gender?: string
+  client2CommunicationFormat?: string
+  client2Phone?: string
+  client2Email?: string
+  firstParent?: any
 }
 
 // @ts-ignore
-const AddClientModal = ({isOpen, onClose}) => {
-    const [clientType, setClientType] = useState('adult');
-    const {register, handleSubmit, reset, setValue} = useForm<ClientForm>();
+const AddClientModal = ({ isOpen, onClose }) => {
+  const [clientType, setClientType] = useState('adult')
+  const { register, handleSubmit, reset, setValue } = useForm<ClientForm>()
 
-    useEffect(() => {
-        Modal.setAppElement(document.body);
-    }, []);
+  useEffect(() => {
+    Modal.setAppElement(document.body)
+  }, [])
 
+  const handleCloseModal = () => {
+    reset()
+    onClose()
+  }
 
-    const handleCloseModal = () => {
-        reset();
-        onClose();
-    };
+  const { mutate } = useMutation({
+    mutationKey: ['addUser'],
+    mutationFn: (data: UserMeeting) => {
+      if (clientType === 'adult') {
+        return calendarService.createAdultUser(data)
+      } else if (clientType === 'child') {
+        return calendarService.createChildUser(data)
+      } else if (clientType === 'couple') {
+        return calendarService.createCoupleUser(data)
+      }
+      throw new Error('Неизвестный тип клиента')
+    },
+    onSuccess: () => {
+      toast.success('Клиент успешно добавлен!')
+      reset()
+      onClose()
+    },
+    onError: () => {
+      toast.error('Ошибка при добавлении клиента')
+    },
+  })
 
-    const {mutate} = useMutation({
-        mutationKey: ['addUser'],
-        mutationFn: (data: UserMeeting) => {
-            if (clientType === 'adult') {
-                return calendarService.createAdultUser(data);
-            } else if (clientType === 'child') {
-                return calendarService.createChildUser(data);
-            } else if (clientType === 'couple') {
-                return calendarService.createCoupleUser(data);
-            }
-            throw new Error('Неизвестный тип клиента');
-        },
-        onSuccess: () => {
-            toast.success('Клиент успешно добавлен!');
-            reset();
-            onClose();
-        },
-        onError: () => {
-            toast.error('Ошибка при добавлении клиента');
-        }
-    });
+  const formatDate = (dateString: string | number | Date) => {
+    const options = { year: 'numeric', month: 'long', day: 'numeric' }
+    // @ts-ignore
+    return new Date(dateString).toLocaleDateString(undefined, options)
+  }
 
-    const formatDate = (dateString: string | number | Date) => {
-        const options = { year: "numeric", month: "long", day: "numeric"}
+  const onSubmit: SubmitHandler<ClientForm> = (data) => {
+    if (clientType === 'child') {
+      // @ts-ignore
+      mutate({
+        fullName: data.fullName,
+        birth: data.birth,
+        phoneNumber: data.phoneNumber,
+        mail: data.mail,
+        gender: data.gender,
+        meetingFormat: data.meetingFormat,
         // @ts-ignore
-        return new Date(dateString).toLocaleDateString(undefined, options)
+        firstParent: {
+          fullName: data.parentFullName,
+          gender: data.parentGender,
+          birth: data.parentBirthDate,
+          phoneNumber: data.parentPhone,
+          meetingFormat: data.parentCommunicationFormat,
+          mail: data.parentEmail,
+        },
+      })
     }
+    if (clientType === 'couple') {
+      mutate({
+        fullName: data.fullName,
+        birth: data.birth,
+        phoneNumber: data.phoneNumber,
+        mail: data.mail,
+        gender: data.gender,
+        meetingFormat: data.communicationFormat,
+        // @ts-ignore
+        secondCustomer: {
+          fullName: data.client2FullName,
+          gender: data.client2Gender,
+          birth: data.client2BirthDate,
+          phoneNumber: data.client2Phone,
+          meetingFormat: data.client2CommunicationFormat,
+          mail: data.client2Email,
+        },
+      })
+    }
+    if (clientType === 'adult') {
+      mutate({ ...data })
+    }
+  }
 
-    const onSubmit: SubmitHandler<ClientForm> = (data) => {
-        if (clientType === 'child') {
-            // @ts-ignore
-            mutate({
-                lastName: data.lastName,
-                secondName: data.secondName,
-                firstName: data.firstName,
-                fullName: `${data.firstName} ${data.secondName} ${data.lastName}`,
-                birth: data.birth,
-                phoneNumber: data.phoneNumber,
-                mail: data.mail,
-                gender: data.gender,
-                meetingFormat: data.meetingFormat,
-                // @ts-ignore
-                firstParent: {
-                    lastName: data.parentLastName,
-                    secondName: data.parentSecondName,
-                    firstName: data.parentFirstName,
-                    fullName: `${data.parentFirstName} ${data.parentSecondName} ${data.parentLastName}`,
-                    gender: data.parentGender,
-                    birth: data.parentBirthDate,
-                    phoneNumber: data.parentPhone,
-                    meetingFormat: data.parentCommunicationFormat,
-                    mail: data.parentEmail,
-                }
-        })}
-        if (clientType === 'couple') {
-            mutate({
-                lastName: data.lastName,
-                secondName: data.secondName,
-                firstName: data.firstName,
-                fullName: `${data.firstName} ${data.secondName} ${data.lastName}`,
-                birth: data.birth,
-                phoneNumber: data.phoneNumber,
-                mail: data.mail,
-                gender: data.gender,
-                meetingFormat: data.communicationFormat,
-                // @ts-ignore
-                secondCustomer: {
-                    lastName: data.client2LastName,
-                    secondName: data.client2SecondName,
-                    firstName: data.client2FirstName,
-                    gender: data.client2Gender,
-                    birth: data.client2BirthDate,
-                    phoneNumber: data.client2Phone,
-                    meetingFormat: data.client2CommunicationFormat,
-                    mail: data.client2Email,
-                }
-            })
-            }
-        if (clientType === 'adult') {
-            mutate({...data});
-        }
-    };
+  const genderOptions = [
+    { value: 'Мужской', label: 'Мужской' },
+    { value: 'Женский', label: 'Женский' },
+  ]
 
-    const genderOptions = [
-        {value: 'Мужской', label: 'Мужской'},
-        {value: 'Женский', label: 'Женский'}
-    ];
+  const communicationFormatOptions = [
+    { value: 'Офлайн', label: 'Офлайн' },
+    { value: 'Онлайн', label: 'Онлайн' },
+  ]
 
-    const communicationFormatOptions = [
-        {value: 'Офлайн', label: 'Офлайн'},
-        {value: 'Онлайн', label: 'Онлайн'}
-    ];
-
-    return (
-        <Modal
-            isOpen={isOpen}
-            onRequestClose={onClose}
-            contentLabel="Добавить клиента"
-            className={styles.modalContent}
-            overlayClassName={styles.modalOverlay}
-        >
-            <div className="p-[26px]">
-                <div className="text-black font-ebgaramond font-bold text-[33px]">Добавить клиента</div>
-                <div className="h-[550px] overflow-y-auto">
-                <form onSubmit={handleSubmit(onSubmit)} >
-                    <div className="flex my-[32px] space-x-[25px]">
-                        <div>
-                            <input
-                                type="radio"
-                                className="mr-[5px]"
-                                value="adult"
-                                checked={clientType === 'adult'}
-                                onChange={(e) => setClientType(e.target.value)}
-                            />
-                            Взрослый
-                        </div>
-                        <div>
-                            <input
-                                type="radio"
-                                className="mr-[5px]"
-                                value="child"
-                                checked={clientType === 'child'}
-                                onChange={(e) => setClientType(e.target.value)}
-                            />
-                            Ребёнок
-                        </div>
-                        <div>
-                            <input
-                                type="radio"
-                                className="mr-[5px]"
-                                value="couple"
-                                checked={clientType === 'couple'}
-                                onChange={(e) => setClientType(e.target.value)}
-                            />
-                            Пара
-                        </div>
-                    </div>
+  return (
+    <Modal
+      isOpen={isOpen}
+      onRequestClose={onClose}
+      contentLabel="Добавить клиента"
+      className={styles.modalContent}
+      overlayClassName={styles.modalOverlay}>
+      <div className="p-[26px]">
+        <div className="text-black font-ebgaramond font-bold text-[33px]">Добавить клиента</div>
+        <div className="h-[550px] overflow-y-auto">
+          <form onSubmit={handleSubmit(onSubmit)}>
+            <div className="flex my-[32px] space-x-[25px]">
+              <div>
+                <input
+                  type="radio"
+                  className="mr-[5px]"
+                  value="adult"
+                  checked={clientType === 'adult'}
+                  onChange={(e) => setClientType(e.target.value)}
+                />
+                Взрослый
+              </div>
+              <div>
+                <input
+                  type="radio"
+                  className="mr-[5px]"
+                  value="child"
+                  checked={clientType === 'child'}
+                  onChange={(e) => setClientType(e.target.value)}
+                />
+                Ребёнок
+              </div>
+              <div>
+                <input
+                  type="radio"
+                  className="mr-[5px]"
+                  value="couple"
+                  checked={clientType === 'couple'}
+                  onChange={(e) => setClientType(e.target.value)}
+                />
+                Пара
+              </div>
+            </div>
 
                     {clientType === 'adult' && (
                         <div className="space-y-[13px]">
@@ -663,4 +643,4 @@ const AddClientModal = ({isOpen, onClose}) => {
     );
 };
 
-export default AddClientModal;
+export default AddClientModal
