@@ -21,6 +21,7 @@ interface ICardFormProps {
 
 export function CardForm({ user }: ICardFormProps) {
 
+    console.log(user);
     return (
         <>
             <div className="bg-[#F1F1F1] px-[16px] py-[25px] rounded-tr-[4px] rounded-br-[4px] rounded-bl-[4px]">

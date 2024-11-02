@@ -58,13 +58,26 @@ export default function CalendarBody() {
         <div className={styles.MainContainer}>
             <div>
                 <FullCalendar
-                    plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
-                    initialView="dayGridMonth"
+                    plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin ]}
                     headerToolbar={{
                         left: 'title',
                         center: 'timeGridDay,timeGridWeek,dayGridMonth,dayGridYear',
                         right: 'prev,today,next'
                     }}
+                    views={{
+                        customMonthView: {
+                            type: 'dayGridMonth',
+                            fixedWeekCount: false,
+                            dayHeaderFormat: { weekday: 'short' },
+                            visibleRange: function(currentDate) {
+                                let start = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
+                                let end = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0);
+                                return { start: start, end: end };
+                            },
+                            firstDay: 1
+                        }
+                    }}
+                    initialView="customMonthView"
                     initialDate={new Date()}
                     slotMinTime="00:00:00"
                     slotMaxTime="24:00:00"
@@ -81,10 +94,8 @@ export default function CalendarBody() {
                     slotLabelFormat={{
                         hour: '2-digit',
                         minute: '2-digit',
-                        hour12: false
                     }}
                     nowIndicator={true}
-                    scrollTime={moment().format('HH:mm:ss')}
                     dayHeaderContent={(dateInfo) => {
                         const isToday = moment(dateInfo.date).isSame(moment(), 'day');
                         const dayName = moment(dateInfo.date).format('dd').charAt(0).toUpperCase() + moment(dateInfo.date).format('dd').slice(1);

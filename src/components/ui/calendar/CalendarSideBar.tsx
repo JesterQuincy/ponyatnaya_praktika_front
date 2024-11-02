@@ -147,11 +147,10 @@ export default function SideBar({children}: PropsWithChildren) {
                             //@ts-ignore
                             onClick={() => handleEventClick(meeting)}
                             style={{zIndex: index}}
-                            className={`flex relative gap-[6px] shadow-[0px_-5px_11px_0px_#0000002E] items-center rounded-t-[8px] flex-row py-[8px] pl-[8px] hover:cursor-pointer`}
+                            className={`flex relative gap-[6px] whitespace-nowrap overflow-hidden text-ellipsis shadow-[0px_-5px_11px_0px_#0000002E] items-center rounded-t-[8px] flex-row py-[8px] pl-[8px] hover:cursor-pointer `}
                         >
                             <div
                                 className="text-[9px] rounded-[8px] text-white bg-[#6E6E6E] px-[3px]">
-                                    
                                     {
                                         //@ts-ignore
                                         meeting.date

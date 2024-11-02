@@ -41,7 +41,7 @@ function Clients() {
     const [currentPage, setCurrentPage] = useState(1);
     const [clients, setClients] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
-    const clientsPerPage = 10;
+    const clientsPerPage = 5;
 
     const router = useRouter();
 
@@ -75,32 +75,43 @@ function Clients() {
                 const matchesClientType = filterClientType.value === "Нет" || client.clientType === filterClientType.value;
                 // @ts-ignore
                 const matchesClientStatus = filterClientStatus.value === "Нет" || client.meetingType === filterClientStatus.value;
-                const matchesDateOrder = filterDateOrder.value === "Нет" ||
-                    // @ts-ignore
-                    (filterDateOrder.value === "Раньше" && new Date(client.meetDate) <= new Date()) ||
-                    // @ts-ignore
-                    (filterDateOrder.value === "Позже" && new Date(client.meetDate) > new Date());
                 const matchesFrequency = filterMeetingFrequency.value === "Нет" ||
                     // @ts-ignore
                     (filterMeetingFrequency.value === "Чаще" ) ||
                     // @ts-ignore
                     (filterMeetingFrequency.value === "Реже");
 
-                return matchesSearch && matchesClientType && matchesClientStatus && matchesDateOrder && matchesFrequency;
+                return matchesSearch && matchesClientType && matchesClientStatus && matchesFrequency;
             })
             .sort((a, b) => {
-                if (filterDateOrder.value === "Раньше") {
-                    // @ts-ignore
-                    return new Date(a.meetDate) - new Date(b.meetDate);
-                } else if (filterDateOrder.value === "Позже") {
-                    // @ts-ignore
-                    return new Date(b.meetDate) - new Date(a.meetDate);
-                } else if (filterMeetingFrequency.value === "Чаще") {
+                if (filterMeetingFrequency.value === "Чаще") {
                     // @ts-ignore
                     return b.countMeet - a.countMeet;
                 } else if (filterMeetingFrequency.value === "Реже") {
                     // @ts-ignore
                     return a.countMeet - b.countMeet;
+                } else {
+                    return 0;
+                }
+            })
+            .sort((a, b) => {
+                // @ts-ignore
+                const dateA = a.meetDate ? new Date(a.meetDate) : null;
+                // @ts-ignore
+                const dateB = b.meetDate ? new Date(b.meetDate) : null;
+
+                if (filterDateOrder.value === "Раньше") {
+                    if (dateA === null && dateB === null) return 0;
+                    if (dateA === null) return 1;
+                    if (dateB === null) return -1;
+                    // @ts-ignore
+                    return dateA - dateB;
+                } else if (filterDateOrder.value === "Позже") {
+                    if (dateA === null && dateB === null) return 0;
+                    if (dateA === null) return 1;
+                    if (dateB === null) return -1;
+                    // @ts-ignore
+                    return dateB - dateA;
                 } else {
                     return 0;
                 }
