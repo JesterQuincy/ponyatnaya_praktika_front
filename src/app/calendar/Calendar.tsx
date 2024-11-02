@@ -2,7 +2,6 @@
 
 import styles from '@/styles/calendar.module.css'
 import Header from '@/components/ui/calendar/CalendarHeader'
-import CalendarBody from '@/components/ui/calendar/CalendarBody'
 import AddClientModal from '@/components/ui/ModalOverlay'
 import AddMeetModal from '@/components/ui/AddMeetModal'
 import { useState, ReactNode } from 'react'
