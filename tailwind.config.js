@@ -104,6 +104,12 @@ module.exports = {
         'accordion-down': 'accordion-down 0.2s ease-out',
         'accordion-up': 'accordion-up 0.2s ease-out',
       },
+      padding: {
+        sidebar: 'var(--main-padding)',
+      },
+      height: {
+        sidebar: 'calc(100vh - (2 * var(--main-padding)))',
+      },
     },
   },
   plugins: [require('tailwindcss-animate')],

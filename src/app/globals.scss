@@ -18,6 +18,8 @@
   background-repeat: repeat;
 
   --wrapper-max-width: 1107px;
+  --main-padding: 12px;
+  --header-height: 70px;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -29,7 +31,7 @@
 }
 
 .wrapper {
-  @apply w-full max-w-[--wrapper-max-width] rounded-[6px] bg-white px-10 py-[30px];
+  @apply w-full max-w-[--wrapper-max-width] rounded-[6px] bg-white px-10 py-[30px] h-full;
 }
 
 .main_content {
