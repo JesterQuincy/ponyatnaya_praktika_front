@@ -28,6 +28,7 @@ module.exports = {
         grey: '#f1f1f1',
         taupe: '#5a5a5a',
         orange: '#EA660C',
+        orangeSecondary: '#EA6608',
         blackMedium: '#63615F',
         hoverButton: '#ECECEC',
         background: 'hsl(var(--background))',

@@ -30,17 +30,17 @@ export default function PollPage() {
     console.log(data)
   }
   return (
-    <div className="flex justify-center items-center h-screen">
+    <div className="flex justify-center items-center h-screen my-auto">
       <QuestionnaireCard title="Опрос по завершении терапии">
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-3">
             {/* Вопрос 1 */}
             <FormField
               control={form.control}
               name="priority"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>1. Вам ясны приоритеты и цели терапии?</FormLabel>
+                  <FormLabel className="font-bold text-[18px]">1. Вам ясны приоритеты и цели терапии?</FormLabel>
                   <FormControl>
                     <RadioGroup onValueChange={field.onChange} value={field.value}>
                       <div className="flex items-center space-x-2 mt-2">
@@ -53,7 +53,7 @@ export default function PollPage() {
                       </div>
                     </RadioGroup>
                   </FormControl>
-                  <FormMessage />
+                  <FormMessage className="text-red-500" />
                 </FormItem>
               )}
             />
@@ -64,7 +64,7 @@ export default function PollPage() {
               name="favoriteColors"
               render={() => (
                 <FormItem>
-                  <FormLabel>2. Ваши любимые цвета</FormLabel>
+                  <FormLabel className="font-bold text-[18px]">2. Ваши любимые цвета</FormLabel>
                   <div className="mt-2">
                     {COLOR_OPTIONS.map((color) => (
                       <FormField
@@ -75,15 +75,17 @@ export default function PollPage() {
                           <FormItem key={color.id} className="flex items-center space-x-2">
                             <FormControl>
                               <Checkbox
+                                id={color.id}
                                 checked={field.value.includes(color.id)}
                                 onCheckedChange={(checked) => {
                                   return checked
                                     ? field.onChange([...field.value, color.id])
                                     : field.onChange(field.value.filter((v) => v !== color.id))
                                 }}
+                                className="mt-2"
                               />
                             </FormControl>
-                            <label>{color.label}</label>
+                            <label htmlFor={color.id}>{color.label}</label>
                           </FormItem>
                         )}
                       />
@@ -100,7 +102,7 @@ export default function PollPage() {
               name="stressManagement"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>3. Вы умеете справляться со стрессом?</FormLabel>
+                  <FormLabel className="font-bold text-[18px]">3. Вы умеете справляться со стрессом?</FormLabel>
                   <FormControl>
                     <RadioGroup onValueChange={field.onChange} value={field.value}>
                       <div className="flex items-center space-x-2 mt-2">
@@ -128,7 +130,7 @@ export default function PollPage() {
               name="support"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>4. Вы знаете что вас поддерживает?</FormLabel>
+                  <FormLabel className="font-bold text-[18px]">4. Вы знаете что вас поддерживает?</FormLabel>
                   <FormControl>
                     <RadioGroup
                       onValueChange={(value) => {
@@ -158,6 +160,7 @@ export default function PollPage() {
                           placeholder="Введите свой вариант ответа"
                           value={field.value}
                           onChange={(e) => field.onChange(e.target.value)}
+                          className="bg-white w-[20%] rounded-[6px]"
                         />
                       </FormControl>
                       <FormMessage />
@@ -173,7 +176,7 @@ export default function PollPage() {
               name="sessionsSatisfaction"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>5. Довольны ли вы состоявшимися сессиями?</FormLabel>
+                  <FormLabel className="font-bold text-[18px]">5. Довольны ли вы состоявшимися сессиями?</FormLabel>
                   <FormControl>
                     <RadioGroup onValueChange={field.onChange} value={field.value}>
                       <div className="flex items-center space-x-2 mt-2">
@@ -191,7 +194,10 @@ export default function PollPage() {
               )}
             />
 
-            <Button type="submit" className="mt-4 bg-taupe w-[15%] text-white hover:bg-taupe/80 rounded-[6px]">
+            <Button
+              type="submit"
+              className="mt-4 bg-taupe w-[15%] text-white hover:bg-taupe/80 rounded-[6px]"
+              disabled={!form.formState.isValid}>
               Отправить
             </Button>
           </form>
