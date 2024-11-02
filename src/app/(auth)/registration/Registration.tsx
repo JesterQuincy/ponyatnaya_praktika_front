@@ -133,7 +133,7 @@ export function Registration() {
             />
             <Button
               type="submit"
-              className="w-full bg-orange text-white hover:bg-orange hover:text-white rounded-[6px]"
+              className="w-full bg-orange text-white hover:bg-orange/80 rounded-[6px]"
               variant="default"
               disabled={isLoading}>
               <div className="flex items-center justify-center">
