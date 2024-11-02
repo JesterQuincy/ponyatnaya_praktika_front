@@ -1,8 +1,8 @@
 .MainContainer {
     width: clamp(69.125rem, 6.875rem + 69.17vw, 89.875rem);
-    height: 70px;
+    max-width: var(--wrapper-max-width);
+    height: var(--header-height);
     background: white;
-    margin-top: 20px;
     border-radius: 6px;
     display: flex;
     flex-direction: row;
@@ -21,6 +21,7 @@
     padding-left: 15px;
     width: 292px;
 }
+
 .buttonsGroup {
     color: white;
     display: flex;

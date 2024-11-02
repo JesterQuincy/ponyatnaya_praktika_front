@@ -4,7 +4,8 @@
     display: flex;
     flex-direction: row;
     gap: 8px;
-
+    padding: var(--main-padding);
+    justify-content: center;
 }
 
 .CentralContainer {
