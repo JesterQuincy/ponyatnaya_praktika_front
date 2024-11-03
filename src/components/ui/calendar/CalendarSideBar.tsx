@@ -89,7 +89,7 @@ export default function SideBar({ children }: PropsWithChildren) {
   // @ts-ignore
   return (
     <div className="w-full max-w-[300px]">
-      <div className="flex flex-col  rounded-xl  items-center bg-white shadow-lg p-4 h-sidebar">
+      <div className="flex flex-col  rounded-xl  items-center bg-white shadow-lg p-4 h-sidebar sticky top-[var(--main-padding)]">
         <Image src={Logo} alt="Logo company" width={400} onClick={returnToCalendar} className="hover:cursor-pointer" />
         <hr className="my-4 h-0.5 w-full border-gray" />
         <div className="flex flex-col items-center">
