@@ -33,7 +33,7 @@ export default function PollPage() {
     <div className="flex justify-center items-center h-screen my-auto">
       <QuestionnaireCard title="Опрос по завершении терапии">
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-3">
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-2">
             {/* Вопрос 1 */}
             <FormField
               control={form.control}
@@ -91,7 +91,7 @@ export default function PollPage() {
                       />
                     ))}
                   </div>
-                  <FormMessage />
+                  <FormMessage className="text-red-500" />
                 </FormItem>
               )}
             />
@@ -119,7 +119,7 @@ export default function PollPage() {
                       </div>
                     </RadioGroup>
                   </FormControl>
-                  <FormMessage />
+                  <FormMessage className="text-red-500" />
                 </FormItem>
               )}
             />
@@ -152,7 +152,6 @@ export default function PollPage() {
                       </div>
                     </RadioGroup>
                   </FormControl>
-                  <FormMessage />
                   {showCustomInput && (
                     <FormItem className="mt-2">
                       <FormControl>
@@ -163,7 +162,7 @@ export default function PollPage() {
                           className="bg-white w-[20%] rounded-[6px]"
                         />
                       </FormControl>
-                      <FormMessage />
+                      <FormMessage className="text-red-500" />
                     </FormItem>
                   )}
                 </FormItem>
