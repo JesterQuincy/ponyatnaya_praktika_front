@@ -11,7 +11,7 @@ import 'moment/locale/ru';
 import {useEffect, useState} from "react";
 import {useRouter} from "next/navigation";
 
-moment.locale('ru');
+moment.locale('kz');
 
 export default function CalendarBody() {
     const [events, setEvents] = useState<any[]>([]);
@@ -61,35 +61,23 @@ export default function CalendarBody() {
                     plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin ]}
                     headerToolbar={{
                         left: 'title',
-                        center: 'timeGridDay,timeGridWeek,dayGridMonth,dayGridYear',
+                        center: 'timeGridDay,timeGridWeek,dayGridYear',
                         right: 'prev,today,next'
                     }}
-                    views={{
-                        customMonthView: {
-                            type: 'dayGridMonth',
-                            fixedWeekCount: false,
-                            dayHeaderFormat: { weekday: 'short' },
-                            visibleRange: function(currentDate) {
-                                let start = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
-                                let end = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0);
-                                return { start: start, end: end };
-                            },
-                            firstDay: 1
-                        }
-                    }}
-                    initialView="customMonthView"
+                    initialView="dayGridMonth"
                     initialDate={new Date()}
+                    fixedWeekCount={true}
                     slotMinTime="00:00:00"
                     slotMaxTime="24:00:00"
                     slotDuration='00:30:00'
-                    locale="ru"
+                    locale="kz"
                     titleFormat={{year: 'numeric', month: 'long'}}
                     buttonText={{
                         today: 'Сегодня',
                         day: 'День',
                         month: 'Месяц',
                         week: 'Неделя',
-                        year: 'Год'
+                        year: 'Месяц'
                     }}
                     slotLabelFormat={{
                         hour: '2-digit',
