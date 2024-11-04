@@ -93,7 +93,7 @@ export default function SideBar({children}: PropsWithChildren) {
     // @ts-ignore
     // @ts-ignore
     return (
-        <div className="flex flex-col w-[35vw] rounded-xl mt-3 ml-3 items-center bg-white shadow-lg p-4">
+        <div className="flex flex-col w-[15vw] rounded-xl mt-3 ml-3 items-center bg-white shadow-lg p-4">
             <Image src={Logo} alt="Logo company" width={400} onClick={returnToCalendar} className="hover:cursor-pointer"/>
             <hr className="my-4 h-0.5 w-full border-gray"/>
             <div className="flex flex-col items-center">

@@ -341,7 +341,7 @@ function Clients() {
                 ))}
 
             </div>
-            <div style={{ position: 'absolute', bottom: '30px', left: '50%', transform: 'translateX(-50%)'}}>
+            <div style={{ position: 'absolute', bottom: '80px', left: '50%', transform: 'translateX(-50%)'}}>
                 <Pagination
                     currentPage={currentPage}
                     totalPages={totalPages}

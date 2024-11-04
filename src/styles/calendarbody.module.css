@@ -1,6 +1,6 @@
 .MainContainer {
-    width: 100%;
-    height: fit-content;
+    width: 85vw;
+    height: 100vh;
     border-radius: 6px;
     background: white;
 }

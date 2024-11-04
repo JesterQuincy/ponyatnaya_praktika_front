@@ -55,9 +55,11 @@ export function Card(id: any) {
 
     }, [id]);
 
+    const title = `${client?.lastName} ${client?.firstName} ${client?.secondName} `;
+
     return (
         <div className={styles.card}>
-            <Heading title={client?.fullName}/>
+            <Heading title={title}/>
             <div className="flex items-center space-x-4 mt-[7px] text-gray-700">
                 <div className="flex items-center space-x-2 bg-gray-200 text-gray-700 py-1 rounded-full">
                     <div className="text-[11px] bg-[#E4E4E4] px-[12px] py-[3px] rounded-[30px] flex">
