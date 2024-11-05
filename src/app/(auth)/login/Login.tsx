@@ -2,7 +2,7 @@
 
 import { Input } from '@/components/ui/input'
 import { SubmitHandler, useForm } from 'react-hook-form'
-import { AuthForm } from '@/types/auth.types'
+import { AuthForm } from '@/helpers/types/auth'
 import React, { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { useMutation } from '@tanstack/react-query'

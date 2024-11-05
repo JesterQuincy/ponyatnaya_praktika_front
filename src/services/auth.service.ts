@@ -1,4 +1,4 @@
-import { AuthForm, AuthResponse } from '@/types/auth.types'
+import { AuthForm, AuthResponse } from '@/helpers/types/auth'
 import { axiosClassic } from '@/api/interceptors'
 import { removeTokenStorage, saveTokenStorage } from '@/services/auth-token.service'
 

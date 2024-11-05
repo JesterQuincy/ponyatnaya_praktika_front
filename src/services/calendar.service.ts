@@ -1,5 +1,5 @@
 import { axiosClassic, axiosWithAuth } from '@/api/interceptors'
-import { UserMeeting } from '@/types/calendar.types'
+import { UserMeeting } from '@/helpers/types/calendar'
 
 export const calendarService = {
   async createMeeting(data: UserMeeting): Promise<any> {
