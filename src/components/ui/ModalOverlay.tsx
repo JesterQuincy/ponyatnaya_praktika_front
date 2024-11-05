@@ -199,17 +199,17 @@ const AddClientModal = ({isOpen, onClose}) => {
                         <div className="space-y-[13px]">
                             <div className="space-y-[5px]">
                                 <label
-                                    className="font-montserrat text-xs font-medium">Имя</label>
-                                <Input className="h-[31px] rounded-xl" type="text"
-                                       placeholder='Введите имя клиента'
-                                       required {...register('firstName')} />
-                            </div>
-                            <div className="space-y-[5px]">
-                                <label
                                     className="font-montserrat text-xs font-medium">Фамилия</label>
                                 <Input className="h-[31px] rounded-xl" type="text"
                                        placeholder='Введите фамилию клиента'
                                        required {...register('lastName')} />
+                            </div>
+                            <div className="space-y-[5px]">
+                                <label
+                                    className="font-montserrat text-xs font-medium">Имя</label>
+                                <Input className="h-[31px] rounded-xl" type="text"
+                                       placeholder='Введите имя клиента'
+                                       required {...register('firstName')} />
                             </div>
                             <div className="space-y-[5px]">
                                 <label
@@ -287,17 +287,17 @@ const AddClientModal = ({isOpen, onClose}) => {
                             <div className='space-y-[13px] '>
                                 <div className="space-y-[5px]">
                                     <label
-                                        className="font-montserrat text-xs font-medium">Имя ребенка</label>
-                                    <Input className="h-[31px] rounded-xl" type="text"
-                                           placeholder='Введите имя клиента'
-                                           required {...register('firstName')} />
-                                </div>
-                                <div className="space-y-[5px]">
-                                    <label
                                         className="font-montserrat text-xs font-medium">Фамилия ребенка</label>
                                     <Input className="h-[31px] rounded-xl" type="text"
                                            placeholder='Введите фамилию клиента'
                                            required {...register('lastName')} />
+                                </div>
+                                <div className="space-y-[5px]">
+                                    <label
+                                        className="font-montserrat text-xs font-medium">Имя ребенка</label>
+                                    <Input className="h-[31px] rounded-xl" type="text"
+                                           placeholder='Введите имя клиента'
+                                           required {...register('firstName')} />
                                 </div>
                                 <div className="space-y-[5px]">
                                     <label
@@ -375,17 +375,17 @@ const AddClientModal = ({isOpen, onClose}) => {
                                 <div className="space-y-[13px]">
                                     <div className="space-y-[5px]">
                                         <label
-                                            className="font-montserrat text-xs font-medium">Имя родителя</label>
-                                        <Input className="h-[31px] rounded-xl" type="text"
-                                               placeholder='Введите имя клиента'
-                                               required {...register('parentFirstName')} />
-                                    </div>
-                                    <div className="space-y-[5px]">
-                                        <label
                                             className="font-montserrat text-xs font-medium">Фамилия родителя</label>
                                         <Input className="h-[31px] rounded-xl" type="text"
                                                placeholder='Введите фамилию клиента'
                                                required {...register('parentLastName')} />
+                                    </div>
+                                    <div className="space-y-[5px]">
+                                        <label
+                                            className="font-montserrat text-xs font-medium">Имя родителя</label>
+                                        <Input className="h-[31px] rounded-xl" type="text"
+                                               placeholder='Введите имя клиента'
+                                               required {...register('parentFirstName')} />
                                     </div>
                                     <div className="space-y-[5px]">
                                         <label
@@ -462,19 +462,19 @@ const AddClientModal = ({isOpen, onClose}) => {
                     {clientType === 'couple' && (
                         <div className="space-y-[40px]">
                             <div className='space-y-[13px] '>
-                                <div>
-                                    <label
-                                        className="font-montserrat text-xs font-medium">Имя клиента №1</label>
-                                    <Input className="h-[31px] rounded-xl" type="text"
-                                           placeholder='Введите имя клиента'
-                                           required {...register('firstName')} />
-                                </div>
                                 <div className="space-y-[5px]">
                                     <label
                                         className="font-montserrat text-xs font-medium">Фамилия клиента №1</label>
                                     <Input className="h-[31px] rounded-xl" type="text"
                                            placeholder='Введите фамилию клиента'
                                            required {...register('lastName')} />
+                                </div>
+                                <div>
+                                    <label
+                                        className="font-montserrat text-xs font-medium">Имя клиента №1</label>
+                                    <Input className="h-[31px] rounded-xl" type="text"
+                                           placeholder='Введите имя клиента'
+                                           required {...register('firstName')} />
                                 </div>
                                 <div className="space-y-[5px]">
                                     <label
@@ -553,17 +553,17 @@ const AddClientModal = ({isOpen, onClose}) => {
                                 <div className="space-y-[13px]">
                                     <div className="space-y-[5px]">
                                         <label
-                                            className="font-montserrat text-xs font-medium">Имя клиента №2</label>
-                                        <Input className="h-[31px] rounded-xl" type="text"
-                                               placeholder='Введите имя клиента'
-                                               required {...register('client2FirstName')} />
-                                    </div>
-                                    <div className="space-y-[5px]">
-                                        <label
                                             className="font-montserrat text-xs font-medium">Фамилия клиента №2</label>
                                         <Input className="h-[31px] rounded-xl" type="text"
                                                placeholder='Введите фамилию клиента'
                                                required {...register('client2LastName')} />
+                                    </div>
+                                    <div className="space-y-[5px]">
+                                        <label
+                                            className="font-montserrat text-xs font-medium">Имя клиента №2</label>
+                                        <Input className="h-[31px] rounded-xl" type="text"
+                                               placeholder='Введите имя клиента'
+                                               required {...register('client2FirstName')} />
                                     </div>
                                     <div className="space-y-[5px]">
                                         <label
@@ -646,7 +646,7 @@ const AddClientModal = ({isOpen, onClose}) => {
                                 onClick={handleCloseModal}
                                 className="flex bg-transparent rounded-[4px] text-[12px] font-semibold cursor-pointer"
                             >
-                                Отмена
+                            Отмена
                             </div>
                             <button
                                 type="submit"

@@ -64,7 +64,7 @@ export default function CalendarBody() {
                         center: 'timeGridDay,timeGridWeek,dayGridYear',
                         right: 'prev,today,next'
                     }}
-                    initialView="dayGridMonth"
+                    initialView="dayGridYear"
                     initialDate={new Date()}
                     fixedWeekCount={true}
                     slotMinTime="00:00:00"
