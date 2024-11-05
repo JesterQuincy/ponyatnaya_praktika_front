@@ -6,6 +6,8 @@ import { Providers } from '@/app/providers'
 import { Theme } from '@radix-ui/themes'
 import { UserProvider } from './context/userContext'
 import { MeetProvider } from './context/meetContext'
+import { ToastContainer } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -37,7 +39,18 @@ export default function RootLayout({
         <Providers>
           <Theme>
             <UserProvider>
-              <MeetProvider>{children}</MeetProvider>
+              <MeetProvider>
+                {children}
+                <ToastContainer
+                  position="top-right"
+                  closeOnClick
+                  autoClose={3000}
+                  hideProgressBar
+                  draggable
+                  theme="light"
+                  limit={10}
+                />
+              </MeetProvider>
             </UserProvider>
           </Theme>
         </Providers>

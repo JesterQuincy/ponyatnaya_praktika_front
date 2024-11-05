@@ -12,7 +12,7 @@ export default function QuestionnairePage() {
 
   return (
     <div className="flex justify-center items-center h-screen my-auto">
-      <QuestionnaireCard title="Опрос по завершении терапии">
+      <QuestionnaireCard title="Анкета клиента">
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-1">
             <Questions form={form} />

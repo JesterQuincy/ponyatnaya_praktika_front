@@ -20,6 +20,7 @@ module.exports = {
     },
     extend: {
       colors: {
+        'bg-grey': '#F0F0F0',
         border: 'hsl(var(--border))',
         input: 'hsl(var(--input))',
         ring: 'hsl(var(--ring))',
@@ -29,6 +30,7 @@ module.exports = {
         taupe: '#5a5a5a',
         orange: '#EA660C',
         orangeSecondary: '#EA6608',
+        orangeHover: '#BD4F00',
         blackMedium: '#63615F',
         hoverButton: '#ECECEC',
         background: 'hsl(var(--background))',
@@ -73,6 +75,7 @@ module.exports = {
         lg: 'var(--radius)',
         md: 'calc(var(--radius) - 2px)',
         sm: 'calc(var(--radius) - 4px)',
+        def: '6px',
       },
       fontFamily: {
         sans: ['var(--font-sans)', ...fontFamily.sans],
@@ -100,6 +103,12 @@ module.exports = {
       animation: {
         'accordion-down': 'accordion-down 0.2s ease-out',
         'accordion-up': 'accordion-up 0.2s ease-out',
+      },
+      padding: {
+        sidebar: 'var(--main-padding)',
+      },
+      height: {
+        sidebar: 'calc(100vh - (2 * var(--main-padding)))',
       },
     },
   },

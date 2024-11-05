@@ -16,6 +16,10 @@
   background-size: cover;
   background-position: center;
   background-repeat: repeat;
+
+  --wrapper-max-width: 1107px;
+  --main-padding: 12px;
+  --header-height: 70px;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -24,6 +28,14 @@
     --background-start-rgb: 0, 0, 0;
     --background-end-rgb: 0, 0, 0;
   }
+}
+
+.wrapper {
+  @apply w-full max-w-[--wrapper-max-width] rounded-[6px] bg-white px-10 py-[30px] h-full;
+}
+
+.main_content {
+  @apply w-full max-w-[642px]
 }
 
 body {
@@ -57,7 +69,7 @@ body {
 }
 
 .fc .fc-timegrid-major {
-  border-bottom: 1px solid black !important;  /* Тонкая линия разделителя только для каждого часа */
+  border-bottom: 1px solid black !important; /* Тонкая линия разделителя только для каждого часа */
 }
 
 .fc .fc-timegrid-slot-lane {
@@ -66,30 +78,30 @@ body {
 
 /* Убираем внутренние разделители */
 .fc .fc-timegrid-divider, .fc .fc-timegrid-axis-frame {
-  display: none !important;  /* Отключаем разделители времени */
+  display: none !important; /* Отключаем разделители времени */
 }
 
 
 /* Оранжевая линия для текущего времени */
 .fc .fc-now-indicator {
-  background-color: orange !important;  /* Оранжевая линия для текущего времени */
-  height: 2px !important;  /* Задаем толщину линии */
+  background-color: orange !important; /* Оранжевая линия для текущего времени */
+  height: 2px !important; /* Задаем толщину линии */
 }
 
 /* Цвет текста времени */
 .fc .fc-timegrid-slot-label, .fc .fc-axis {
-  color: black !important;  /* Делаем текст времени черным */
+  color: black !important; /* Делаем текст времени черным */
 }
 
 /* Добавляем минимальную границу для событий */
 .fc-event {
-  border: none;  /* Легкая граница для визуального выделения событий */
+  border: none; /* Легкая граница для визуального выделения событий */
 }
 
 /* Убираем границы для всех временных интервалов, кроме часовых */
 .fc .fc-timegrid-slot-lane {
-  border: none !important;  /* Убираем любые границы между временными интервалами */
-  padding-bottom: 0 !important;  /* Убираем отступы */
+  border: none !important; /* Убираем любые границы между временными интервалами */
+  padding-bottom: 0 !important; /* Убираем отступы */
 }
 
 
@@ -105,9 +117,9 @@ body {
 
 /* Настройка временных меток */
 .fc .fc-timegrid-slot-label {
-  margin-right: 10px !important;  /* Отступ справа от времени для небольшого зазора */
-  color: black !important;  /* Цвет текста времени */
-  font-weight: lighter !important;  /* Жирный шрифт для времени */
+  margin-right: 10px !important; /* Отступ справа от времени для небольшого зазора */
+  color: black !important; /* Цвет текста времени */
+  font-weight: lighter !important; /* Жирный шрифт для времени */
 }
 
 .fc-timegrid-now-indicator-arrow {
