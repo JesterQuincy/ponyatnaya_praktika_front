@@ -3,18 +3,7 @@ import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import Link from 'next/link'
 import { PopoverButton } from '@/components/popover-button'
-
-enum ETestType {
-  test = 'Тест',
-  survey = 'Опрос',
-  form = 'Анкета',
-}
-
-export interface ITestCardProps {
-  type: 'test' | 'survey' | 'form'
-  title: string
-  date: string
-}
+import { ETestType, ITestCardProps } from '@/helpers/types/tests'
 
 export const TestCard: FC<ITestCardProps> = ({ type, title, date }) => {
   return (
@@ -22,7 +11,7 @@ export const TestCard: FC<ITestCardProps> = ({ type, title, date }) => {
       <CardContent className="p-0 flex flex-col gap-y-[12px]">
         <div className="flex gap-[25px]">
           <Badge variant={type}>{ETestType[type]}</Badge>
-          <Link href={''} className="text-[18px] text-[#EA660C] underline font-semibold">
+          <Link href={`/tests/${type}`} className="text-[18px] text-[#EA660C] underline font-semibold">
             {title}
           </Link>
           <PopoverButton className="ml-auto">

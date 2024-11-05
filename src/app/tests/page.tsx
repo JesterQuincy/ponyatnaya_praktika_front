@@ -57,27 +57,25 @@ const TestsPage = () => {
   })
 
   return (
-    <Calendar>
-      <Wrapper>
-        <Heading title="Опросники и тесты" />
-        <Filters sort={sort} setSort={setSort} />
-        <div className="flex gap-x-[20px] items-start">
-          <div className="main_content bg-[#F1F1F1] rounded-[5px] py-[12px] px-[16px] flex flex-col gap-y-[12px]">
-            {cardData.map((el) => (
-              <TestCard key={el.id} type={el.type as ITestCardProps['type']} title={el.title} date={el.date} />
-            ))}
-          </div>
-          <div className="flex flex-col items-start gap-y-[20px] w-full max-w-[364px]">
-            <FormProvider {...form}>
-              <Panel onSubmit={handlePanelSubmit} />
-            </FormProvider>
-            <FormProvider {...createMaterialForm}>
-              <CreateMaterialModal onSubmit={handleCreateSubmit} modalOpen={modalOpen} setModalOpen={setModalOpen} />
-            </FormProvider>
-          </div>
+    <>
+      <Heading title="Опросники и тесты" />
+      <Filters sort={sort} setSort={setSort} />
+      <div className="flex gap-x-[20px] items-start">
+        <div className="main_content bg-[#F1F1F1] rounded-[5px] py-[12px] px-[16px] flex flex-col gap-y-[12px]">
+          {cardData.map((el) => (
+            <TestCard key={el.id} type={el.type as ITestCardProps['type']} title={el.title} date={el.date} />
+          ))}
         </div>
-      </Wrapper>
-    </Calendar>
+        <div className="flex flex-col items-start gap-y-[20px] w-full max-w-[364px]">
+          <FormProvider {...form}>
+            <Panel onSubmit={handlePanelSubmit} />
+          </FormProvider>
+          <FormProvider {...createMaterialForm}>
+            <CreateMaterialModal onSubmit={handleCreateSubmit} modalOpen={modalOpen} setModalOpen={setModalOpen} />
+          </FormProvider>
+        </div>
+      </div>
+    </>
   )
 }
 
