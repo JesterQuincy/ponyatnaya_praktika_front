@@ -26,6 +26,8 @@ module.exports = {
         ring: 'hsl(var(--ring))',
         gray: '#D9D9D9',
         placeholderText: '#BDBDBD',
+        grey: '#f1f1f1',
+        taupe: '#5a5a5a',
         orange: '#EA660C',
         orangeSecondary: '#EA6608',
         orangeHover: '#BD4F00',
