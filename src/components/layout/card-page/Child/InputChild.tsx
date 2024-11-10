@@ -1,7 +1,6 @@
 import { FormControl, FormField, FormItem, FormMessage } from '@/components/ui/form'
 import { UseFormReturn } from 'react-hook-form'
 import { forwardRef, InputHTMLAttributes } from 'react'
-import { IChild } from '@/types/child'
 import { IChildSchema } from '@/models/childSchema'
 import { NestedKeys } from '@/types/common'
 

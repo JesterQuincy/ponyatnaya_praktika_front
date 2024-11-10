@@ -1,7 +1,5 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { toast } from 'react-toastify'
-import { clientService } from '@/services/clients.service'
-import { IClient } from '@/types/clients'
 import { EInvalidationTags } from '@/api/hooks/constants'
 import { IChild } from '@/types/child'
 import { childService } from '@/services/child.service'
