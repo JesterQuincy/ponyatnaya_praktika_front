@@ -1,4 +1,6 @@
 import { axiosWithAuth } from '@/api/interceptors'
+import { DeepPartial } from '@/types/common'
+import { IClient } from '@/types/clients'
 
 export const clientService = {
   async getClientByName(limit: number, offset: number, personName: string): Promise<any> {
@@ -16,5 +18,9 @@ export const clientService = {
 
   async getUserMeets(limit: number, offset: number, personId: number): Promise<any> {
     return await axiosWithAuth.get(`/api/v1/General/searchMeet/${personId}/${offset}/${limit}`)
+  },
+
+  async updateUser(data: DeepPartial<IClient>): Promise<void> {
+    return await axiosWithAuth.put('/api/customer', data)
   },
 }

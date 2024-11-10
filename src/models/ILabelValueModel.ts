@@ -1,4 +1,4 @@
 export interface IValueLabelModel {
-  value: string
+  value: string | number
   label: string
 }
