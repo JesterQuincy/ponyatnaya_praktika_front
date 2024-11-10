@@ -16,7 +16,6 @@ import PhoneIcon from '@/public/icon/telephoneIcon.svg'
 import PairIcon from '@/public/icon/pair.svg'
 import BottomArrow from '@/public/icon/bottomArrow.svg'
 import { clientService } from '@/services/clients.service'
-import { useUser } from '@/app/context/userContext'
 import { Pagination } from '@/components/ui/Pagination'
 
 export const DropdownIndicator = (props: any) => {
