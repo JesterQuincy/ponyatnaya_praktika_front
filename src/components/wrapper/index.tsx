@@ -7,5 +7,5 @@ interface IWrapperProps {
 }
 
 export const Wrapper: FC<IWrapperProps> = ({ children, className }) => {
-  return <div className={cn(className, 'wrapper h-mainContent')}>{children}</div>
+  return <div className={cn(className, 'wrapper h-mainContent w-screen overflow-auto')}>{children}</div>
 }

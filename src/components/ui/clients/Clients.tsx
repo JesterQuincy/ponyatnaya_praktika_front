@@ -185,7 +185,7 @@ function Clients() {
 
   // @ts-ignore
   return (
-    <div className="w-full h-full rounded-[6px] bg-white px-10 pt-[30px]">
+    <div className="w-full rounded-[6px]">
       <Heading title="Клиенты" />
       <div className="flex flex-col items-start mb-4 mt-[10px]">
         <div className="relative flex flex-row">
