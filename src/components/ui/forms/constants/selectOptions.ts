@@ -30,10 +30,10 @@ export const genderOptions = [
   { value: 'Мужской', label: 'Мужской' },
 ]
 
-export const statusOptions = [
-  { value: 'По запросу', label: 'По запросу' },
-  { value: 'По ссылке', label: 'По ссылке' },
-]
+// export const statusOptions = [
+//   { value: 'По запросу', label: 'По запросу' },
+//   { value: 'По ссылке', label: 'По ссылке' },
+// ]
 
 export const appealOptions = [
   { value: 'Мессенджер', label: 'Мессенджер' },
@@ -59,4 +59,22 @@ export const serviceOptions = [
 export const firstRequestOptions = [
   { value: 'Онлайн', label: 'Онлайн' },
   { value: 'Офлайн', label: 'Офлайн' },
+]
+
+export const statusOptions = [
+  { value: 'Заявка', label: 'Заявка' },
+  { value: 'Регулярный', label: 'Регулярный' },
+  { value: 'По запросу', label: 'По запросу' },
+  { value: 'Завершен', label: 'Завершен' },
+]
+
+export const familyStatusOptions = [
+  { value: 'Женат/Замужем', label: 'Женат/Замужем' },
+  { value: 'Холост/Не замужем', label: 'Холост/Не замужем' },
+  { value: 'В разводе', label: 'В разводе' },
+  { value: 'Вдовец/Вдова', label: 'Вдовец/Вдова' },
+  { value: 'Сожительство/Несостоявшийся брак', label: 'Сожительство/Несостоявшийся брак' },
+  { value: 'Официальный брак с раздельным проживанием', label: 'Официальный брак с раздельным проживанием' },
+  { value: 'Одиночество/Не в постоянных отношениях', label: 'Одиночество/Не в постоянных отношениях' },
+  { value: 'Семьи с детьми', label: 'Семьи с детьми' },
 ]

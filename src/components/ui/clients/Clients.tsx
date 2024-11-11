@@ -16,7 +16,6 @@ import PhoneIcon from '@/public/icon/telephoneIcon.svg'
 import PairIcon from '@/public/icon/pair.svg'
 import BottomArrow from '@/public/icon/bottomArrow.svg'
 import { clientService } from '@/services/clients.service'
-import { useUser } from '@/app/context/userContext'
 import { Pagination } from '@/components/ui/Pagination'
 
 export const DropdownIndicator = (props: any) => {
@@ -62,37 +61,40 @@ function Clients() {
   }, [currentPage, searchQuery])
 
   const filteredClients = useMemo(() => {
-    return clients
-      .filter((client) => {
-        // @ts-ignore
-        const matchesSearch = client.fullName.toLowerCase().includes(searchQuery.toLowerCase())
-        // @ts-ignore
-        const matchesClientType = filterClientType.value === 'Нет' || client.clientType === filterClientType.value
-        // @ts-ignore
-        const matchesClientStatus =
-          filterClientStatus.value === 'Нет' || client.meetingType === filterClientStatus.value
-        const matchesDateOrder =
-          filterDateOrder.value === 'Нет' ||
+    return (
+      clients
+        // Client был с типом never, так сделал прошлый фронт. Пусть хотя бы будет `any`
+        .filter((client: any) => {
           // @ts-ignore
-          (filterDateOrder.value === 'Раньше' && new Date(client.meetDate) <= new Date()) ||
+          const matchesSearch = client.fullName?.toLowerCase().includes(searchQuery.toLowerCase())
           // @ts-ignore
-          (filterDateOrder.value === 'Позже' && new Date(client.meetDate) > new Date())
-        const matchesFrequency =
-          filterMeetingFrequency.value === 'Нет' ||
+          const matchesClientType = filterClientType.value === 'Нет' || client.clientType === filterClientType.value
           // @ts-ignore
-          (filterMeetingFrequency.value === 'Чаще' && client.countMeet >= 10) ||
-          // @ts-ignore
-          (filterMeetingFrequency.value === 'Реже' && client.countMeet < 10)
+          const matchesClientStatus =
+            filterClientStatus.value === 'Нет' || client.meetingType === filterClientStatus.value
+          const matchesDateOrder =
+            filterDateOrder.value === 'Нет' ||
+            // @ts-ignore
+            (filterDateOrder.value === 'Раньше' && new Date(client.meetDate) <= new Date()) ||
+            // @ts-ignore
+            (filterDateOrder.value === 'Позже' && new Date(client.meetDate) > new Date())
+          const matchesFrequency =
+            filterMeetingFrequency.value === 'Нет' ||
+            // @ts-ignore
+            (filterMeetingFrequency.value === 'Чаще' && client.countMeet >= 10) ||
+            // @ts-ignore
+            (filterMeetingFrequency.value === 'Реже' && client.countMeet < 10)
 
-        return matchesSearch && matchesClientType && matchesClientStatus && matchesDateOrder && matchesFrequency
-      })
-      .sort((a, b) =>
-        filterDateOrder.value === 'Раньше'
-          ? // @ts-ignore
-            new Date(a.meetDate) - new Date(b.meetDate)
-          : // @ts-ignore
-            new Date(b.meetDate) - new Date(a.meetDate),
-      )
+          return matchesSearch && matchesClientType && matchesClientStatus && matchesDateOrder && matchesFrequency
+        })
+        .sort((a, b) =>
+          filterDateOrder.value === 'Раньше'
+            ? // @ts-ignore
+              new Date(a.meetDate) - new Date(b.meetDate)
+            : // @ts-ignore
+              new Date(b.meetDate) - new Date(a.meetDate),
+        )
+    )
   }, [clients, searchQuery, filterClientType, filterClientStatus, filterDateOrder, filterMeetingFrequency])
 
   const totalPages = Math.ceil(filteredClients.length / clientsPerPage)
@@ -248,7 +250,7 @@ function Clients() {
               <div>
                 <h2
                   onClick={(): void => handleClick(client)}
-                  className="text-[18px] font-semibold underline text-orange mb-[10px]">
+                  className="text-[18px] font-semibold underline text-orange mb-[10px] cursor-pointer">
                   {
                     //@ts-ignore
                     client.fullName
