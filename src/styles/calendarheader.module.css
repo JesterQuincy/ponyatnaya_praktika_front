@@ -1,6 +1,5 @@
 .MainContainer {
-    width: clamp(69.125rem, 6.875rem + 69.17vw, 89.875rem);
-    max-width: var(--wrapper-max-width);
+    width: 100%;
     height: var(--header-height);
     background: white;
     border-radius: 6px;
