@@ -1,5 +1,7 @@
 'use client'
 
+import PollActionsPanel from '@/components/testPoll/PollActionsPanel'
+import { PollForm } from '@/components/testPoll/pollForm'
 import { Badge } from '@/components/ui/badge'
 import { Card } from '@/components/ui/card'
 import { Heading } from '@/components/ui/Heading'
@@ -26,8 +28,12 @@ export default function Page({ params }: Props) {
       </Badge>
       <Heading title={`${type} по завершении терапии`} />
       <div className="flex justify-between items-start mt-5 gap-5">
-        <div className="w-2/3 bg-grey rounded-[5px] py-3 px-4">asd</div>
-        <div className="w-1/3 bg-grey rounded-[5px] py-3 px-4">asd</div>
+        <div className="w-2/3 bg-grey rounded-[5px] py-3 px-4">
+          <PollForm />
+        </div>
+        <div className="w-1/3 bg-grey rounded-[5px] py-3 px-4">
+          <PollActionsPanel />
+        </div>
       </div>
     </>
   )
