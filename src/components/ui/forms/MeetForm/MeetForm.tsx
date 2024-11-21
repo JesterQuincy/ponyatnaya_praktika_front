@@ -7,9 +7,10 @@ import { useMeet } from '@/app/context/meetContext'
 import { MeetHeader } from './MeetHeader'
 import { MeetContent } from './MeetContent'
 import MethodicModal from './MethodicModal'
+import { IMeetingDetails } from '@/types/meet/getMeetById'
 
 interface IMeetFormProps {
-  meetData: any
+  meetData: IMeetingDetails
 }
 
 export function MeetForm({ meetData }: IMeetFormProps) {

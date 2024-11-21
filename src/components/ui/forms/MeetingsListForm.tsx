@@ -14,7 +14,7 @@ import { Button } from '../buttons/Button'
 import { Pagination } from '../Pagination'
 import { DropdownMenu } from './DropDownMenu'
 
-import { projectMetodics } from './mocks/projectMetodics'
+import { projectMethodics } from './mocks/projectMetodics'
 import { clientService } from '@/services/clients.service'
 
 interface ICardFormProps {
@@ -51,7 +51,7 @@ export function MeetingsListForm({ user }: ICardFormProps) {
 
   const handleClick = (meet: any): void => {
     setMeet(meet)
-    router.push('/meet')
+    router.push(`/meet?id=${meet.id}`)
   }
 
   const handleDropdownToggle = (id: number) => {
@@ -70,7 +70,7 @@ export function MeetingsListForm({ user }: ICardFormProps) {
             <div className="flex flex-col gap-[4px]">
               <span
                 onClick={(): void => handleClick(meet)}
-                className="text-[#EA660C] text-[22px] underline underline-offset-[2.5px]">
+                className="text-[#EA660C] text-[22px] underline underline-offset-[2.5px] cursor-pointer">
                 {meet.nameMeet}
               </span>
               <span className="text-[12px] flex gap-[5px]">
@@ -130,7 +130,7 @@ export function MeetingsListForm({ user }: ICardFormProps) {
         <div className="mt-[27px]">
           <span className="font-bold text-[20px]">Проективные методики</span>
           <div className="flex flex-col gap-[10px] mt-[10px]">
-            {projectMetodics.map((item) => (
+            {projectMethodics.map((item) => (
               <div key={item.id} className="bg-white rounded-[6px] p-[5px] flex items-center gap-[10px]">
                 <span className="bg-[#6E6E6E] text-white text-[12px] p-[2px] rounded-[3px] text-center min-w-[75px]">
                   {item.date}
