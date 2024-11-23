@@ -1,10 +1,8 @@
 'use client'
 
-import PollActionsPanel from '@/components/testPoll/PollActionsPanel'
-import { PollForm } from '@/components/testPoll/pollForm'
 import { Badge } from '@/components/ui/badge'
-import { Card } from '@/components/ui/card'
 import { Heading } from '@/components/ui/Heading'
+import { componentMap } from '@/helpers/constants/tests'
 import { ETestType } from '@/helpers/types/tests'
 import { ArrowLeft } from 'lucide-react'
 import Link from 'next/link'
@@ -16,6 +14,8 @@ type Props = {
 export default function Page({ params }: Props) {
   const { assessment } = params
   const type = ETestType[assessment]
+
+  const { Form, ActionsPanel } = componentMap[assessment]
 
   return (
     <>
@@ -29,10 +29,10 @@ export default function Page({ params }: Props) {
       <Heading title={`${type} по завершении терапии`} />
       <div className="flex justify-between items-start mt-5 gap-5">
         <div className="w-2/3 bg-grey rounded-[5px] py-3 px-4">
-          <PollForm />
+          <Form />
         </div>
         <div className="w-1/3 bg-grey rounded-[5px] py-3 px-4">
-          <PollActionsPanel />
+          <ActionsPanel />
         </div>
       </div>
     </>
