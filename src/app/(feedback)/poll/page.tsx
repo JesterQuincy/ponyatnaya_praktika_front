@@ -9,7 +9,7 @@ import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
 import { Form, FormField, FormItem, FormControl, FormLabel, FormMessage } from '@/components/ui/form'
 import { Button } from '@/components/ui/button'
 import { z } from 'zod'
-import { COLOR_OPTIONS } from '@/helpers/constants'
+import { COLOR_OPTIONS } from '@/helpers/constants/constants'
 import { Input } from '@/components/ui/input'
 
 export default function PollPage() {
