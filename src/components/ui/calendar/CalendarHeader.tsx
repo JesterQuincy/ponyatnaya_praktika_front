@@ -24,8 +24,8 @@ export default function Header({ onOpenModal, onOpenModalMeet }) {
     try {
       const response = await calendarService.getUsersByName(inputValue)
       const data = response.data
-      const formattedOptions = data.map((client: { personId: number; fullName: string }) => ({
-        value: client.personId,
+      const formattedOptions = data.map((client: { customerId: number; fullName: string }) => ({
+        value: client.customerId,
         label: client.fullName,
       }))
       setOptions(formattedOptions)

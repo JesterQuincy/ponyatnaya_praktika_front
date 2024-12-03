@@ -40,7 +40,7 @@ function Clients() {
   const router = useRouter()
 
   const handleClick = (client: any): void => {
-    router.push(`card/${client.personId}?clientType=${client.clientType}`)
+    router.push(`card/${client.customerId}?clientType=${client.clientType}`)
   }
 
   async function fetchClients() {
@@ -243,7 +243,7 @@ function Clients() {
           <div
             key={
               //@ts-ignore
-              client.personId
+              client.customerId
             }
             className="border-t border-[#6A6A6A] py-[10px]">
             <div className="flex justify-between items-start">

@@ -29,7 +29,7 @@ export function Card(id: any) {
   const clientType = searchParams.get('clientType')
 
   const [isLoading, setIsLoading] = useState(false)
-  const [client, setClient] = useState<TUserType>()
+  const [data, setData] = useState<TUserType>()
   const [activeTab, setActiveTab] = useState<TTab>('card')
 
   useEffect(() => {
@@ -40,13 +40,13 @@ export function Card(id: any) {
         let data
         if (clientType === 'Взрослый') {
           data = await clientService.getClientById(id.id)
-          setClient({ type: EClientType.ADULT, client: data.data })
+          setData({ type: EClientType.ADULT, client: data.data })
         } else if (clientType === 'Ребенок') {
           data = await clientService.getChildById(id.id)
-          setClient({ type: EClientType.CHILD, client: data.data })
+          setData({ type: EClientType.CHILD, client: data.data })
         } else if (clientType === 'Пара') {
           data = await clientService.getPairById(id.id)
-          setClient({ type: EClientType.COUPLE, client: data.data })
+          setData({ type: EClientType.COUPLE, client: data.data })
         }
       } catch (error) {
         console.error('Ошибка при получении данных клиента:', error)
@@ -61,13 +61,13 @@ export function Card(id: any) {
   return (
     <div className={styles.card}>
       {isLoading && <Spinner />}
-      {!isLoading && client && (
+      {!isLoading && data && (
         <>
-          <Heading title={client?.client.fullName} />
+          <Heading title={data?.client.fullName} />
           <div className="flex items-center space-x-4 mt-[7px] text-gray-700">
             <div className="flex items-center space-x-2 bg-gray-200 text-gray-700 py-1 rounded-full">
               <div className="text-[11px] bg-[#E4E4E4] px-[12px] py-[3px] rounded-[30px] flex">
-                <Image src={HumanIcon} alt="Human" className="mr-2" /> {client?.client.clientType}
+                <Image src={HumanIcon} alt="Human" className="mr-2" /> {data?.client.clientType}
               </div>
             </div>
             {/*TODO: вернуть, когда обновят сваггер*/}
@@ -85,11 +85,11 @@ export function Card(id: any) {
             {/*</div>*/}
           </div>
           <Tabs changeActiveTab={setActiveTab} activeTab={activeTab} />
-          {activeTab === 'card' && client.type === EClientType.ADULT && <CardFormAdult user={client.client} />}
-          {activeTab === 'card' && client.type === EClientType.CHILD && <CardFormChild user={client.client} />}
-          {activeTab === 'card' && client.type === EClientType.COUPLE && <CardFormCouple user={client.client} />}
-          {activeTab === 'meetingsList' && <MeetingsListForm user={client} />}
-          {activeTab === 'surveys' && <SurveysListForm user={client} />}
+          {activeTab === 'card' && data.type === EClientType.ADULT && <CardFormAdult user={data.client} />}
+          {activeTab === 'card' && data.type === EClientType.CHILD && <CardFormChild user={data.client} />}
+          {activeTab === 'card' && data.type === EClientType.COUPLE && <CardFormCouple user={data.client} />}
+          {activeTab === 'meetingsList' && <MeetingsListForm user={data.client} />}
+          {activeTab === 'surveys' && <SurveysListForm user={data.client} />}
         </>
       )}
     </div>

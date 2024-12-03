@@ -16,8 +16,8 @@ export const clientService = {
     return await axiosWithAuth.get(`/api/pair/get/${id}`)
   },
 
-  async getUserMeets(limit: number, offset: number, personId: number): Promise<any> {
-    return await axiosWithAuth.get(`/api/v1/General/searchMeet/${personId}/${offset}/${limit}`)
+  async getUserMeets(limit: number, offset: number, customerId: number): Promise<any> {
+    return await axiosWithAuth.get(`/api/v1/General/searchMeet/${customerId}/${offset}/${limit}`)
   },
 
   async updateUser(data: DeepPartial<IClient>): Promise<void> {
