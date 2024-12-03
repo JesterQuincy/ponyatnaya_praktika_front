@@ -1,88 +1,97 @@
 'use client'
 
-import {useEffect, useState} from "react";
-import Image from "next/image";
+import { useEffect, useState } from 'react'
+import Image from 'next/image'
+import HumanIcon from '@/public/icon/humanIcon.svg'
+import { Heading } from '@/components/ui/Heading'
+import { CardFormAdult } from '@/components/layout/card-page/Adult'
+import { Tabs, TTab } from '@/components/ui/tabs/Tabs'
+import { MeetingsListForm } from '@/components/ui/forms/MeetingsListForm'
+import { SurveysListForm } from '@/components/ui/forms/SurveysListForm'
+import styles from '@/styles/card.module.css'
+import { clientService } from '@/services/clients.service'
+import { useSearchParams } from 'next/navigation'
+import { IClient } from '@/types/clients'
+import { Spinner } from '@/components/Spinner'
+import { IChild } from '@/types/child'
+import { CardFormChild } from '@/components/layout/card-page/Child'
+import { EClientType } from '@/types/common'
+import { CardFormCouple } from '@/components/layout/card-page/Couple'
+import { ICouple } from '@/types/couple'
 
-import { useUser } from "@/app/context/userContext";
-
-import HumanIcon from "@/public/icon/humanIcon.svg";
-
-import { Heading } from "@/components/ui/Heading";
-import { CardForm } from "@/components/ui/forms/CardForm";
-import { Tabs } from "@/components/ui/tabs/Tabs";
-import { MeetingsListForm } from "@/components/ui/forms/MeetingsListForm";
-import { SurveysListForm } from "@/components/ui/forms/SurveysListForm";
-
-import styles from "@/styles/card.module.css";
-import {clientService} from "@/services/clients.service";
-import {useRouter, useSearchParams} from "next/navigation";
-
+type TUserType =
+  | { type: EClientType.ADULT; client: IClient }
+  | { type: EClientType.CHILD; client: IChild }
+  | { type: EClientType.COUPLE; client: ICouple }
 
 export function Card(id: any) {
-    const searchParams = useSearchParams();
-    const clientType = searchParams.get('clientType');
-    const [client, setClient] = useState<any>(null);
-    const [activeTab, setActiveTab] = useState('card');
+  const searchParams = useSearchParams()
+  const clientType = searchParams.get('clientType')
 
-    useEffect(() => {
+  const [isLoading, setIsLoading] = useState(false)
+  const [data, setData] = useState<TUserType>()
+  const [activeTab, setActiveTab] = useState<TTab>('card')
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        setIsLoading(true)
+
+        let data
         if (clientType === 'Взрослый') {
-            clientService.getClientById(id.id)
-                .then(data => {
-                    setClient(data.data);
-                })
-                .catch(error => {
-                    console.error("Ошибка при получении данных клиента:", error);
-                });
+          data = await clientService.getClientById(id.id)
+          setData({ type: EClientType.ADULT, client: data.data })
+        } else if (clientType === 'Ребенок') {
+          data = await clientService.getChildById(id.id)
+          setData({ type: EClientType.CHILD, client: data.data })
+        } else if (clientType === 'Пара') {
+          data = await clientService.getPairById(id.id)
+          setData({ type: EClientType.COUPLE, client: data.data })
         }
-        if (clientType === 'Ребенок') {
-            clientService.getChildById(id.id)
-                .then(data => {
-                    setClient(data.data);
-                })
-                .catch(error => {
-                    console.error("Ошибка при получении данных клиента:", error);
-                });
-        }
-        if (clientType === 'Пара') {
-            clientService.getPairById(id.id)
-                .then(data => {
-                    setClient(data.data);
-                })
-                .catch(error => {
-                    console.error("Ошибка при получении данных клиента:", error);
-                });
-        }
+      } catch (error) {
+        console.error('Ошибка при получении данных клиента:', error)
+      } finally {
+        setIsLoading(false)
+      }
+    }
 
-    }, [id]);
+    fetchData()
+  }, [id, clientType])
 
-    const title = `${client?.lastName} ${client?.firstName} ${client?.secondName} `;
-
-    return (
-        <div className={styles.card}>
-            <Heading title={title}/>
-            <div className="flex items-center space-x-4 mt-[7px] text-gray-700">
-                <div className="flex items-center space-x-2 bg-gray-200 text-gray-700 py-1 rounded-full">
-                    <div className="text-[11px] bg-[#E4E4E4] px-[12px] py-[3px] rounded-[30px] flex">
-                        <Image src={HumanIcon} alt="Human" className="mr-2"/> {client?.clientType}
-                    </div>
-                </div>
-                <div className="text-[11px]">
-                    <span className="text-[#7E7E7E]">Возраст:</span> {client?.years}
-                </div>
-                <div className="text-[11px]">
-                    <span className="text-[#7E7E7E]">Всего встреч:</span> {client?.countMeet}
-                </div>
-                <div className="text-[11px]">
-                    <span className="text-[#7E7E7E]">Последняя:</span> {client?.lastMeeting || null}
-                </div>
-                <div className="text-[11px]">
-                    <span className="text-[#7E7E7E]">Следующая:</span> {client?.nextMeeting || null}
-                </div>
+  return (
+    <div className={styles.card}>
+      {isLoading && <Spinner />}
+      {!isLoading && data && (
+        <>
+          <Heading title={data?.client.fullName} />
+          <div className="flex items-center space-x-4 mt-[7px] text-gray-700">
+            <div className="flex items-center space-x-2 bg-gray-200 text-gray-700 py-1 rounded-full">
+              <div className="text-[11px] bg-[#E4E4E4] px-[12px] py-[3px] rounded-[30px] flex">
+                <Image src={HumanIcon} alt="Human" className="mr-2" /> {data?.client.clientType}
+              </div>
             </div>
-            <Tabs changeActiveTab={setActiveTab} />
-            {activeTab === 'card' && <CardForm user={client}/>}
-            {activeTab === 'meetingsList' && <MeetingsListForm user={client}/>}
-            {activeTab === 'surveys' && <SurveysListForm user={client}/>}
-        </div>
-    );
+            {/*TODO: вернуть, когда обновят сваггер*/}
+            {/*<div className="text-[11px]">*/}
+            {/*  <span className="text-[#7E7E7E]">Возраст:</span> {client?.years}*/}
+            {/*</div>*/}
+            {/*<div className="text-[11px]">*/}
+            {/*  <span className="text-[#7E7E7E]">Всего встреч:</span> {client?.countMeet}*/}
+            {/*</div>*/}
+            {/*<div className="text-[11px]">*/}
+            {/*  <span className="text-[#7E7E7E]">Последняя:</span> {client?.lastMeeting || null}*/}
+            {/*</div>*/}
+            {/*<div className="text-[11px]">*/}
+            {/*  <span className="text-[#7E7E7E]">Следующая:</span> {client?.nextMeeting || null}*/}
+            {/*</div>*/}
+          </div>
+          <Tabs changeActiveTab={setActiveTab} activeTab={activeTab} />
+          {activeTab === 'card' && data.type === EClientType.ADULT && <CardFormAdult user={data.client} />}
+          {activeTab === 'card' && data.type === EClientType.CHILD && <CardFormChild user={data.client} />}
+          {activeTab === 'card' && data.type === EClientType.COUPLE && <CardFormCouple user={data.client} />}
+          {activeTab === 'meetingsList' && <MeetingsListForm user={data.client} />}
+          {activeTab === 'surveys' && <SurveysListForm user={data.client} />}
+        </>
+      )}
+    </div>
+  )
 }

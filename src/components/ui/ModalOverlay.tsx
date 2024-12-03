@@ -1,89 +1,80 @@
-import React, {useState, useEffect} from 'react';
-import Modal from 'react-modal';
-import styles from '@/styles/AddClientModal.module.css';
-import {useForm, SubmitHandler} from "react-hook-form";
-import {useMutation} from "@tanstack/react-query";
-import {calendarService} from "@/services/calendar.service";
-import {toast} from "react-toastify";
-import {UserMeeting} from "@/types/calendar.types";
-import {Input} from "@/components/ui/input";
-import Select from "react-select";
-import {DropdownIndicator} from "@/components/ui/clients/Clients";
-
+import React, { useState, useEffect } from 'react'
+import Modal from 'react-modal'
+import styles from '@/styles/AddClientModal.module.css'
+import { useForm, SubmitHandler } from 'react-hook-form'
+import { useMutation } from '@tanstack/react-query'
+import { calendarService } from '@/services/calendar.service'
+import { toast } from 'react-toastify'
+import { UserMeeting } from '@/helpers/types/calendar'
+import { Input } from '@/components/ui/input'
+import Select from 'react-select'
+import { DropdownIndicator } from '@/components/ui/clients/Clients'
 
 interface ClientForm {
-    clientType: string;
-    firstName?: string;
-    lastName?: string;
-    secondName?: string;
-    birth?: string;
-    gender?: string;
-    meetingFormat?: string;
-    phoneNumber?: string;
-    mail?: string;
-    parentFullName?: string;
-    parentFirstName?: string;
-    parentLastName?: string;
-    parentSecondName?: string
-    parentPhone?: string;
-    parentBirthDate?: string;
-    communicationFormat: string;
-    parentGender?: string;
-    parentCommunicationFormat?: string;
-    parentEmail?: string;
-    client2FirstName?: string;
-    client2LastName?: string;
-    client2SecondName?: string;
-    client2BirthDate?: string;
-    client2Gender?: string;
-    client2CommunicationFormat?: string;
-    client2Phone?: string;
-    client2Email?: string;
-    firstParent?: any;
+  clientType: string
+  fullName?: string
+  birth?: string
+  gender?: string
+  meetingFormat?: string
+  phoneNumber?: string
+  mail?: string
+  parentFullName?: string
+  parentPhone?: string
+  parentBirthDate?: string
+  communicationFormat: string
+  parentGender?: string
+  parentCommunicationFormat?: string
+  parentEmail?: string
+  client2FullName?: string
+  client2BirthDate?: string
+  client2Gender?: string
+  client2CommunicationFormat?: string
+  client2Phone?: string
+  client2Email?: string
+  firstParent?: any
 }
 
 // @ts-ignore
-const AddClientModal = ({isOpen, onClose}) => {
-    const [clientType, setClientType] = useState('adult');
-    const {register, handleSubmit, reset, setValue} = useForm<ClientForm>();
+const AddClientModal = ({ isOpen, onClose }) => {
+  const [clientType, setClientType] = useState('adult')
+  const { register, handleSubmit, reset, setValue } = useForm<ClientForm>()
 
-    useEffect(() => {
-        Modal.setAppElement(document.body);
-    }, []);
+  useEffect(() => {
+    Modal.setAppElement(document.body)
+  }, [])
 
+  const handleCloseModal = () => {
+    reset()
+    onClose()
+  }
 
-    const handleCloseModal = () => {
-        reset();
-        onClose();
-    };
+  const { mutate } = useMutation({
+    mutationKey: ['addUser'],
+    mutationFn: (data: UserMeeting) => {
+      if (clientType === 'adult') {
+        return calendarService.createAdultUser(data)
+      } else if (clientType === 'child') {
+        return calendarService.createChildUser(data)
+      } else if (clientType === 'couple') {
+        return calendarService.createCoupleUser(data)
+      }
+      throw new Error('Неизвестный тип клиента')
+    },
+    onSuccess: () => {
+      toast.success('Клиент успешно добавлен!')
+      reset()
+      onClose()
+    },
+    onError: () => {
+      toast.error('Ошибка при добавлении клиента')
+    },
+  })
 
-    const {mutate} = useMutation({
-        mutationKey: ['addUser'],
-        mutationFn: (data: UserMeeting) => {
-            if (clientType === 'adult') {
-                return calendarService.createAdultUser(data);
-            } else if (clientType === 'child') {
-                return calendarService.createChildUser(data);
-            } else if (clientType === 'couple') {
-                return calendarService.createCoupleUser(data);
-            }
-            throw new Error('Неизвестный тип клиента');
-        },
-        onSuccess: () => {
-            toast.success('Клиент успешно добавлен!');
-            reset();
-            onClose();
-        },
-        onError: () => {
-            toast.error('Ошибка при добавлении клиента');
-        }
-    });
-
-    const formatDate = (dateString: string | number | Date) => {
-        const options = { year: "numeric", month: "long", day: "numeric"}
-        // @ts-ignore
-        return new Date(dateString).toLocaleDateString(undefined, options)
-    }
+  const formatDate = (dateString: string | number | Date) => {
+    const options = { year: 'numeric', month: 'long', day: 'numeric' }
+    // @ts-ignore
+    return new Date(dateString).toLocaleDateString(undefined, options)
+  }
 
     const onSubmit: SubmitHandler<ClientForm> = (data) => {
         if (clientType === 'child') {
@@ -140,15 +131,15 @@ const AddClientModal = ({isOpen, onClose}) => {
         }
     };
 
-    const genderOptions = [
-        {value: 'Мужской', label: 'Мужской'},
-        {value: 'Женский', label: 'Женский'}
-    ];
+  const genderOptions = [
+    { value: 'Мужской', label: 'Мужской' },
+    { value: 'Женский', label: 'Женский' },
+  ]
 
-    const communicationFormatOptions = [
-        {value: 'Офлайн', label: 'Офлайн'},
-        {value: 'Онлайн', label: 'Онлайн'}
-    ];
+  const communicationFormatOptions = [
+    { value: 'Офлайн', label: 'Офлайн' },
+    { value: 'Онлайн', label: 'Онлайн' },
+  ]
 
     return (
         <Modal
@@ -663,4 +654,4 @@ const AddClientModal = ({isOpen, onClose}) => {
     );
 };
 
-export default AddClientModal;
+export default AddClientModal

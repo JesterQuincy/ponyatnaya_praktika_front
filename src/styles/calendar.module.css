@@ -1,14 +1,14 @@
 .MainBody {
     width: 100%;
-    height: fit-content;
     display: flex;
     flex-direction: row;
     gap: 8px;
-
+    padding: var(--main-padding);
 }
 
 .CentralContainer {
     display: flex;
     flex-direction: column;
     gap: 8px;
+    width: 100vw;
 }

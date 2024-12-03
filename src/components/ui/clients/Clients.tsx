@@ -1,70 +1,64 @@
 'use client'
 
-import React, { useState, useMemo, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
+import React, { useState, useMemo, useEffect } from 'react'
+import { useRouter } from 'next/navigation'
 import Image from 'next/image'
-import { Heading } from "@/components/ui/Heading";
-import Select from 'react-select';
-import { components } from "react-select";
-import { Input } from "@/components/ui/input";
-import SearchUserIcon from "@/public/icon/searchUser.svg"
-import FilterIcon from "@/public/icon/filterIcon.svg"
+import { Heading } from '@/components/ui/Heading'
+import Select from 'react-select'
+import { components } from 'react-select'
+import { Input } from '@/components/ui/input'
+import SearchUserIcon from '@/public/icon/searchUser.svg'
+import FilterIcon from '@/public/icon/filterIcon.svg'
 import ChildrenIcon from '@/public/icon/childrenIcon.svg'
-import HumanIcon from "@/public/icon/humanIcon.svg"
-import MailIcon from "@/public/icon/mailIcon.svg"
-import PhoneIcon from "@/public/icon/telephoneIcon.svg"
+import HumanIcon from '@/public/icon/humanIcon.svg'
+import MailIcon from '@/public/icon/mailIcon.svg'
+import PhoneIcon from '@/public/icon/telephoneIcon.svg'
 import PairIcon from '@/public/icon/pair.svg'
-import BottomArrow from "@/public/icon/bottomArrow.svg"
-import { clientService } from "@/services/clients.service";
-import { useUser } from '@/app/context/userContext';
-import {Pagination} from "@/components/ui/Pagination";
+import BottomArrow from '@/public/icon/bottomArrow.svg'
+import { clientService } from '@/services/clients.service'
+import { Pagination } from '@/components/ui/Pagination'
 
 export const DropdownIndicator = (props: any) => {
-    return (
-        <components.DropdownIndicator {...props}>
-            <Image
-                src={BottomArrow}
-                alt="Dropdown icon"
-                width={8}
-                height={8}
-            />
-        </components.DropdownIndicator>
-    );
-};
+  return (
+    <components.DropdownIndicator {...props}>
+      <Image src={BottomArrow} alt="Dropdown icon" width={8} height={8} />
+    </components.DropdownIndicator>
+  )
+}
 
 function Clients() {
-    const [searchQuery, setSearchQuery] = useState("");
-    const [filterClientType, setFilterClientType] = useState({ value: "Нет", label: "Нет" });
-    const [filterClientStatus, setFilterClientStatus] = useState({ value: "Нет", label: "Нет" });
-    const [filterDateOrder, setFilterDateOrder] = useState({ value: "Нет", label: "Нет" });
-    const [filterMeetingFrequency, setFilterMeetingFrequency] = useState({ value: "Нет", label: "Нет" });
-    const [currentPage, setCurrentPage] = useState(1);
-    const [clients, setClients] = useState([]);
-    const [isLoading, setIsLoading] = useState(true);
-    const clientsPerPage = 5;
+  const [searchQuery, setSearchQuery] = useState('')
+  const [filterClientType, setFilterClientType] = useState({ value: 'Нет', label: 'Нет' })
+  const [filterClientStatus, setFilterClientStatus] = useState({ value: 'Нет', label: 'Нет' })
+  const [filterDateOrder, setFilterDateOrder] = useState({ value: 'Нет', label: 'Нет' })
+  const [filterMeetingFrequency, setFilterMeetingFrequency] = useState({ value: 'Нет', label: 'Нет' })
+  const [currentPage, setCurrentPage] = useState(1)
+  const [clients, setClients] = useState([])
+  const [isLoading, setIsLoading] = useState(true)
+  const clientsPerPage = 10
 
-    const router = useRouter();
+  const router = useRouter()
 
-    const handleClick = (client: any): void => {
-        router.push(`card/${client.personId}?clientType=${client.clientType}`);
-    };
+  const handleClick = (client: any): void => {
+    router.push(`card/${client.customerId}?clientType=${client.clientType}`)
+  }
 
-    async function fetchClients() {
-        try {
-            setIsLoading(true);
-            const data = await clientService.getClientByName(clientsPerPage, (currentPage - 1) * clientsPerPage, searchQuery);
-            console.log("Полученные данные:", data.data);
-            setClients(data.data);
-        } catch (error) {
-            console.error("Ошибка загрузки данных:", error);
-        } finally {
-            setIsLoading(false);
-        }
+  async function fetchClients() {
+    try {
+      setIsLoading(true)
+      const data = await clientService.getClientByName(clientsPerPage, (currentPage - 1) * clientsPerPage, searchQuery)
+      console.log('Полученные данные:', data.data)
+      setClients(data.data)
+    } catch (error) {
+      console.error('Ошибка загрузки данных:', error)
+    } finally {
+      setIsLoading(false)
     }
+  }
 
-    useEffect(() => {
-        fetchClients();
-    }, [currentPage, searchQuery]);
+  useEffect(() => {
+    fetchClients()
+  }, [currentPage, searchQuery])
 
     const filteredClients = useMemo(() => {
         return clients
@@ -118,116 +112,124 @@ function Clients() {
             });
     }, [clients, searchQuery, filterClientType, filterClientStatus, filterDateOrder, filterMeetingFrequency]);
 
-    const totalPages = Math.ceil(filteredClients.length / clientsPerPage);
-    const currentClients = filteredClients.slice((currentPage - 1) * clientsPerPage, currentPage * clientsPerPage);
+  const totalPages = Math.ceil(filteredClients.length / clientsPerPage)
+  const currentClients = filteredClients.slice((currentPage - 1) * clientsPerPage, currentPage * clientsPerPage)
 
-    const clientTypeOptions = [
-        { value: "Нет", label: "Нет" },
-        { value: "Взрослый", label: "Взрослый" },
-        { value: "Пара", label: "Пара" },
-        { value: "Ребенок", label: "Ребенок" }
-    ];
+  const clientTypeOptions = [
+    { value: 'Нет', label: 'Нет' },
+    { value: 'Взрослый', label: 'Взрослый' },
+    { value: 'Пара', label: 'Пара' },
+    { value: 'Ребенок', label: 'Ребенок' },
+  ]
 
-    const clientStatusOptions = [
-        { value: "Нет", label: "Нет" },
-        { value: "Онлайн", label: "Онлайн" },
-        { value: "Офлайн", label: "Офлайн" },
-        { value: "Заявка", label: "Заявка" },
-        { value: "Завершён", label: "Завершён" }
-    ];
+  const clientStatusOptions = [
+    { value: 'Нет', label: 'Нет' },
+    { value: 'Онлайн', label: 'Онлайн' },
+    { value: 'Офлайн', label: 'Офлайн' },
+    { value: 'Заявка', label: 'Заявка' },
+    { value: 'Завершён', label: 'Завершён' },
+  ]
 
-    const dateOrderOptions = [
-        { value: "Нет", label: "Нет" },
-        { value: "Раньше", label: "Раньше" },
-    ];
+  const dateOrderOptions = [
+    { value: 'Нет', label: 'Нет' },
+    { value: 'Раньше', label: 'Раньше' },
+  ]
 
-    const meetingFrequencyOptions = [
-        { value: "Нет", label: "Нет" },
-        { value: "Чаще", label: "Чаще" },
-        { value: "Реже", label: "Реже" }
-    ];
+  const meetingFrequencyOptions = [
+    { value: 'Нет', label: 'Нет' },
+    { value: 'Чаще', label: 'Чаще' },
+    { value: 'Реже', label: 'Реже' },
+  ]
 
-    const iconMap = {
-        Пара: PairIcon,
-        Взрослый: HumanIcon,
-        Ребенок: ChildrenIcon,
-    };
+  const iconMap = {
+    Пара: PairIcon,
+    Взрослый: HumanIcon,
+    Ребенок: ChildrenIcon,
+  }
 
-    const paginate = (pageNumber: number) => setCurrentPage(pageNumber);
+  const paginate = (pageNumber: number) => setCurrentPage(pageNumber)
 
-    // @ts-ignore
-    return (
-        <div className="w-full h-[100vh] rounded-[6px] bg-white px-10 pt-[30px] relative">
-            <Heading title="Клиенты"/>
-            <div className="flex flex-col items-start mb-4 mt-[10px]">
-                <div className="relative flex flex-row">
-                    <Input
-                        type="text"
-                        placeholder="Поиск по клиентам"
-                        value={searchQuery}
-                        onChange={(e) => setSearchQuery(e.target.value)}
-                        className="w-[300px]"
-                        iconSrc={SearchUserIcon}
-                    />
-                    <div className="flex flex-row items-center ml-[17px]">
-                        <Image src={FilterIcon} alt="filter" width={13} height={13}/>
-                        <div className="ml-[5px]">Фильтр:</div>
-                        <Select
-                            value={filterClientStatus}
-                            onChange={(selectedOption) => setFilterClientStatus(selectedOption || {
-                                value: "Нет",
-                                label: "Нет"
-                            })}
-                            options={clientStatusOptions}
-                            className="ml-4 w-[100px]"
-                            placeholder="Статус клиента"
-                            styles={{
-                                indicatorSeparator: () => ({display: "none"}),
-                            }}
-                            components={{DropdownIndicator}}
-                        />
-                    </div>
-                </div>
-            </div>
+  // @ts-ignore
+  return (
+    <div className="w-full rounded-[6px]">
+      <Heading title="Клиенты" />
+      <div className="flex flex-col items-start mb-4 mt-[10px]">
+        <div className="relative flex flex-row">
+          <Input
+            type="text"
+            placeholder="Поиск по клиентам"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="w-[300px]"
+            iconSrc={SearchUserIcon}
+          />
+          <div className="flex flex-row items-center ml-[17px]">
+            <Image src={FilterIcon} alt="filter" width={13} height={13} />
+            <div className="ml-[5px]">Фильтр:</div>
+            <Select
+              value={filterClientStatus}
+              onChange={(selectedOption) =>
+                setFilterClientStatus(
+                  selectedOption || {
+                    value: 'Нет',
+                    label: 'Нет',
+                  },
+                )
+              }
+              options={clientStatusOptions}
+              className="ml-4 w-[100px]"
+              placeholder="Статус клиента"
+              styles={{
+                indicatorSeparator: () => ({ display: 'none' }),
+              }}
+              components={{ DropdownIndicator }}
+            />
+          </div>
+        </div>
+      </div>
 
-            <div className="flex items-center mb-4">
-                <div className="text-[12px]">Сортировать по дате последней встречи</div>
-                <Select
-                    value={filterDateOrder}
-                    onChange={(selectedOption) =>
-                        setFilterDateOrder(selectedOption || {
-                            value: "Нет",
-                            label: "Нет",
-                        })
-                    }
-                    options={dateOrderOptions}
-                    className="w-[100px] text-[12px] ml-2"
-                    placeholder="Дата встречи"
-                    styles={{
-                        indicatorSeparator: () => ({display: "none"}),
-                    }}
-                    components={{DropdownIndicator}}
-                />
+      <div className="flex items-center mb-4">
+        <div className="text-[12px]">Сортировать по дате последней встречи</div>
+        <Select
+          value={filterDateOrder}
+          onChange={(selectedOption) =>
+            setFilterDateOrder(
+              selectedOption || {
+                value: 'Нет',
+                label: 'Нет',
+              },
+            )
+          }
+          options={dateOrderOptions}
+          className="w-[100px] text-[12px] ml-2"
+          placeholder="Дата встречи"
+          styles={{
+            indicatorSeparator: () => ({ display: 'none' }),
+          }}
+          components={{ DropdownIndicator }}
+        />
 
-                <div className="flex items-center ml-5">
-                    <div className="text-[12px]">По интенсивности встреч</div>
-                    <Select
-                        value={filterMeetingFrequency}
-                        onChange={(selectedOption) =>
-                            setFilterMeetingFrequency(selectedOption || {
-                                value: "Нет",
-                                label: "Нет",
-                            })
-                        }
-                        options={meetingFrequencyOptions}
-                        className="ml-2 w-[80px] text-[12px]"
-                        placeholder="Интенсивность встреч"
-                        styles={{
-                            indicatorSeparator: () => ({display: "none"}),
-                        }}
-                        components={{DropdownIndicator}}
-                    />
-                </div>
+        <div className="flex items-center ml-5">
+          <div className="text-[12px]">По интенсивности встреч</div>
+          <Select
+            value={filterMeetingFrequency}
+            onChange={(selectedOption) =>
+              setFilterMeetingFrequency(
+                selectedOption || {
+                  value: 'Нет',
+                  label: 'Нет',
+                },
+              )
+            }
+            options={meetingFrequencyOptions}
+            className="ml-2 w-[80px] text-[12px]"
+            placeholder="Интенсивность встреч"
+            styles={{
+              indicatorSeparator: () => ({ display: 'none' }),
+            }}
+            components={{ DropdownIndicator }}
+          />
+        </div>
 
                 <div className="flex items-center ml-5">
                     <div className="text-[12px]">Тип клиента</div>
@@ -253,7 +255,7 @@ function Clients() {
                 {currentClients.map(client => (
                     <div key={
                         //@ts-ignore
-                        client.personId} className="border-t border-[#6A6A6A] py-[10px]">
+                        client.customerId} className="border-t border-[#6A6A6A] py-[10px]">
                         <div className="flex justify-between items-start">
                             <div>
                                 <h2
@@ -353,4 +355,4 @@ function Clients() {
     );
 }
 
-export default Clients;
+export default Clients
