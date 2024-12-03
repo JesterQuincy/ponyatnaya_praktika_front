@@ -1,12 +1,15 @@
 'use client'
 
-import {Calendar} from "@/app/calendar/Calendar";
-import Clients from "@/components/ui/clients/Clients";
+import { Calendar } from '@/app/calendar/Calendar'
+import Clients from '@/components/ui/clients/Clients'
+import { Wrapper } from '@/components/wrapper'
 
 export default function Client() {
-    return (
-        <Calendar>
-            <Clients />
-        </Calendar>
-    )
+  return (
+    <Calendar>
+      <Wrapper>
+        <Clients />
+      </Wrapper>
+    </Calendar>
+  )
 }
