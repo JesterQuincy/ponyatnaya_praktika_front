@@ -12,20 +12,27 @@ import { DropdownIndicator } from '@/components/ui/clients/Clients'
 
 interface ClientForm {
   clientType: string
-  fullName?: string
+  firstName?: string
+  lastName?: string
+  secondName?: string
   birth?: string
   gender?: string
   meetingFormat?: string
   phoneNumber?: string
   mail?: string
   parentFullName?: string
+  parentFirstName?: string
+  parentLastName?: string
+  parentSecondName?: string
   parentPhone?: string
   parentBirthDate?: string
   communicationFormat: string
   parentGender?: string
   parentCommunicationFormat?: string
   parentEmail?: string
-  client2FullName?: string
+  client2FirstName?: string
+  client2LastName?: string
+  client2SecondName?: string
   client2BirthDate?: string
   client2Gender?: string
   client2CommunicationFormat?: string
@@ -35,7 +42,7 @@ interface ClientForm {
 }
 
 // @ts-ignore
-const AddClientModal = ({ isOpen, onClose }) => {
+export const AddClientModal = ({ isOpen, onClose }) => {
   const [clientType, setClientType] = useState('adult')
   const { register, handleSubmit, reset, setValue } = useForm<ClientForm>()
 
@@ -726,5 +733,3 @@ const AddClientModal = ({ isOpen, onClose }) => {
     </Modal>
   )
 }
-
-export default AddClientModal
