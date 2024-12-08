@@ -12,22 +12,29 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { isEmpty } from '@/helpers/utils/isEmpty'
 import { useUpdateMeeting } from '@/api/hooks/meet/useUpdateMeeting'
 import { FormPrompt } from '@/components/form-prompt'
-import { useState } from 'react'
+import { Dispatch, SetStateAction, useState } from 'react'
 import { IMeetingDetails } from '@/types/meet/getMeetById'
 import { removeEmptyValues } from '@/helpers/utils/removeEmptyValues'
 import { useGetProjMethods } from '@/api/hooks/methods/useGetProjMethods'
 import { Spinner } from '@/components/Spinner'
+import { Delete, Edit, Pencil, Trash2 } from 'lucide-react'
+import { TModalType } from '@/components/ui/forms/MeetForm/MeetForm'
 
 interface IMeetFormProps {
   content: IMeetingDetails
-  modalOpen: () => void
+  modalOpen: Dispatch<SetStateAction<TModalType>>
 }
 
 export function MeetContent({ content, modalOpen }: IMeetFormProps) {
   const [showAll, setShowAll] = useState(false)
 
-  const { data: methods, isPending: isGetProjMethodsPending } = useGetProjMethods(content.id)
-  const { mutate: updateMeet, isPending: isUpdateMeetPending } = useUpdateMeeting()
+  const {
+    data: methods,
+    isPending: isGetProjMethodsPending,
+    isLoading: isGetProjMethodsLoading,
+    isRefetching: isGetProjMethodsRefetching,
+  } = useGetProjMethods(content.id)
+  const { mutateAsync: updateMeet, isPending: isUpdateMeetPending } = useUpdateMeeting()
 
   const visibleMetodics = showAll ? methods?.data : methods?.data?.slice(0, 5)
 
@@ -40,6 +47,7 @@ export function MeetContent({ content, modalOpen }: IMeetFormProps) {
     therapistMainEmotionsExpressed,
     techniquesAndMethodsUsed,
     clientMainObstaclesMethods,
+    note,
   } = removeEmptyValues(content)
 
   const form = useForm<IMeetingSchema>({
@@ -53,13 +61,19 @@ export function MeetContent({ content, modalOpen }: IMeetFormProps) {
       therapistMainEmotionsExpressed,
       techniquesAndMethodsUsed,
       clientMainObstaclesMethods,
+      note,
     },
   })
 
-  const handleFormSubmit = (data: IMeetingSchema) => {
-    updateMeet({ id: content.id, ...data })
-    console.log(data)
+  const handleFormSubmit = async (data: IMeetingSchema) => {
+    try {
+      await updateMeet({ ...content, ...data })
+
+      form.reset(data)
+    } catch {}
   }
+
+  const isLoadingMethod = isGetProjMethodsPending || isGetProjMethodsLoading || isGetProjMethodsRefetching
 
   return (
     <Form {...form}>
@@ -96,16 +110,40 @@ export function MeetContent({ content, modalOpen }: IMeetFormProps) {
         <div className="bg-[#F1F1F1] w-[40%] rounded-[4px] py-[29px] px-[11px] h-fit">
           <div>
             <span className="font-bold text-[20px]">Проективные методики</span>
-            {isGetProjMethodsPending && <Spinner />}
-            {!!methods?.data?.length && (
+            {isLoadingMethod && <Spinner />}
+            {!isLoadingMethod && !!methods?.data?.length && (
               <>
                 <div className="flex flex-col gap-[10px] mt-[10px]">
-                  {visibleMetodics?.map((item, i) => (
-                    <div key={i} className="bg-white rounded-[6px] p-[5px] flex items-center gap-[10px]">
+                  {visibleMetodics?.map((item) => (
+                    <div key={item.id} className="bg-white rounded-[6px] p-[5px] flex items-center gap-[10px]">
                       <span className="bg-[#6E6E6E] text-white text-[12px] p-[2px] rounded-[3px] text-center min-w-[75px]">
                         {item.dateCreateMethod}
                       </span>
-                      <span className="text-[15px]">{item.typeMethod.nameMethod}</span>
+                      <span
+                        className="text-[15px] w-full hover:underline cursor-pointer"
+                        onClick={() => {
+                          modalOpen({ type: 'view', id: item.id })
+                        }}>
+                        {item.typeMethod.nameMethod}
+                      </span>
+                      <div className="ml-auto flex gap-x-4">
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation()
+                            modalOpen({ type: 'edit', id: item.id })
+                          }}
+                          type="button">
+                          <Pencil className="w-4 h-4" />
+                        </button>
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation()
+                            modalOpen({ type: 'delete', id: item.id })
+                          }}
+                          type="button">
+                          <Trash2 className="w-4 h-4" />
+                        </button>
+                      </div>
                     </div>
                   ))}
                 </div>
@@ -126,7 +164,9 @@ export function MeetContent({ content, modalOpen }: IMeetFormProps) {
           </div>
           <div className="mt-[13px]">
             <Button
-              onClick={modalOpen}
+              onClick={() => {
+                modalOpen({ type: 'create' })
+              }}
               type={'button'}
               className="bg-[#5A5A5A] text-white px-[10px] py-[5px] rounded-[6px] flex items-center">
               <Image src={ImageIcon} alt="CorrectFile" className="mr-2" />
