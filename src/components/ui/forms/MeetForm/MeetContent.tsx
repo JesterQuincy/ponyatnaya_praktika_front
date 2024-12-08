@@ -17,7 +17,7 @@ import { IMeetingDetails } from '@/types/meet/getMeetById'
 import { removeEmptyValues } from '@/helpers/utils/removeEmptyValues'
 import { useGetProjMethods } from '@/api/hooks/methods/useGetProjMethods'
 import { Spinner } from '@/components/Spinner'
-import { Delete, Edit, Pencil, Trash2 } from 'lucide-react'
+import { Pencil, Trash2 } from 'lucide-react'
 import { TModalType } from '@/components/ui/forms/MeetForm/MeetForm'
 
 interface IMeetFormProps {
