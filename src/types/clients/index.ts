@@ -5,15 +5,15 @@ export interface IClient {
   firstName: string
   secondName: string
   lastName: string
-  birth: string // Можно заменить на Date, если предполагается использование объектов даты
+  birth: string
   phoneNumber: string
   mail: string
   gender: string
   clientStatus: string
   meetingFormat: string
   contactMethod: string
-  dateFirstRequest: string // Также можно заменить на Date
-  dateFirstConsultation: string // Аналогично
+  dateFirstRequest: string
+  dateFirstConsultation: string
   onlinePlatform: string
   offlineAddress: string
   clientTherapyRequest: string
@@ -27,5 +27,7 @@ export interface IClient {
   supervisionStatusThisClient: string
   contactSupervisor: string
   supervisionMaterial: string
+  takingMedic: string
+  prevExperience: string
   notes: string
 }

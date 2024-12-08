@@ -1,4 +1,4 @@
-export const projectMetodics = [
+export const projectMethodics = [
   {
     id: 1,
     date: '12.09.2024',
@@ -23,5 +23,15 @@ export const projectMetodics = [
     id: 5,
     date: '12.09.2024',
     title: 'Три дерева',
+  },
+  {
+    id: 6,
+    date: '12.09.2024',
+    title: 'ё',
+  },
+  {
+    id: 7,
+    date: '12.09.2024',
+    title: '123',
   },
 ]

@@ -13,3 +13,10 @@ export type NestedKeys<T> = T extends object
 export type DeepPartial<T> = {
   [P in keyof T]?: T[P] extends object ? DeepPartial<T[P]> : T[P]
 }
+
+export interface IMutateResponse {
+  data: number
+  error: string
+}
+
+export type TPromiseNumber = Promise<{ data: number }>

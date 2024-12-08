@@ -1,78 +1,36 @@
-export const meetsList = [
-  {
-    id: 1,
-    title: 'Встреча 9',
-    date: '20.12.2024',
-    status: 'Офлайн',
-    themes: ['Работа со страхом, неуверенностью', 'Отношения с матерью', 'Сепарация'],
-  },
-  {
-    id: 2,
-    title: 'Встреча 8',
-    date: '20.12.2024',
-    status: 'Офлайн',
-    themes: ['Работа со страхом, неуверенностью', 'Отношения с матерью', 'Сепарация'],
-  },
-  {
-    id: 3,
-    title: 'Встреча 7',
-    date: '20.12.2024',
-    status: 'Офлайн',
-    themes: ['Работа со страхом, неуверенностью'],
-  },
-  {
-    id: 4,
-    title: 'Встреча 6',
-    date: '20.12.2024',
-    status: 'Онлайн',
-    themes: ['Инструменты преодоления панической атаки'],
-  },
-  {
-    id: 5,
-    title: 'Встреча 5',
-    date: '20.12.2024',
-    status: 'Онлайн',
-    themes: ['Инструменты преодоления панической атаки'],
-  },
-  {
-    id: 6,
-    title: 'Встреча 4',
-    date: '20.12.2024',
-    status: 'Офлайн',
-    themes: ['Работа со страхом, неуверенностью', 'Отношения с матерью', 'Сепарация'],
-  },
-  {
-    id: 7,
-    title: 'Встреча 3',
-    date: '20.12.2024',
-    status: 'Офлайн',
-    themes: ['Работа со страхом, неуверенностью', 'Отношения с матерью', 'Сепарация'],
-  },
-]
+import { IMeetingSchema } from '@/models/meetSchema'
 
-export const meetData = [
+export const meetData: { name: keyof IMeetingSchema; label: string }[] = [
   {
-    fieldName: 'Запрос на сессию со стороны клиента',
+    name: 'clientSessionRequest',
+    label: 'Запрос на сессию со стороны клиента',
   },
   {
-    fieldName: 'Состояние терапевта в начале сессии',
+    name: 'therapistStateAtSessionStart',
+    label: 'Состояние терапевта в начале сессии',
   },
   {
-    fieldName: 'Основные темы, затронутые в ходе сеанса',
+    name: 'mainTopicsDiscussedDuringSession',
+    label: 'Основные темы, затронутые в ходе сеанса',
   },
   {
-    fieldName: 'Значимые фразы, инсайты клиента',
+    name: 'clientKeyPhrasesInsights',
+    label: 'Значимые фразы, инсайты клиента',
   },
   {
-    fieldName: 'Основные эмоции клиента',
+    name: 'clientMainEmotions',
+    label: 'Основные эмоции клиента',
   },
   {
-    fieldName: 'Основные проявленные эмоции терапевта',
+    name: 'therapistMainEmotionsExpressed',
+    label: 'Основные проявленные эмоции терапевта',
   },
   {
-    fieldName: 'Применяемые техники и методы',
+    name: 'techniquesAndMethodsUsed',
+    label: 'Применяемые техники и методы',
   },
   {
-    fieldName: 'Основные препятствия и способы сопротивления процессу со стороны клиента',
+    name: 'clientMainObstaclesMethods',
+    label: 'Основные препятствия и способы сопротивления процессу со стороны клиента',
   },
 ]
