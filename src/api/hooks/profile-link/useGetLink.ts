@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { profileLinkService } from '@/models/profile-link.service'
+import { profileLinkService } from '@/services/profile-link.service'
 import { toast } from 'react-toastify'
 
 export function useGetLink() {

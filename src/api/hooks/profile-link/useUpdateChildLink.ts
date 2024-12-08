@@ -1,7 +1,7 @@
 import { useMutation } from '@tanstack/react-query'
 import { DeepPartial } from '@/types/common'
 import { toast } from 'react-toastify'
-import { profileLinkService } from '@/models/profile-link.service'
+import { profileLinkService } from '@/services/profile-link.service'
 import { IChild } from '@/types/child'
 
 export function useUpdateChildLink() {
