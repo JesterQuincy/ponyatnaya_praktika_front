@@ -12,7 +12,7 @@ interface IUser {
   userImage: string
 }
 
-interface IMethodic {
+export interface IMethodic {
   id: number
   nameMethod: string
   user: IUser

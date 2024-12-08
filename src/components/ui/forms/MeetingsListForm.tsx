@@ -90,7 +90,7 @@ export function MeetingsListForm({ user }: ICardFormProps) {
                 </span>
                 <span className="text-[#7E7E7E] text-[13px]">Основные темы:</span>
               </div>
-              <span className="text-[13px]">{meet.clientSessionRequest?.join('. ')}</span>
+              <span className="text-[13px]">{meet.clientSessionRequest}</span>
             </div>
             <Button
               onClick={() => handleDropdownToggle(meet.id)}

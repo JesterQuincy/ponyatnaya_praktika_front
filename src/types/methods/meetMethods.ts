@@ -1,12 +1,4 @@
-import { IClient } from '@/types/clients'
 import { IMeetingDetails } from '@/types/meet/getMeetById'
-
-interface Time {
-  hour: number
-  minute: number
-  second: number
-  nano: number
-}
 
 interface IUser {
   id: number
@@ -28,23 +20,25 @@ interface ITypeMethod {
   user: IUser
 }
 
-interface IProjectiveMethod {
+export interface IProjectiveMethod {
   id: number
   meet: IMeetingDetails
   dateCreateMethod: string
   typeMethod: ITypeMethod
+  photoProjectiveMethods: IPhotoProjectiveMethod[]
 }
 
 interface IPhotoProjectiveMethod {
   id: number
-  projectiveMethod: IProjectiveMethod
+  projectiveMethod: string
   photoMethod: string
   dateCreatePhoto: string
 }
 
 export interface IMeetProjMethod {
+  id: number
   meet: IMeetingDetails
   dateCreateMethod: string
   typeMethod: ITypeMethod
-  photoProjectiveMethod: IPhotoProjectiveMethod[]
+  photoProjectiveMethods: IPhotoProjectiveMethod[]
 }
