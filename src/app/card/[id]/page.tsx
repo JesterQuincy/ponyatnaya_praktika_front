@@ -2,13 +2,16 @@
 
 import { Calendar } from '@/app/calendar/Calendar'
 import { Card } from '@/app/card/Card'
+import { Wrapper } from '@/components/wrapper'
 
 export default function CardPage({ params }: { params: { id: string } }) {
   const { id } = params
 
   return (
     <Calendar>
-      <Card id={id} />
+      <Wrapper>
+        <Card id={id} />
+      </Wrapper>
     </Calendar>
   )
 }

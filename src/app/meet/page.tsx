@@ -1,13 +1,15 @@
 'use client'
 
 import { Calendar } from '@/app/calendar/Calendar'
-import Clients from '@/components/ui/clients/Clients'
 import { Meet } from '@/app/meet/Meet'
+import { Wrapper } from '@/components/wrapper'
 
 export default function MeetPage() {
   return (
     <Calendar>
-      <Meet />
+      <Wrapper>
+        <Meet />
+      </Wrapper>
     </Calendar>
   )
 }

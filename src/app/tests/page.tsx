@@ -1,10 +1,8 @@
 'use client'
 
 import React, { useState } from 'react'
-import { Calendar } from '@/app/calendar/Calendar'
 import { Heading } from '@/components/ui/Heading'
-import { Wrapper } from '@/components/wrapper'
-import { ITestCardProps, TestCard } from '@/components/test-card'
+import { TestCard } from '@/components/test-card'
 import { cardData, initialSortValue } from '@/app/tests/constants'
 import { FormProvider, useForm } from 'react-hook-form'
 import { toast } from 'react-toastify'
@@ -14,6 +12,7 @@ import { CreateMaterialModal } from '@/components/layout/tests-page/CreateMateri
 import { zodResolver } from '@hookform/resolvers/zod'
 import { ITestsFilter } from '@/models/testsFilterSchema'
 import { createMaterialSchema, ICreateMaterial } from '@/models/createMaterialSchema'
+import { ITestCardProps } from '@/helpers/types/tests'
 
 export interface IValueLabelModel {
   value: string
