@@ -7,13 +7,32 @@ export interface ICouple {
   firstName: string
   secondName: string
   lastName: string
-  birth: string // Можно использовать Date, если хотите работать с датами
+  birth: string
   phoneNumber: string
   mail: string
   gender: string
   clientStatus: string
   meetingFormat: string
-  secondCustomer: IClient
+  contactMethod: string
+  dateFirstRequest: string
+  dateFirstConsultation: string
+  onlinePlatform: string
+  offlineAddress: string
+  clientTherapyRequest: string
+  meetingTimeDay: string
+  financialCondition: 0
+  residenceAddress: string
+  peerRecommendation: string
+  specialTermsContact: string
+  familyStatus: string
+  priorityCommunicationChannel: string
+  supervisionStatusThisClient: string
+  contactSupervisor: string
+  supervisionMaterial: string
+  takingMedic: string
+  prevExperience: string
+  notes: string
+  secondPerson: IClient
   clientFirstRequestTherapyReason: string
   clientFirstRequestTherapyDesiredOutcome: string
   secondClientRequestTherapyReason: string
@@ -22,5 +41,4 @@ export interface ICouple {
   phoneNumberCotherapy: string
   mailCotherapy: string
   financialTermsCotherapists: string
-  familyStatus: string
 }

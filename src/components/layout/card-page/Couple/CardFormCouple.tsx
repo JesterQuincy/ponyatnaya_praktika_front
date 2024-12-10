@@ -3,7 +3,14 @@
 import { Form } from '@/components/ui/form'
 import { useForm } from 'react-hook-form'
 import { useCallback, useEffect, useMemo, useState } from 'react'
-import { communicationFormatOptions, genderOptions } from '@/components/ui/forms/constants/selectOptions'
+import {
+  appealOptions,
+  channelOptions,
+  communicationFormatOptions,
+  familyStatusOptions,
+  genderOptions,
+  serviceOptions,
+} from '@/components/ui/forms/constants/selectOptions'
 import { removeEmptyValues } from '@/helpers/utils/removeEmptyValues'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { ICouple } from '@/types/couple'
@@ -38,33 +45,27 @@ export const CardFormCouple = ({ user }: ICardFormProps) => {
     secondClientRequestTherapyReason,
     clientSecondRequestTherapyDesiredOutcome,
     familyStatus,
-    secondCustomer,
+    secondPerson,
     meetingFormat,
+    onlinePlatform,
+    meetingTimeDay,
+    residenceAddress,
   } = {
     ...removeEmptyValues(user),
   }
 
   const secondClientData = useMemo(() => {
     return {
-      lastName: secondCustomer?.lastName,
-      firstName: secondCustomer?.firstName,
-      secondName: secondCustomer?.secondName,
-      phoneNumber: secondCustomer?.phoneNumber,
-      mail: secondCustomer?.mail,
-      gender: secondCustomer?.gender,
-      birth: secondCustomer?.birth,
-      familyStatus: secondCustomer?.familyStatus,
+      lastName: secondPerson?.lastName,
+      firstName: secondPerson?.firstName,
+      secondName: secondPerson?.secondName,
+      phoneNumber: secondPerson?.phoneNumber,
+      mail: secondPerson?.mail,
+      gender: secondPerson?.gender,
+      birth: secondPerson?.birth,
+      familyStatus: secondPerson?.familyStatus,
     }
-  }, [
-    secondCustomer?.birth,
-    secondCustomer?.familyStatus,
-    secondCustomer?.firstName,
-    secondCustomer?.gender,
-    secondCustomer?.lastName,
-    secondCustomer?.mail,
-    secondCustomer?.phoneNumber,
-    secondCustomer?.secondName,
-  ])
+  }, [secondPerson])
 
   const form = useForm<ICoupleSchema>({
     mode: 'onBlur',
@@ -84,6 +85,9 @@ export const CardFormCouple = ({ user }: ICardFormProps) => {
       familyStatus,
       secondCustomer: secondClientData,
       meetingFormat,
+      onlinePlatform,
+      meetingTimeDay,
+      residenceAddress,
     },
   })
 
@@ -134,7 +138,6 @@ export const CardFormCouple = ({ user }: ICardFormProps) => {
               <InputCouple type={'number'} form={form} name={'phoneNumber'} label={'Телефон первого клиента'} />
               <InputCouple form={form} name={'mail'} label={'Почта первого клиента'} />
               <SelectCouple form={form} options={genderOptions} name={'gender'} label={'Пол первого клиента'} />
-              {/*<InputCouple form={form} name={'clientTherapyRequest'} label={'Город первого клиента'} />*/}
               <InputCouple
                 form={form}
                 name={'clientFirstRequestTherapyReason'}
@@ -164,7 +167,6 @@ export const CardFormCouple = ({ user }: ICardFormProps) => {
                 name={'secondCustomer.gender'}
                 label={'Пол второго клиента'}
               />
-              {/*<InputCouple form={form} name={} label={'Город второго клиента'} />*/}
               <InputCouple
                 form={form}
                 name={'secondClientRequestTherapyReason'}
@@ -178,49 +180,47 @@ export const CardFormCouple = ({ user }: ICardFormProps) => {
               {/*endregion*/}
 
               {/*region common*/}
-
               <InputCouple form={form} name={'payerFullName'} label={'ФИО плательщика'} />
-              {/*<SelectCouple form={form} options={appealOptions} name={'contactMethod'} label={'Откуда обратились'} />*/}
-              {/*<SelectCouple form={form} options={serviceOptions} name={'onlinePlatform'} label={'Площадка'} />*/}
+              <SelectCouple form={form} options={appealOptions} name={'contactMethod'} label={'Откуда обратились'} />
+              <SelectCouple form={form} options={serviceOptions} name={'onlinePlatform'} label={'Площадка'} />
               <SelectCouple
                 form={form}
                 options={communicationFormatOptions}
                 name={'meetingFormat'}
                 label={'Предпочтительный формат встречи'}
               />
-              {/*<InputCouple form={form} name={'meetingTimeDay'} label={'Фиксированное время встречи'} />*/}
-
+              <InputCouple form={form} name={'meetingTimeDay'} label={'Фиксированное время встречи'} />
               {/*endregion*/}
 
               {isMore && (
                 <>
                   <InputCouple form={form} name={'birth'} label={'Дата рождения'} type="date" />
-                  {/*<InputCouple form={form} name={'residenceAddress'} label={'Адрес проживания'} />*/}
-                  {/*<SelectCouple*/}
-                  {/*  form={form}*/}
-                  {/*  options={appealOptions}*/}
-                  {/*  name={'priorityCommunicationChannel'}*/}
-                  {/*  label={'Приоритетный канал коммуникации'}*/}
-                  {/*/>*/}
-                  {/*<InputCouple form={form} name={'peerRecommendation'} label={'Коллегиальные рекомендации'} />*/}
-                  {/*<SelectCouple*/}
-                  {/*  form={form}*/}
-                  {/*  // options={familyStatusOptions}*/}
-                  {/*  name={'familyStatus'}*/}
-                  {/*  label={'Семейное положение'}*/}
-                  {/*/>*/}
-                  {/*<InputCouple*/}
-                  {/*  form={form}*/}
-                  {/*  name={'residenceAddress'}*/}
-                  {/*  label={*/}
-                  {/*    'Прием медицинских препаратов оказывающих влияние на сознание/эмоциональное состояние клиента'*/}
-                  {/*  }*/}
-                  {/*/>*/}
-                  {/*<InputCouple*/}
-                  {/*  form={form}*/}
-                  {/*  name={'residenceAddress'}*/}
-                  {/*  label={'Предыдущий опыт получения психологической помощи'}*/}
-                  {/*/>*/}
+                  <InputCouple form={form} name={'residenceAddress'} label={'Адрес проживания'} />
+                  <SelectCouple
+                    form={form}
+                    options={channelOptions}
+                    name={'priorityCommunicationChannel'}
+                    label={'Приоритетный канал коммуникации'}
+                  />
+                  <InputCouple form={form} name={'peerRecommendation'} label={'Коллегиальные рекомендации'} />
+                  <SelectCouple
+                    form={form}
+                    options={familyStatusOptions}
+                    name={'familyStatus'}
+                    label={'Семейное положение'}
+                  />
+                  <InputCouple
+                    form={form}
+                    name={'residenceAddress'}
+                    label={
+                      'Прием медицинских препаратов оказывающих влияние на сознание/эмоциональное состояние клиента'
+                    }
+                  />
+                  <InputCouple
+                    form={form}
+                    name={'residenceAddress'}
+                    label={'Предыдущий опыт получения психологической помощи'}
+                  />
                 </>
               )}
             </div>
