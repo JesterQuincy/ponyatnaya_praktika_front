@@ -4,6 +4,7 @@ import { SelectAdult } from './SelectAdult'
 
 import {
   appealOptions,
+  channelOptions,
   familyStatusOptions,
   genderOptions,
   serviceOptions,
@@ -45,6 +46,8 @@ export function CardFormAdult({ user }: ICardFormProps) {
     familyStatus,
     id,
     meetingTimeDay,
+    takingMedic,
+    prevExperience,
   } = { ...removeEmptyValues(user) }
 
   const form = useForm<IClientSchema>({
@@ -63,6 +66,8 @@ export function CardFormAdult({ user }: ICardFormProps) {
       peerRecommendation,
       familyStatus,
       meetingTimeDay,
+      takingMedic,
+      prevExperience,
     },
   })
 
@@ -75,6 +80,7 @@ export function CardFormAdult({ user }: ICardFormProps) {
       console.log(error)
     }
   }
+
   const handleFormChange = () => {
     setIsFormDirty(true) // Отмечаем, что были изменения в форме
   }
@@ -112,7 +118,6 @@ export function CardFormAdult({ user }: ICardFormProps) {
               <InputAdult form={form} name={'mail'} label={'Почта'} />
               <SelectAdult form={form} options={genderOptions} name={'gender'} label={'Пол'} />
               <SelectAdult form={form} options={appealOptions} name={'contactMethod'} label={'Откуда обратился'} />
-              {/*<InputCustom form={form} name={'clientTherapyRequest'} label={'Город'} />*/}
               <SelectAdult form={form} options={serviceOptions} name={'onlinePlatform'} label={'Площадка'} />
               <InputAdult form={form} name={'clientTherapyRequest'} label={'Первичный запрос'} />
               <InputAdult form={form} name={'meetingTimeDay'} label={'Фиксированное время встречи'} />
@@ -122,7 +127,7 @@ export function CardFormAdult({ user }: ICardFormProps) {
                   <InputAdult form={form} name={'residenceAddress'} label={'Адрес проживания'} />
                   <SelectAdult
                     form={form}
-                    options={appealOptions}
+                    options={channelOptions}
                     name={'priorityCommunicationChannel'}
                     label={'Приоритетный канал коммуникации'}
                   />
@@ -133,18 +138,18 @@ export function CardFormAdult({ user }: ICardFormProps) {
                     label={'Семейное положение'}
                   />
                   <InputAdult form={form} name={'peerRecommendation'} label={'Коллегиальные рекомендации'} />
-                  {/*<InputCustom*/}
-                  {/*  form={form}*/}
-                  {/*  name={'offlineAddress'}*/}
-                  {/*  label={*/}
-                  {/*    'Прием медицинских препаратов оказывающих влияние на сознание/эмоциональное состояние клиента'*/}
-                  {/*  }*/}
-                  {/*/>*/}
-                  {/*<InputCustom*/}
-                  {/*  form={form}*/}
-                  {/*  name={'offlineAddress'}*/}
-                  {/*  label={'Предыдущий опыт получения психологической помощи'}*/}
-                  {/*/>*/}
+                  <InputAdult
+                    form={form}
+                    name={'takingMedic'}
+                    label={
+                      'Прием медицинских препаратов оказывающих влияние на сознание/эмоциональное состояние клиента'
+                    }
+                  />
+                  <InputAdult
+                    form={form}
+                    name={'prevExperience'}
+                    label={'Предыдущий опыт получения психологической помощи'}
+                  />
                 </>
               )}
             </div>
