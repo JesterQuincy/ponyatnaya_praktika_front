@@ -1,14 +1,14 @@
-import Select from 'react-select'
 import { IValueLabelModel } from '@/models/ILabelValueModel'
 import { FormControl, FormField, FormItem, FormMessage } from '@/components/ui/form'
 import { UseFormReturn } from 'react-hook-form'
-import { NestedKeys } from '@/types/common'
+import { NonNullableNestedKeys } from '@/types/common'
 import { ICoupleSchema } from '@/models/coupleSchema'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 
 interface ISelectHandlerProps {
   options?: IValueLabelModel[]
   form: UseFormReturn<ICoupleSchema>
-  name: NestedKeys<ICoupleSchema> // Используем тип NestedKeys для вложенных ключей
+  name: NonNullableNestedKeys<ICoupleSchema> // Используем тип NestedKeys для вложенных ключей
   label: string
 }
 
@@ -20,35 +20,23 @@ export function SelectCouple({ options, form, name, label }: ISelectHandlerProps
         name={name}
         control={form.control}
         render={({ field }) => {
-          const selectedOption = options?.find((option) => option.value === field.value) || null
-
           return (
-            <FormItem>
-              <FormControl>
-                <Select
-                  {...field}
-                  onChange={(option) => {
-                    field.onChange((option as IValueLabelModel)?.value)
-                    form.trigger(name)
-                  }}
-                  options={options}
-                  placeholder="Выберите"
-                  value={selectedOption}
-                  styles={{
-                    control: (base) => ({
-                      ...base,
-                      height: '36px',
-                      minHeight: '36px',
-                      padding: '0 0 5px 0',
-                      borderRadius: '12px',
-                      maxWidth: '129px',
-                      fontSize: '15px',
-                    }),
-                    indicatorSeparator: () => ({ display: 'none' }),
-                  }}
-                />
-              </FormControl>
-              <FormMessage className="text-orange" />
+            <FormItem className="max-h-[38px]">
+              <Select onValueChange={field.onChange} value={field.value ? String(field.value) : undefined}>
+                <FormControl>
+                  <SelectTrigger className="border-gray rounded-xl bg-white">
+                    <SelectValue placeholder="Выберите" />
+                  </SelectTrigger>
+                </FormControl>
+                <SelectContent className="border-gray bg-white rounded-[6px]">
+                  {options?.map((o) => (
+                    <SelectItem key={o.value} value={String(o.value)}>
+                      {o.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              <FormMessage />
             </FormItem>
           )
         }}
