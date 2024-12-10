@@ -4,6 +4,7 @@
     flex-direction: row;
     gap: 8px;
     padding: var(--main-padding);
+    position: relative;
 }
 
 .CentralContainer {
