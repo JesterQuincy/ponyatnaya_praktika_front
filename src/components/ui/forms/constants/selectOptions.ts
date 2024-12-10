@@ -78,3 +78,13 @@ export const familyStatusOptions = [
   { value: 'Одиночество/Не в постоянных отношениях', label: 'Одиночество/Не в постоянных отношениях' },
   { value: 'Семьи с детьми', label: 'Семьи с детьми' },
 ]
+
+export const channelOptions = [
+  { value: 'Telegram', label: 'Telegram' },
+  { value: 'WhatsApp', label: 'WhatsApp' },
+  { value: 'Viber', label: 'Viber' },
+  { value: 'Skype', label: 'Skype' },
+  { value: 'Discord', label: 'Discord' },
+  { value: 'Почта', label: 'Почта' },
+  { value: 'Snapchat', label: 'Snapchat' },
+]
