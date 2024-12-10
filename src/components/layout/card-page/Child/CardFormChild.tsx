@@ -5,7 +5,15 @@ import { useForm } from 'react-hook-form'
 import { useCallback, useEffect, useState } from 'react'
 import { IChild } from '@/types/child'
 import { InputChild } from '@/components/layout/card-page/Child'
-import { genderOptions, statusOptions } from '@/components/ui/forms/constants/selectOptions'
+import {
+  appealOptions,
+  channelOptions,
+  communicationFormatOptions,
+  familyStatusOptions,
+  genderOptions,
+  serviceOptions,
+  statusOptions,
+} from '@/components/ui/forms/constants/selectOptions'
 import { SelectChild } from '@/components/layout/card-page/Child'
 import { removeEmptyValues } from '@/helpers/utils/removeEmptyValues'
 import { childSchema, IChildSchema } from '@/models/childSchema'
@@ -43,6 +51,16 @@ export const CardFormChild = ({ user }: ICardFormProps) => {
     firstParent,
     secondParent,
     payerFullName,
+    meetingFormat,
+    onlinePlatform,
+    meetingTimeDay,
+    residenceAddress,
+    priorityCommunicationChannel,
+    familyStatus,
+    takingMedic,
+    prevExperience,
+    peerRecommendation,
+    contactMethod,
   } = { ...removeEmptyValues(user) }
 
   const getParentValues = useCallback((parent: IChild['firstParent'] | IChild['secondParent']): TParent => {
@@ -75,6 +93,16 @@ export const CardFormChild = ({ user }: ICardFormProps) => {
       firstParent: getParentValues(firstParent),
       secondParent: getParentValues(secondParent),
       payerFullName,
+      meetingFormat,
+      onlinePlatform,
+      meetingTimeDay,
+      residenceAddress,
+      priorityCommunicationChannel,
+      familyStatus,
+      takingMedic,
+      prevExperience,
+      peerRecommendation,
+      contactMethod,
     },
   })
 
@@ -125,9 +153,10 @@ export const CardFormChild = ({ user }: ICardFormProps) => {
               <InputChild type={'number'} form={form} name={'phoneNumber'} label={'Телефон ребенка'} />
               <InputChild form={form} name={'mail'} label={'Почта ребенка'} />
               <SelectChild form={form} options={genderOptions} name={'gender'} label={'Пол ребенка'} />
-              {/*<InputChild form={form} name={'clientTherapyRequest'} label={'Город ребенка'} />*/}
               <SelectChild form={form} options={statusOptions} name={'clientStatus'} label={'Статус'} />
-              <InputChild form={form} name={'adultRequestForTherapyReason'} label={'Запрос ребенка на терапию'} />
+              {/*TODO*/}
+              {/*<InputChild form={form} name={'clientTherapyRequest'} label={'Запрос ребенка на терапию'} />*/}
+              {/*<InputChild form={form} name={'adultRequestForTherapyReason'} label={'Запрос ребенка на терапию'} />*/}
               <InputChild
                 form={form}
                 name={'adultRequestForTherapyDesiredOutcome'}
@@ -144,7 +173,6 @@ export const CardFormChild = ({ user }: ICardFormProps) => {
                 label={'Что сам ребенок хотел изменить, если хотел?'}
               />
               {/*endregion*/}
-
               {/*region: parent 1*/}
               <InputChild form={form} name={'firstParent.lastName'} label={'Фамилия первого родителя'} />
               <InputChild form={form} name={'firstParent.firstName'} label={'Имя первого родителя'} />
@@ -164,7 +192,6 @@ export const CardFormChild = ({ user }: ICardFormProps) => {
               />
               {/*<InputChild form={form} name={'firstParent.clientTherapyRequest'} label={'Город первого родителя'} />*/}
               {/*endregion*/}
-
               {/*region: parent 2*/}
               <InputChild form={form} name={'secondParent.lastName'} label={'Фамилия второго родителя'} />
               <InputChild form={form} name={'secondParent.firstName'} label={'Имя второго родителя'} />
@@ -184,47 +211,45 @@ export const CardFormChild = ({ user }: ICardFormProps) => {
               />
               {/*<InputChild form={form} name={'secondParent.clientTherapyRequest'} label={'Город  второго родителя'} />*/}
               {/*endregion*/}
-
               <InputChild form={form} name={'payerFullName'} label={'ФИО плательщика'} />
-              {/*<SelectChild form={form} options={appealOptions} name={'contactMethod'} label={'Откуда обратился'} />*/}
-              {/*<SelectChild form={form} options={serviceOptions} name={'onlinePlatform'} label={'Площадка'} />*/}
-              {/*<SelectChild*/}
-              {/*  form={form}*/}
-              {/*  options={communicationFormatOptions}*/}
-              {/*  name={'meetingFormat'}*/}
-              {/*  label={'Предпочтительный формат встречи'}*/}
-              {/*/>*/}
-              {/*<InputChild form={form} name={'meetingTimeDay'} label={'Фиксированное время встречи'} />*/}
-
+              <SelectChild form={form} options={appealOptions} name={'contactMethod'} label={'Откуда обратился'} />
+              <SelectChild form={form} options={serviceOptions} name={'onlinePlatform'} label={'Площадка'} />
+              <SelectChild
+                form={form}
+                options={communicationFormatOptions}
+                name={'meetingFormat'}
+                label={'Предпочтительный формат встречи'}
+              />
+              <InputChild form={form} name={'meetingTimeDay'} label={'Фиксированное время встречи'} />
               {isMore && (
                 <>
                   <InputChild form={form} name={'birth'} label={'Дата рождения'} type="date" />
-                  {/*<InputChild form={form} name={'residenceAddress'} label={'Адрес проживания'} />*/}
-                  {/*<SelectChild*/}
-                  {/*  form={form}*/}
-                  {/*  options={appealOptions}*/}
-                  {/*  name={'priorityCommunicationChannel'}*/}
-                  {/*  label={'Приоритетный канал коммуникации'}*/}
-                  {/*/>*/}
-                  {/*<SelectChild*/}
-                  {/*  form={form}*/}
-                  {/*  // options={familyStatusOptions}*/}
-                  {/*  name={'priorityCommunicationChannel'}*/}
-                  {/*  label={'Семейное положение'}*/}
-                  {/*/>*/}
-                  {/*<InputChild form={form} name={'peerRecommendation'} label={'Коллегиальные рекомендации'} />*/}
-                  {/*<InputChild*/}
-                  {/*  form={form}*/}
-                  {/*  name={'residenceAddress'}*/}
-                  {/*  label={*/}
-                  {/*    'Прием медицинских препаратов оказывающих влияние на сознание/эмоциональное состояние клиента'*/}
-                  {/*  }*/}
-                  {/*/>*/}
-                  {/*<InputChild*/}
-                  {/*  form={form}*/}
-                  {/*  name={'residenceAddress'}*/}
-                  {/*  label={'Предыдущий опыт получения психологической помощи'}*/}
-                  {/*/>*/}
+                  <InputChild form={form} name={'residenceAddress'} label={'Адрес проживания'} />
+                  <SelectChild
+                    form={form}
+                    options={channelOptions}
+                    name={'priorityCommunicationChannel'}
+                    label={'Приоритетный канал коммуникации'}
+                  />
+                  <InputChild form={form} name={'peerRecommendation'} label={'Коллегиальные рекомендации'} />
+                  <SelectChild
+                    form={form}
+                    options={familyStatusOptions}
+                    name={'familyStatus'}
+                    label={'Семейное положение'}
+                  />
+                  <InputChild
+                    form={form}
+                    name={'residenceAddress'}
+                    label={
+                      'Прием медицинских препаратов оказывающих влияние на сознание/эмоциональное состояние клиента'
+                    }
+                  />
+                  <InputChild
+                    form={form}
+                    name={'prevExperience'}
+                    label={'Предыдущий опыт получения психологической помощи'}
+                  />
                 </>
               )}
             </div>

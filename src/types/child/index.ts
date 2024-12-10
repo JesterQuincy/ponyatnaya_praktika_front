@@ -7,12 +7,31 @@ export interface IChild {
   firstName: string
   secondName: string
   lastName: string
-  birth: string // или Date
+  birth: string
   phoneNumber: string
   mail: string
   gender: string
   clientStatus: string
   meetingFormat: string
+  contactMethod: string
+  dateFirstRequest: string
+  dateFirstConsultation: string
+  onlinePlatform: string
+  offlineAddress: string
+  clientTherapyRequest: string
+  meetingTimeDay: string
+  financialCondition: number
+  residenceAddress: string
+  peerRecommendation: string
+  specialTermsContact: string
+  familyStatus: string
+  priorityCommunicationChannel: string
+  supervisionStatusThisClient: string
+  contactSupervisor: string
+  supervisionMaterial: string
+  takingMedic: string
+  prevExperience: string
+  notes: string
   bringsClient: string
   firstParent: IClient
   secondParent: IClient
