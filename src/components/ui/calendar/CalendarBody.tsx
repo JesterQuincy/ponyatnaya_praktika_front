@@ -11,7 +11,7 @@ import 'moment/locale/ru'
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 
-moment.locale('kz');
+moment.locale('kz')
 
 export default function CalendarBody() {
   const [events, setEvents] = useState<any[]>([])
@@ -51,57 +51,54 @@ export default function CalendarBody() {
     router.push('/meet')
   }
 
-    return (
-        <div className={styles.MainContainer}>
-            <div>
-                <FullCalendar
-                    plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin ]}
-                    headerToolbar={{
-                        left: 'title',
-                        center: 'timeGridDay,timeGridWeek,dayGridYear',
-                        right: 'prev,today,next'
-                    }}
-                    initialView="dayGridYear"
-                    initialDate={new Date()}
-                    fixedWeekCount={true}
-                    slotMinTime="00:00:00"
-                    slotMaxTime="24:00:00"
-                    slotDuration='00:30:00'
-                    locale="kz"
-                    titleFormat={{year: 'numeric', month: 'long'}}
-                    buttonText={{
-                        today: 'Сегодня',
-                        day: 'День',
-                        month: 'Месяц',
-                        week: 'Неделя',
-                        year: 'Месяц'
-                    }}
-                    slotLabelFormat={{
-                        hour: '2-digit',
-                        minute: '2-digit',
-                    }}
-                    nowIndicator={true}
-                    dayHeaderContent={(dateInfo) => {
-                        const isToday = moment(dateInfo.date).isSame(moment(), 'day');
-                        const dayName = moment(dateInfo.date).format('dd').charAt(0).toUpperCase() + moment(dateInfo.date).format('dd').slice(1);
-                        if (viewType === 'timeGridWeek') {
-                            return (
-                                <div className="flex items-center gap-[5px]">
-                                    <span className="font-semibold">
-                                        {dayName},
-                                    </span>
-                                    {isToday ? (
-                                        <span className="flex items-center justify-center w-6 h-6 text-white bg-[#EA660C] rounded-full">
-                                            {moment(dateInfo.date).format('D')}
-                                        </span>
-                                    ) : (
-                                        <span className="font-semibold">
-                                            {moment(dateInfo.date).format('D')}
-                                        </span>
-                                    )}
-                                </div>
-                            );
-                        }
+  return (
+    <div className={styles.MainContainer}>
+      <div>
+        <FullCalendar
+          plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
+          headerToolbar={{
+            left: 'title',
+            center: 'timeGridDay,timeGridWeek,dayGridYear',
+            right: 'prev,today,next',
+          }}
+          initialView="dayGridYear"
+          initialDate={new Date()}
+          fixedWeekCount={true}
+          slotMinTime="00:00:00"
+          slotMaxTime="24:00:00"
+          slotDuration="00:30:00"
+          locale="kz"
+          titleFormat={{ year: 'numeric', month: 'long' }}
+          buttonText={{
+            today: 'Сегодня',
+            day: 'День',
+            month: 'Месяц',
+            week: 'Неделя',
+            year: 'Месяц',
+          }}
+          slotLabelFormat={{
+            hour: '2-digit',
+            minute: '2-digit',
+          }}
+          nowIndicator={true}
+          dayHeaderContent={(dateInfo) => {
+            const isToday = moment(dateInfo.date).isSame(moment(), 'day')
+            const dayName =
+              moment(dateInfo.date).format('dd').charAt(0).toUpperCase() + moment(dateInfo.date).format('dd').slice(1)
+            if (viewType === 'timeGridWeek') {
+              return (
+                <div className="flex items-center gap-[5px]">
+                  <span className="font-semibold">{dayName},</span>
+                  {isToday ? (
+                    <span className="flex items-center justify-center w-6 h-6 text-white bg-[#EA660C] rounded-full">
+                      {moment(dateInfo.date).format('D')}
+                    </span>
+                  ) : (
+                    <span className="font-semibold">{moment(dateInfo.date).format('D')}</span>
+                  )}
+                </div>
+              )
+            }
 
             return <></>
           }}
