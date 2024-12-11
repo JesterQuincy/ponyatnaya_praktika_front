@@ -3,11 +3,9 @@ import { authService } from '@/services/auth.service'
 import { toast } from 'react-toastify'
 import { z } from 'zod'
 import { registrationSchema } from '@/models/registrationSchema'
-import { useRouter } from 'next/navigation'
 import { EInvalidationTags } from '@/api/hooks/constants'
 
 export function useRegisterUser() {
-  const { push } = useRouter()
   const queryClient = useQueryClient()
 
   return useMutation({
@@ -16,7 +14,6 @@ export function useRegisterUser() {
     onSuccess: () => {
       toast.success('Регистрация прошла успешно!')
       queryClient.invalidateQueries({ queryKey: ['auth'] })
-      push('/calendar')
     },
     onError: () => {
       toast.error('Ошибка регистрации')

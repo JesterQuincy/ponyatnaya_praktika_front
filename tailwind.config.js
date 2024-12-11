@@ -111,6 +111,13 @@ module.exports = {
         sidebar: 'calc(100vh - (2 * var(--main-padding)))',
         mainContent: 'calc(100vh - var(--header-height) - 32px)',
       },
+      minHeight: {
+        sidebar: 'calc(100vh - (2 * var(--main-padding)))',
+        mainContent: 'calc(100vh - var(--header-height) - 32px)',
+      },
+      top: {
+        sidebar: 'var(--main-padding)',
+      },
     },
   },
   plugins: [require('tailwindcss-animate')],

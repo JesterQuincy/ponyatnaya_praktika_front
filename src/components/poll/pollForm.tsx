@@ -6,7 +6,6 @@ import { useFieldArray, useForm } from 'react-hook-form'
 import { TestPollSchema, TestPollSchemaType } from '@/models/testPollSchema'
 import addQuestion from '@/public/icon/addQuestion.svg'
 import Image from 'next/image'
-import { z } from 'zod'
 import { SortableQuestionItem } from './SortableQuestionItem'
 
 import { DndContext, closestCenter, PointerSensor, useSensor, useSensors } from '@dnd-kit/core'

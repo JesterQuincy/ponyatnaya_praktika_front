@@ -17,6 +17,8 @@ import PairIcon from '@/public/icon/pair.svg'
 import BottomArrow from '@/public/icon/bottomArrow.svg'
 import { clientService } from '@/services/clients.service'
 import { Pagination } from '@/components/ui/Pagination'
+import { IGetClientsBySearch } from '@/types/clients'
+import { toast } from 'react-toastify'
 
 export const DropdownIndicator = (props: any) => {
   return (
@@ -33,7 +35,7 @@ function Clients() {
   const [filterDateOrder, setFilterDateOrder] = useState({ value: 'Нет', label: 'Нет' })
   const [filterMeetingFrequency, setFilterMeetingFrequency] = useState({ value: 'Нет', label: 'Нет' })
   const [currentPage, setCurrentPage] = useState(1)
-  const [clients, setClients] = useState([])
+  const [clients, setClients] = useState<IGetClientsBySearch[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const clientsPerPage = 10
 
@@ -46,11 +48,15 @@ function Clients() {
   async function fetchClients() {
     try {
       setIsLoading(true)
-      const data = await clientService.getClientByName(clientsPerPage, (currentPage - 1) * clientsPerPage, searchQuery)
-      console.log('Полученные данные:', data.data)
-      setClients(data.data)
-    } catch (error) {
-      console.error('Ошибка загрузки данных:', error)
+      const { data } = await clientService.getClientByName(
+        clientsPerPage,
+        (currentPage - 1) * clientsPerPage,
+        searchQuery,
+      )
+
+      setClients(data)
+    } catch {
+      toast.error('Ошибка при загрузке клиентов')
     } finally {
       setIsLoading(false)
     }
@@ -62,51 +68,41 @@ function Clients() {
 
   const filteredClients = useMemo(() => {
     return clients
-      .filter((client: any) => {
-        // @ts-ignore
-        const matchesSearch = client.fullName?.toLowerCase().includes(searchQuery.toLowerCase())
-        // @ts-ignore
+      .filter((client) => {
         const matchesClientType = filterClientType.value === 'Нет' || client.clientType === filterClientType.value
-        // @ts-ignore
         const matchesClientStatus =
           filterClientStatus.value === 'Нет' || client.meetingType === filterClientStatus.value
         const matchesFrequency =
           filterMeetingFrequency.value === 'Нет' ||
-          // @ts-ignore
           filterMeetingFrequency.value === 'Чаще' ||
-          // @ts-ignore
           filterMeetingFrequency.value === 'Реже'
 
-        return matchesSearch && matchesClientType && matchesClientStatus && matchesFrequency
+        return matchesClientType && matchesClientStatus && matchesFrequency
       })
       .sort((a, b) => {
         if (filterMeetingFrequency.value === 'Чаще') {
-          // @ts-ignore
           return b.countMeet - a.countMeet
         } else if (filterMeetingFrequency.value === 'Реже') {
-          // @ts-ignore
           return a.countMeet - b.countMeet
         } else {
           return 0
         }
       })
       .sort((a, b) => {
-        // @ts-ignore
-        const dateA = a.meetDate ? new Date(a.meetDate) : null
-        // @ts-ignore
-        const dateB = b.meetDate ? new Date(b.meetDate) : null
+        const dateA = a.meetDate ? new Date(a.meetDate).getTime() : null
+        const dateB = b.meetDate ? new Date(b.meetDate).getTime() : null
 
         if (filterDateOrder.value === 'Раньше') {
           if (dateA === null && dateB === null) return 0
           if (dateA === null) return 1
           if (dateB === null) return -1
-          // @ts-ignore
+
           return dateA - dateB
         } else if (filterDateOrder.value === 'Позже') {
           if (dateA === null && dateB === null) return 0
           if (dateA === null) return 1
           if (dateB === null) return -1
-          // @ts-ignore
+
           return dateB - dateA
         } else {
           return 0
@@ -143,7 +139,7 @@ function Clients() {
     { value: 'Реже', label: 'Реже' },
   ]
 
-  const iconMap = {
+  const iconMap: { [key: string]: any } = {
     Пара: PairIcon,
     Взрослый: HumanIcon,
     Ребенок: ChildrenIcon,
@@ -151,7 +147,6 @@ function Clients() {
 
   const paginate = (pageNumber: number) => setCurrentPage(pageNumber)
 
-  // @ts-ignore
   return (
     <div className="w-full rounded-[6px]">
       <Heading title="Клиенты" />
@@ -257,101 +252,50 @@ function Clients() {
       </div>
       <div>
         {currentClients.map((client) => (
-          <div
-            key={
-              //@ts-ignore
-              client.customerId
-            }
-            className="border-t border-[#6A6A6A] py-[10px]">
+          <div key={client.customerId} className="border-t border-[#6A6A6A] py-[10px]">
             <div className="flex justify-between items-start">
               <div>
                 <h2
                   onClick={(): void => handleClick(client)}
-                  className="text-[18px] font-semibold underline text-orange mb-[10px]">
-                  {
-                    //@ts-ignore
-                    client.fullName
-                  }
+                  className="text-[18px] font-semibold underline text-orange mb-[10px] cursor-pointer">
+                  {client.fullName}
                 </h2>
                 <div className="font-montserrat flex gap-[5px]">
                   <div
                     className={`text-[11px] px-[11px] rounded-[4px] ${
-                      //@ts-ignore
                       client.clientStatus === 'Онлайн' ? 'bg-[#CFEFFD]' : 'bg-[#FDDCC6]'
                     }`}>
-                    {
-                      //@ts-ignore
-                      client.clientStatus
-                    }
+                    {client.clientStatus}
                   </div>
-                  <div className="text-[11px] bg-[#E4E4E4] px-[11px] rounded-[4px]">
-                    {
-                      //@ts-ignore
-                      client.meetingType
-                    }
-                  </div>
+                  <div className="text-[11px] bg-[#E4E4E4] px-[11px] rounded-[4px]">{client.meetingType}</div>
                   <div className="text-[11px] text-[#E4E4E4] rounded-[4px] flex gap-[4px]">
                     Всего встреч:
-                    <div className="text-black">
-                      {
-                        //@ts-ignore
-                        client.countMeet
-                      }
-                    </div>
+                    <div className="text-black">{client.countMeet}</div>
                   </div>
                   <div className="text-[11px] text-[#E4E4E4] rounded-[4px] flex gap-[4px]">
-                    Последняя:{' '}
-                    <div className="text-black">
-                      {
-                        //@ts-ignore
-                        client.meetDate
-                      }
-                    </div>
+                    Последняя: <div className="text-black">{client.meetDate}</div>
                   </div>
                 </div>
               </div>
               <div className="flex justify-between w-1/3">
                 <div className="flex flex-row align-center items-start text-[11px] gap-[8px]">
                   <div className="flex flex-row items-center bg-[#E4E4E4] px-[12px] py-[3px] rounded-[30px] gap-[4px]">
-                    <Image
-                      src={
-                        //@ts-ignore
-                        iconMap[client.clientType] || HumanIcon
-                      }
-                      alt="logo"
-                      width={8}
-                      height={8}
-                    />
-                    {
-                      //@ts-ignore
-                      client.clientType
-                    }
+                    <Image src={iconMap[client.clientType] || HumanIcon} alt="logo" width={8} height={8} />
+                    {client.clientType}
                   </div>
                   <div className="text-[11px] text-[#E4E4E4] rounded-[4px] flex gap-[4px] mt-[4px]">
                     {' '}
-                    Возраст:{' '}
-                    <div className="text-black">
-                      {
-                        //@ts-ignore
-                        client.years
-                      }
-                    </div>
+                    Возраст: <div className="text-black">{client.years}</div>
                   </div>
                 </div>
                 <div className="flex flex-col">
                   <div className="flex flex-row items-center  text-[11px] px-[12px] py-[3px] rounded-[30px] gap-[4px]">
                     <Image src={PhoneIcon} alt="logo" width={12} height={12} />
-                    {
-                      //@ts-ignore
-                      client.phone
-                    }
+                    {client.phone}
                   </div>
                   <div className="flex flex-row items-center text-[11px] underline px-[12px] py-[3px] rounded-[30px] gap-[4px]">
                     <Image src={MailIcon} alt="logo" width={12} height={12} />
-                    {
-                      //@ts-ignore
-                      client.mail
-                    }
+                    {client.mail}
                   </div>
                 </div>
               </div>

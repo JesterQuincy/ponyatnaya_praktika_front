@@ -18,6 +18,7 @@ import { CardFormChild } from '@/components/layout/card-page/Child'
 import { EClientType } from '@/types/common'
 import { CardFormCouple } from '@/components/layout/card-page/Couple'
 import { ICouple } from '@/types/couple'
+import { getAge } from '@/helpers/utils/getAge'
 
 type TUserType =
   | { type: EClientType.ADULT; client: IClient }
@@ -72,7 +73,7 @@ export function Card(id: any) {
             </div>
             {/*TODO: вернуть, когда обновят сваггер*/}
             {/*<div className="text-[11px]">*/}
-            {/*  <span className="text-[#7E7E7E]">Возраст:</span> {client?.years}*/}
+            {/*  <span className="text-[#7E7E7E]">Возраст:</span> {getAge(clientData.client?.birth)}*/}
             {/*</div>*/}
             {/*<div className="text-[11px]">*/}
             {/*  <span className="text-[#7E7E7E]">Всего встреч:</span> {client?.countMeet}*/}
