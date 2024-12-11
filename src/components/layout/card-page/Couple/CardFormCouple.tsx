@@ -2,17 +2,25 @@
 
 import { Form } from '@/components/ui/form'
 import { useForm } from 'react-hook-form'
-import { useCallback, useEffect, useMemo, useState } from 'react'
-import { communicationFormatOptions, genderOptions } from '@/components/ui/forms/constants/selectOptions'
+import { useMemo, useState } from 'react'
+import {
+  appealOptions,
+  channelOptions,
+  communicationFormatOptions,
+  familyStatusOptions,
+  genderOptions,
+  serviceOptions,
+} from '@/components/ui/forms/constants/selectOptions'
 import { removeEmptyValues } from '@/helpers/utils/removeEmptyValues'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { ICouple } from '@/types/couple'
-import { InputCouple } from '@/components/layout/card-page/Couple/InputCouple'
-import { SelectCouple } from '@/components/layout/card-page/Couple/SelectCouple'
+import { SelectCouple, InputCouple } from '@/components/layout/card-page/Couple'
 import { coupleSchema, ICoupleSchema } from '@/models/coupleSchema'
 import { useUpdateCouple } from '@/api/hooks/couple/useUpdateCouple'
 import { useGetLink } from '@/api/hooks/profile-link/useGetLink'
 import { getLink } from '@/helpers/utils/getLink'
+import { FormPrompt } from '@/components/form-prompt'
+import { isEmpty } from '@/helpers/utils/isEmpty'
 
 interface ICardFormProps {
   user: ICouple
@@ -20,7 +28,7 @@ interface ICardFormProps {
 
 export const CardFormCouple = ({ user }: ICardFormProps) => {
   const [isMore, setIsMore] = useState(false)
-  const [isFormDirty, setIsFormDirty] = useState(false) // Состояние для отслеживания изменений
+
   const { mutate, isPending } = useUpdateCouple()
   const { mutateAsync: linkData, isPending: isPendingLink } = useGetLink()
 
@@ -38,33 +46,27 @@ export const CardFormCouple = ({ user }: ICardFormProps) => {
     secondClientRequestTherapyReason,
     clientSecondRequestTherapyDesiredOutcome,
     familyStatus,
-    secondCustomer,
+    secondPerson,
     meetingFormat,
+    onlinePlatform,
+    meetingTimeDay,
+    residenceAddress,
   } = {
     ...removeEmptyValues(user),
   }
 
   const secondClientData = useMemo(() => {
     return {
-      lastName: secondCustomer?.lastName,
-      firstName: secondCustomer?.firstName,
-      secondName: secondCustomer?.secondName,
-      phoneNumber: secondCustomer?.phoneNumber,
-      mail: secondCustomer?.mail,
-      gender: secondCustomer?.gender,
-      birth: secondCustomer?.birth,
-      familyStatus: secondCustomer?.familyStatus,
+      lastName: secondPerson?.lastName,
+      firstName: secondPerson?.firstName,
+      secondName: secondPerson?.secondName,
+      phoneNumber: secondPerson?.phoneNumber,
+      mail: secondPerson?.mail,
+      gender: secondPerson?.gender,
+      birth: secondPerson?.birth,
+      familyStatus: secondPerson?.familyStatus,
     }
-  }, [
-    secondCustomer?.birth,
-    secondCustomer?.familyStatus,
-    secondCustomer?.firstName,
-    secondCustomer?.gender,
-    secondCustomer?.lastName,
-    secondCustomer?.mail,
-    secondCustomer?.phoneNumber,
-    secondCustomer?.secondName,
-  ])
+  }, [secondPerson])
 
   const form = useForm<ICoupleSchema>({
     mode: 'onBlur',
@@ -84,6 +86,9 @@ export const CardFormCouple = ({ user }: ICardFormProps) => {
       familyStatus,
       secondCustomer: secondClientData,
       meetingFormat,
+      onlinePlatform,
+      meetingTimeDay,
+      residenceAddress,
     },
   })
 
@@ -91,41 +96,20 @@ export const CardFormCouple = ({ user }: ICardFormProps) => {
     try {
       mutate({ ...data, id })
 
-      setIsFormDirty(false)
+      form.reset(data)
     } catch (error) {
       console.log(error)
     }
   }
 
-  const handleFormChange = () => {
-    setIsFormDirty(true) // Отмечаем, что были изменения в форме
-  }
-
-  const handleBeforeUnload = useCallback(
-    (e: BeforeUnloadEvent) => {
-      if (isFormDirty) {
-        e.preventDefault()
-      }
-    },
-    [isFormDirty],
-  )
-
-  useEffect(() => {
-    window.addEventListener('beforeunload', handleBeforeUnload)
-
-    return () => {
-      window.removeEventListener('beforeunload', handleBeforeUnload)
-    }
-  }, [handleBeforeUnload, isFormDirty])
+  const { formState } = form
 
   return (
     <>
       <div className="bg-[#F1F1F1] px-[16px] py-[25px] rounded-tr-[4px] rounded-br-[4px] rounded-bl-[4px]">
+        <FormPrompt hasUnsavedChanges={!isEmpty(formState.dirtyFields)} />
         <Form {...form}>
-          <form
-            onChange={handleFormChange}
-            onSubmit={form.handleSubmit(handleSubmit)}
-            className="w-full flex justify-between">
+          <form onSubmit={form.handleSubmit(handleSubmit)} className="w-full flex justify-between">
             <div className="grid grid-cols-[auto_1fr] gap-y-[10px] gap-x-[49px]">
               {/*region: first client*/}
               <InputCouple form={form} name={'lastName'} label={'Фамилия первого клиента'} />
@@ -134,7 +118,6 @@ export const CardFormCouple = ({ user }: ICardFormProps) => {
               <InputCouple type={'number'} form={form} name={'phoneNumber'} label={'Телефон первого клиента'} />
               <InputCouple form={form} name={'mail'} label={'Почта первого клиента'} />
               <SelectCouple form={form} options={genderOptions} name={'gender'} label={'Пол первого клиента'} />
-              {/*<InputCouple form={form} name={'clientTherapyRequest'} label={'Город первого клиента'} />*/}
               <InputCouple
                 form={form}
                 name={'clientFirstRequestTherapyReason'}
@@ -164,7 +147,6 @@ export const CardFormCouple = ({ user }: ICardFormProps) => {
                 name={'secondCustomer.gender'}
                 label={'Пол второго клиента'}
               />
-              {/*<InputCouple form={form} name={} label={'Город второго клиента'} />*/}
               <InputCouple
                 form={form}
                 name={'secondClientRequestTherapyReason'}
@@ -178,49 +160,47 @@ export const CardFormCouple = ({ user }: ICardFormProps) => {
               {/*endregion*/}
 
               {/*region common*/}
-
               <InputCouple form={form} name={'payerFullName'} label={'ФИО плательщика'} />
-              {/*<SelectCouple form={form} options={appealOptions} name={'contactMethod'} label={'Откуда обратились'} />*/}
-              {/*<SelectCouple form={form} options={serviceOptions} name={'onlinePlatform'} label={'Площадка'} />*/}
+              <SelectCouple form={form} options={appealOptions} name={'contactMethod'} label={'Откуда обратились'} />
+              <SelectCouple form={form} options={serviceOptions} name={'onlinePlatform'} label={'Площадка'} />
               <SelectCouple
                 form={form}
                 options={communicationFormatOptions}
                 name={'meetingFormat'}
                 label={'Предпочтительный формат встречи'}
               />
-              {/*<InputCouple form={form} name={'meetingTimeDay'} label={'Фиксированное время встречи'} />*/}
-
+              <InputCouple form={form} name={'meetingTimeDay'} label={'Фиксированное время встречи'} />
               {/*endregion*/}
 
               {isMore && (
                 <>
                   <InputCouple form={form} name={'birth'} label={'Дата рождения'} type="date" />
-                  {/*<InputCouple form={form} name={'residenceAddress'} label={'Адрес проживания'} />*/}
-                  {/*<SelectCouple*/}
-                  {/*  form={form}*/}
-                  {/*  options={appealOptions}*/}
-                  {/*  name={'priorityCommunicationChannel'}*/}
-                  {/*  label={'Приоритетный канал коммуникации'}*/}
-                  {/*/>*/}
-                  {/*<InputCouple form={form} name={'peerRecommendation'} label={'Коллегиальные рекомендации'} />*/}
-                  {/*<SelectCouple*/}
-                  {/*  form={form}*/}
-                  {/*  // options={familyStatusOptions}*/}
-                  {/*  name={'familyStatus'}*/}
-                  {/*  label={'Семейное положение'}*/}
-                  {/*/>*/}
-                  {/*<InputCouple*/}
-                  {/*  form={form}*/}
-                  {/*  name={'residenceAddress'}*/}
-                  {/*  label={*/}
-                  {/*    'Прием медицинских препаратов оказывающих влияние на сознание/эмоциональное состояние клиента'*/}
-                  {/*  }*/}
-                  {/*/>*/}
-                  {/*<InputCouple*/}
-                  {/*  form={form}*/}
-                  {/*  name={'residenceAddress'}*/}
-                  {/*  label={'Предыдущий опыт получения психологической помощи'}*/}
-                  {/*/>*/}
+                  <InputCouple form={form} name={'residenceAddress'} label={'Адрес проживания'} />
+                  <SelectCouple
+                    form={form}
+                    options={channelOptions}
+                    name={'priorityCommunicationChannel'}
+                    label={'Приоритетный канал коммуникации'}
+                  />
+                  <InputCouple form={form} name={'peerRecommendation'} label={'Коллегиальные рекомендации'} />
+                  <SelectCouple
+                    form={form}
+                    options={familyStatusOptions}
+                    name={'familyStatus'}
+                    label={'Семейное положение'}
+                  />
+                  <InputCouple
+                    form={form}
+                    name={'residenceAddress'}
+                    label={
+                      'Прием медицинских препаратов оказывающих влияние на сознание/эмоциональное состояние клиента'
+                    }
+                  />
+                  <InputCouple
+                    form={form}
+                    name={'residenceAddress'}
+                    label={'Предыдущий опыт получения психологической помощи'}
+                  />
                 </>
               )}
             </div>
@@ -230,7 +210,11 @@ export const CardFormCouple = ({ user }: ICardFormProps) => {
                   type={'submit'}
                   className="bg-[#5A5A5A] text-white py-2 px-4 rounded-[6px] mb-3 disabled:cursor-not-allowed disabled:bg-[#8E8E8E]"
                   disabled={
-                    isPending || form.formState.isSubmitting || !form.formState.isValid || form.formState.isValidating
+                    isPending ||
+                    formState.isSubmitting ||
+                    !formState.isValid ||
+                    formState.isValidating ||
+                    isEmpty(formState.dirtyFields)
                   }>
                   Сохранить
                 </button>

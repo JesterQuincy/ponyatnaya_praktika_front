@@ -37,10 +37,10 @@ export function Login() {
   }
 
   return (
-    <div className="max-h-screen flex items-center justify-center">
-      <div className="bg-white p-8 rounded-xl shadow-md w-full max-w-md">
-        <div className="flex justify-center mb-6 pt-12">
-          <Image src={Logo} alt="Logo company" width={201} height={145} />
+    <div className="min-h-full h-screen flex items-center justify-center overflow-hidden my-auto">
+      <div className="bg-white px-8 py-4 rounded-xl shadow-md w-full max-w-md">
+        <div className="flex justify-center mb-2">
+          <Image src={Logo} alt="Logo company" width={171} height={115} />
         </div>
         <div className="flex justify-center mt-32 font-bold mb-3 text-xl font-ebgaramond">Вход</div>
         <form className="space-y-3" onSubmit={handleSubmit(onSubmit)}>
@@ -68,18 +68,22 @@ export function Login() {
               Забыли пароль?
             </a>
           </div>
-          <div className="flex justify-center">
-            <Button className="w-full" onClick={() => setIsLoginForm(true)}>
-              Войти
-            </Button>
-          </div>
+
+          <Button
+            variant="default"
+            type="submit"
+            className="w-full bg-orange text-white hover:bg-orange/80 rounded-[6px]"
+            onClick={() => setIsLoginForm(true)}>
+            Войти
+          </Button>
+
           <div className="flex justify-center text-sm text-gray-600 mb-32">
             <Link href="/registration" className="text-orange underline text-xs">
               Регистрация нового пользователя
             </Link>
           </div>
         </form>
-        <div className="flex flex-row justify-center mt-36">
+        <div className="flex justify-center mt-4">
           <Image src={FeedLogo} width={13} height={13} alt="svg" />
           <Link href="/contact-developers" className="ml-2 text-blackMedium underline">
             Связь с разработчиками

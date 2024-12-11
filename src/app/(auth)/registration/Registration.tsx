@@ -13,6 +13,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
+import { useLogin } from '@/api/hooks/auth/useLogin'
 
 export function Registration() {
   const form = useForm<z.infer<typeof registrationSchema>>({
@@ -28,15 +29,19 @@ export function Registration() {
     },
   })
 
-  const { mutate, status } = useRegisterUser()
+  const { mutateAsync, status } = useRegisterUser()
+  const { mutateAsync: loginMutate, status: loginStatus } = useLogin()
 
-  const onSubmit = form.handleSubmit((data) => {
-    mutate(data)
-    console.log(data)
-    form.reset()
+  const onSubmit = form.handleSubmit(async (data) => {
+    try {
+      await mutateAsync(data)
+      await loginMutate({ username: data.username, password: data.password })
+
+      form.reset()
+    } catch {}
   })
 
-  const isLoading = status === 'pending'
+  const isLoading = status === 'pending' || loginStatus === 'pending'
 
   return (
     <div className="min-h-full h-screen flex items-center justify-center overflow-hidden my-auto">

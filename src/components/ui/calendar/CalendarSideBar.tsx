@@ -24,13 +24,8 @@ export default function SideBar({ children }: PropsWithChildren) {
 
   const router = useRouter()
   const handleEventClick = (meeting: any) => {
-    console.log(meeting)
     router.push(`/card/${meeting.id}?clientType=${meeting.clientType}`)
   }
-  // TODO: посмотреть
-  // const handleEventClick = (id: any) => {
-  //   router.push(`/card/${id}`)
-  // }
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -42,7 +37,9 @@ export default function SideBar({ children }: PropsWithChildren) {
     const fetchNotifications = async () => {
       try {
         const response = await calendarService.getNotifications()
+
         const serverData = response.data.notificationResponseList
+
         const transformedMeetings = serverData.map((item: any) => ({
           date: new Date(item.dateFirstRequest).toLocaleDateString('ru-RU', {
             day: '2-digit',
@@ -51,7 +48,9 @@ export default function SideBar({ children }: PropsWithChildren) {
           }),
           name: item.customerFullName,
           id: item.customerId,
+          clientType: item.clientType,
         }))
+
         setMeetings(transformedMeetings)
       } catch (error) {
         console.error('Ошибка при загрузке уведомлений:', error)
@@ -90,7 +89,7 @@ export default function SideBar({ children }: PropsWithChildren) {
   // @ts-ignore
   // @ts-ignore
   return (
-    <div className="flex flex-col max-w-[300px] rounded-xl mt-3 ml-3 items-center bg-white shadow-lg p-4">
+    <div className="flex flex-col max-w-[300px] rounded-xl items-center bg-white shadow-lg p-4 sticky top-sidebar h-sidebar">
       <Image src={Logo} alt="Logo company" width={400} onClick={returnToCalendar} className="hover:cursor-pointer" />
       <hr className="my-4 h-0.5 w-full border-gray" />
       <div className="flex flex-col items-center">
