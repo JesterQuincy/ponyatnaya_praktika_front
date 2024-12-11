@@ -42,7 +42,7 @@ interface ClientForm {
 }
 
 // @ts-ignore
-const AddClientModal = ({ isOpen, onClose }) => {
+export const AddClientModal = ({ isOpen, onClose }) => {
   const [clientType, setClientType] = useState('adult')
   const { register, handleSubmit, reset, setValue } = useForm<ClientForm>()
 
@@ -76,12 +76,6 @@ const AddClientModal = ({ isOpen, onClose }) => {
       toast.error('Ошибка при добавлении клиента')
     },
   })
-
-  const formatDate = (dateString: string | number | Date) => {
-    const options = { year: 'numeric', month: 'long', day: 'numeric' }
-    // @ts-ignore
-    return new Date(dateString).toLocaleDateString(undefined, options)
-  }
 
   const onSubmit: SubmitHandler<ClientForm> = (data) => {
     if (clientType === 'child') {
@@ -739,5 +733,3 @@ const AddClientModal = ({ isOpen, onClose }) => {
     </Modal>
   )
 }
-
-export default AddClientModal

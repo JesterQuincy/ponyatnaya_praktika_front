@@ -47,7 +47,7 @@ export default function CalendarBody() {
     fetchData()
   }, [])
 
-  const handleEventClick = (info: any) => {
+  const handleEventClick = () => {
     router.push('/meet')
   }
 
