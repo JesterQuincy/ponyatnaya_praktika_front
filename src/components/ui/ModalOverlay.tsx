@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, FC } from 'react'
 import Modal from 'react-modal'
 import styles from '@/styles/AddClientModal.module.css'
 import { useForm, SubmitHandler } from 'react-hook-form'
@@ -41,8 +41,12 @@ interface ClientForm {
   firstParent?: any
 }
 
-// @ts-ignore
-export const AddClientModal = ({ isOpen, onClose }) => {
+interface IAddClientModalProps {
+  isOpen: boolean
+  onClose: () => void
+}
+
+export const AddClientModal: FC<IAddClientModalProps> = ({ isOpen, onClose }) => {
   const [clientType, setClientType] = useState('adult')
   const { register, handleSubmit, reset, setValue } = useForm<ClientForm>()
 
@@ -79,7 +83,6 @@ export const AddClientModal = ({ isOpen, onClose }) => {
 
   const onSubmit: SubmitHandler<ClientForm> = (data) => {
     if (clientType === 'child') {
-      // @ts-ignore
       mutate({
         lastName: data.lastName,
         secondName: data.secondName,
@@ -104,6 +107,7 @@ export const AddClientModal = ({ isOpen, onClose }) => {
         },
       })
     }
+
     if (clientType === 'couple') {
       mutate({
         lastName: data.lastName,
@@ -128,6 +132,7 @@ export const AddClientModal = ({ isOpen, onClose }) => {
         },
       })
     }
+
     if (clientType === 'adult') {
       mutate({ ...data })
     }
