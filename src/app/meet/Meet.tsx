@@ -6,6 +6,7 @@ import styles from '@/styles/card.module.css'
 import { useGetMeeting } from '@/api/hooks/meet/useGetMeeting'
 import { useSearchParams } from 'next/navigation'
 import { Spinner } from '@/components/Spinner'
+import { Suspense } from 'react'
 
 export function Meet() {
   const id = useSearchParams().get('id')
@@ -24,5 +25,14 @@ export function Meet() {
         </>
       )}
     </div>
+  )
+}
+
+// для того чтобы useSearchParams корректно отрабатывал
+export function MeetWithSuspense() {
+  return (
+    <Suspense fallback={<Spinner />}>
+      <Meet />
+    </Suspense>
   )
 }

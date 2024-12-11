@@ -1,12 +1,12 @@
 import { FormControl, FormField, FormItem, FormMessage } from '@/components/ui/form'
 import { UseFormReturn } from 'react-hook-form'
 import { forwardRef, InputHTMLAttributes } from 'react'
-import { NestedKeys } from '@/types/common'
+import { NonNullableNestedKeys } from '@/types/common'
 import { IClientSchema } from '@/models/clientSchema'
 
 interface InputCustomProps extends Omit<InputHTMLAttributes<HTMLInputElement>, 'form'> {
   form: UseFormReturn<IClientSchema>
-  name: NestedKeys<IClientSchema>
+  name: NonNullableNestedKeys<IClientSchema>
   label: string
 }
 

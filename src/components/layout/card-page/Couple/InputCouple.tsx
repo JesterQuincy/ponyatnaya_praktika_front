@@ -1,12 +1,12 @@
 import { FormControl, FormField, FormItem, FormMessage } from '@/components/ui/form'
 import { UseFormReturn } from 'react-hook-form'
 import { forwardRef, InputHTMLAttributes } from 'react'
-import { NestedKeys } from '@/types/common'
+import { NonNullableNestedKeys } from '@/types/common'
 import { ICoupleSchema } from '@/models/coupleSchema'
 
 interface InputCustomProps extends Omit<InputHTMLAttributes<HTMLInputElement>, 'form'> {
   form: UseFormReturn<ICoupleSchema>
-  name: NestedKeys<ICoupleSchema> // Используем тип NestedKeys для вложенных ключей
+  name: NonNullableNestedKeys<ICoupleSchema> // Используем тип NestedKeys для вложенных ключей
   label: string
 }
 

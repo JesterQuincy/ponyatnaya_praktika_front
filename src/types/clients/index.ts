@@ -31,3 +31,16 @@ export interface IClient {
   prevExperience: string
   notes: string
 }
+
+export interface IGetClientsBySearch {
+  customerId: number
+  fullName: string
+  years: number
+  clientType: string
+  mail: string
+  phone: string
+  meetDate: string
+  countMeet: number
+  clientStatus: string
+  meetingType: string
+}
