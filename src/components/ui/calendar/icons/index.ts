@@ -1,0 +1,5 @@
+export * from './CalendarIcon'
+export * from './ClientIcon'
+export * from './AnalyticsIcon'
+export * from './NotificationIcon'
+export * from './TestsIcon'

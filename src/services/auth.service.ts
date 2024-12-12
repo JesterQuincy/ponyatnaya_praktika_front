@@ -27,13 +27,21 @@ export const authService = {
 
   async getNewToken(refreshToken: string) {
     const response = await axiosClassic.post<AuthResponse>('/auth/refresh', refreshToken)
-    if (response.data.access) saveTokenStorage(response.data.access, response.data.refresh)
+
+    if (response.data.access) {
+      saveTokenStorage(response.data.access, response.data.refresh)
+    }
+
     return response
   },
 
   async logout() {
     const response = await axiosClassic.post<boolean>('/auth/logout')
-    if (response.data) removeTokenStorage()
+
+    if (response.data) {
+      removeTokenStorage()
+    }
+
     return response
   },
 }
