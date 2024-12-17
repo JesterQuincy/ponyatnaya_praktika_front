@@ -5,33 +5,26 @@ import Image from 'next/image'
 import Logo from '@/public/LogoSVG.svg'
 import PersonFoto from '@/public/Ellipse 1.png'
 import ExitLogo from '@/public/Out.png'
-import Client from '@/public/img/clientDocsLogo.svg'
-import InboxLogo from '@/public/img/inbox.svg'
-import AnaliticLogo from '@/public/img/analiticsLogo.svg'
 import LetterLogo from '@/public/img/letterLogo.svg'
-import CheckListLogo from '@/public/img/checkListLogo.svg'
-import CalendarIcon from '@/public/icon/calendar.png'
 import { calendarService } from '@/services/calendar.service'
 import { authService } from '@/services/auth.service'
 import { Button } from '@/components/ui/button'
-import { useRouter } from 'next/navigation'
+import { usePathname, useRouter } from 'next/navigation'
+import Link from 'next/link'
+import { ClientIcon, CalendarIcon, NotificationIcon, AnalyticsIcon, TestsIcon } from '@/components/ui/calendar/icons'
 
 export default function SideBar({ children }: PropsWithChildren) {
-  const [currentPath, setCurrentPath] = useState('')
   const [showAll, setShowAll] = useState(false)
   const [meetings, setMeetings] = useState([])
   const [userData, setUserData] = useState(null)
 
   const router = useRouter()
+
   const handleEventClick = (meeting: any) => {
     router.push(`/card/${meeting.id}?clientType=${meeting.clientType}`)
   }
 
-  useEffect(() => {
-    if (typeof window !== 'undefined') {
-      setCurrentPath(window.location.pathname)
-    }
-  }, [])
+  const currentPath = usePathname()
 
   useEffect(() => {
     const fetchNotifications = async () => {
@@ -86,8 +79,14 @@ export default function SideBar({ children }: PropsWithChildren) {
     authService.logout().then()
   }
 
-  // @ts-ignore
-  // @ts-ignore
+  const activeLink = (path: string) => {
+    return currentPath === path ? 'bg-hoverButton text-orange' : 'hover:bg-hoverButton'
+  }
+
+  const isActivePath = (path: string) => {
+    return currentPath === path
+  }
+
   return (
     <div className="flex flex-col max-w-[300px] rounded-xl items-center bg-white shadow-lg p-4 sticky top-sidebar h-sidebar">
       <Image src={Logo} alt="Logo company" width={400} onClick={returnToCalendar} className="hover:cursor-pointer" />
@@ -103,43 +102,46 @@ export default function SideBar({ children }: PropsWithChildren) {
         </div>
       </div>
       <nav className="mt-[50px] flex flex-col space-y-2 w-full">
-        <a href="/clients">
+        <Link href="/clients">
           <Button
             variant="link"
-            className={`p-2 flex w-full border-[1px] justify-start ${currentPath === '/нф' ? 'bg-orange-200' : 'hover:bg-gray-200'} transition-colors`}>
-            <Image src={Client} alt="Client" className="mr-2" /> Клиенты
+            className={`p-2 flex w-full border-[1px] justify-start ${activeLink('/clients')} transition-colors`}>
+            <ClientIcon isActive={isActivePath('/clients')} />
+            Клиенты
           </Button>
-        </a>
-        <a href="/calendar">
+        </Link>
+        <Link href="/calendar">
           <Button
             variant="link"
-            className={`p-2 flex w-full border-[1px] justify-start ${currentPath === '/calendar' ? 'bg-hoverButton text-orange ' : 'hover:bg-hoverButton'} transition-colors`}>
-            <Image src={CalendarIcon} alt="Calendar" className="mr-2" /> Календарь
+            className={`p-2 flex w-full border-[1px] justify-start ${activeLink('/calendar')} transition-colors`}>
+            <CalendarIcon isActive={isActivePath('/calendar')} />
+            Календарь
           </Button>
-        </a>
-        <a href="/notification">
+        </Link>
+        <Link href="/notification">
           <Button
             variant="link"
-            className={`p-2 flex w-full border-[1px] justify-start ${currentPath === '/notification' ? 'bg-orange-200' : 'hover:bg-gray-200'} transition-colors`}>
-            <Image src={InboxLogo} alt="Client" className="mr-2" />
+            className={`p-2 flex w-full border-[1px] justify-start ${activeLink('/notifications')} transition-colors`}>
+            <NotificationIcon isActive={isActivePath('/notifications')} />
             Уведомления
           </Button>
-        </a>
-        <a href="/analytic">
+        </Link>
+        <Link href="/analytic">
           <Button
             variant="link"
-            className={`p-2 flex w-full border-[1px] justify-start ${currentPath === '/analytic' ? 'bg-orange-200' : 'hover:bg-gray-200'} transition-colors`}>
-            <Image src={AnaliticLogo} alt="Client" className="mr-2" /> Клиенты
+            className={`p-2 flex w-full border-[1px] justify-start ${activeLink('/analytic')} transition-colors`}>
+            <AnalyticsIcon isActive={isActivePath('/analytic')} />
+            Аналитика
           </Button>
-        </a>
-        <a href="/tests">
+        </Link>
+        <Link href="/tests">
           <Button
             variant="link"
-            className={`p-2 flex  w-full border-[1px] justify-start ${currentPath === '/tests' ? 'bg-orange-200' : 'hover:bg-gray-200'} transition-colors`}>
-            <Image src={CheckListLogo} alt="Client" className="mr-2" />
+            className={`p-2 flex  w-full border-[1px] justify-start ${activeLink('/tests')} transition-colors`}>
+            <TestsIcon isActive={isActivePath('/tests')} />
             Опросы и тесты
           </Button>
-        </a>
+        </Link>
       </nav>
       <div className="mt-6 w-full bg-gray-100">
         <div className="text-sm mb-4">
