@@ -1,6 +1,5 @@
 import axios, { CreateAxiosDefaults } from 'axios'
 import { getTokens, removeTokenStorage } from '@/services/auth-token.service'
-import { errorCatch } from '@/api/error'
 import { authService } from '@/services/auth.service'
 
 const options: CreateAxiosDefaults = {
@@ -26,26 +25,53 @@ axiosWithAuth.interceptors.response.use(
   async (error) => {
     const originalRequest = error.config
 
-    if (
-      error?.response?.status === 401 ||
-      errorCatch(
-        error === 'jwt expired' ||
-          (errorCatch(error === 'jwt must be provided') && error.config && !error.config._isRetry),
-      )
-    ) {
+    if (error?.response?.status === 401 && !originalRequest._isRetry) {
       originalRequest._isRetry = true
       try {
         const { refreshToken } = getTokens()
-        // @ts-ignore
+
+        if (!refreshToken) {
+          removeTokenStorage()
+          throw error
+        }
+
         await authService.getNewToken(refreshToken)
+
         return axiosWithAuth.request(originalRequest)
-      } catch (error) {
-        if (errorCatch(error) === 'jwt expired') removeTokenStorage()
+      } catch (err) {
+        removeTokenStorage()
       }
     }
-
     throw error
   },
 )
 
 export { axiosClassic, axiosWithAuth }
+//
+// axiosWithAuth.interceptors.response.use(
+//     (config) => config,
+//     async (error) => {
+//       const originalRequest = error.config
+//
+//       if (error?.response?.status === 401 && !originalRequest._isRetry) {
+//         originalRequest._isRetry = true
+//         try {
+//           const { refreshToken } = getTokens()
+//
+//           if (!refreshToken) {
+//             removeTokenStorage()
+//             throw error
+//           }
+//
+//           await authService.getNewToken(refreshToken)
+//
+//           return axiosWithAuth.request(originalRequest)
+//         } catch (err) {
+//           removeTokenStorage()
+//         }
+//       }
+//       throw error
+//     },
+// )
+//
+// export { axiosClassic, axiosWithAuth }
