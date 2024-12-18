@@ -23,8 +23,6 @@ import { useGetLink } from '@/api/hooks/profile-link/useGetLink'
 import { getLink } from '@/helpers/utils/getLink'
 import { FormPrompt } from '@/components/form-prompt'
 import { isEmpty } from '@/helpers/utils/isEmpty'
-import { InputChild, SelectChild, TextareaChild } from '@/components/layout/card-page/Child'
-import { InputAdult, SelectAdult } from '@/components/layout/card-page/Adult'
 
 interface ICardFormProps {
   user: ICouple

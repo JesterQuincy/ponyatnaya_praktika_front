@@ -23,8 +23,6 @@ import { useGetLink } from '@/api/hooks/profile-link/useGetLink'
 import { getLink } from '@/helpers/utils/getLink'
 import { FormPrompt } from '@/components/form-prompt'
 import { isEmpty } from '@/helpers/utils/isEmpty'
-import { InputAdult, SelectAdult } from '@/components/layout/card-page/Adult'
-import { TextareaAdult } from '@/components/layout/card-page/Adult/TextareaAdult'
 import { TextareaChild } from '@/components/layout/card-page/Child/TextareaChild'
 
 type TParent = Pick<IChild['firstParent'], 'gender' | 'mail' | 'phoneNumber' | 'secondName' | 'firstName' | 'lastName'>
