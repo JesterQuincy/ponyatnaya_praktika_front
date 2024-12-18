@@ -5,6 +5,7 @@ import { useForm } from 'react-hook-form'
 import { useCallback, useState } from 'react'
 import { IChild } from '@/types/child'
 import {
+  answerOptions,
   appealOptions,
   channelOptions,
   communicationFormatOptions,
@@ -22,6 +23,9 @@ import { useGetLink } from '@/api/hooks/profile-link/useGetLink'
 import { getLink } from '@/helpers/utils/getLink'
 import { FormPrompt } from '@/components/form-prompt'
 import { isEmpty } from '@/helpers/utils/isEmpty'
+import { InputAdult, SelectAdult } from '@/components/layout/card-page/Adult'
+import { TextareaAdult } from '@/components/layout/card-page/Adult/TextareaAdult'
+import { TextareaChild } from '@/components/layout/card-page/Child/TextareaChild'
 
 type TParent = Pick<IChild['firstParent'], 'gender' | 'mail' | 'phoneNumber' | 'secondName' | 'firstName' | 'lastName'>
 
@@ -62,6 +66,14 @@ export const CardFormChild = ({ user }: ICardFormProps) => {
     prevExperience,
     peerRecommendation,
     contactMethod,
+    financialCondition,
+    specialTermsContact,
+    supervisionStatusThisClient,
+    contactSupervisor,
+    supervisionMaterial,
+    notes,
+    dateFirstRequest,
+    dateFirstConsultation,
   } = { ...removeEmptyValues(user) }
 
   const getParentValues = useCallback((parent: IChild['firstParent'] | IChild['secondParent']): TParent => {
@@ -104,6 +116,14 @@ export const CardFormChild = ({ user }: ICardFormProps) => {
       prevExperience,
       peerRecommendation,
       contactMethod,
+      financialCondition,
+      specialTermsContact,
+      supervisionStatusThisClient,
+      contactSupervisor,
+      supervisionMaterial,
+      notes,
+      dateFirstRequest,
+      dateFirstConsultation,
     },
   })
 
@@ -114,9 +134,7 @@ export const CardFormChild = ({ user }: ICardFormProps) => {
       mutate({ ...data, id })
 
       form.reset(data)
-    } catch (error) {
-      console.log(error)
-    }
+    } catch {}
   }
 
   return (
@@ -189,7 +207,6 @@ export const CardFormChild = ({ user }: ICardFormProps) => {
                 name={'secondParent.gender'}
                 label={'Пол второго родителя'}
               />
-              {/*<InputChild form={form} name={'secondParent.clientTherapyRequest'} label={'Город  второго родителя'} />*/}
               {/*endregion*/}
               <InputChild form={form} name={'payerFullName'} label={'ФИО плательщика'} />
               <SelectChild form={form} options={appealOptions} name={'contactMethod'} label={'Откуда обратился'} />
@@ -201,6 +218,9 @@ export const CardFormChild = ({ user }: ICardFormProps) => {
                 label={'Предпочтительный формат встречи'}
               />
               <InputChild form={form} name={'meetingTimeDay'} label={'Фиксированное время встречи'} />
+              <InputChild form={form} name={'dateFirstRequest'} label={'Дата первого обращения'} type={'date'} />
+              <InputChild form={form} name={'dateFirstConsultation'} label={'Дата первой консультации'} type={'date'} />
+              <InputChild form={form} name={'financialCondition'} label={'Финансовые условия'} type={'number'} />
               {isMore && (
                 <>
                   <InputChild form={form} name={'birth'} label={'Дата рождения'} type="date" />
@@ -230,6 +250,20 @@ export const CardFormChild = ({ user }: ICardFormProps) => {
                     name={'prevExperience'}
                     label={'Предыдущий опыт получения психологической помощи'}
                   />
+                  <InputChild form={form} name={'specialTermsContact'} label={'Особые условия контракта'} />
+                  <SelectChild
+                    form={form}
+                    options={answerOptions}
+                    name={'supervisionStatusThisClient'}
+                    label={'Берется ли супервизия на данного клиента'}
+                  />
+                  <InputChild form={form} name={'contactSupervisor'} label={'ФИО и контакты супервизора'} />
+                  <InputChild
+                    form={form}
+                    name={'supervisionMaterial'}
+                    label={'Материал для следующих сеансов из супервизии'}
+                  />
+                  <TextareaChild form={form} name={'notes'} label={'Заметки'} />
                 </>
               )}
             </div>

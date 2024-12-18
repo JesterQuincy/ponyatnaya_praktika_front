@@ -10,10 +10,11 @@ export const coupleSchema = z.object({
   gender: z.string().min(1, 'Пол обязателен'),
   clientFirstRequestTherapyReason: z.string().min(1, 'Причина обращения обязательна'),
   clientFirstRequestTherapyDesiredOutcome: z.string().min(1, 'Желаемый результат обязателен'),
+  clientStatus: z.string().min(1, 'Статус обязателен'),
   // #endregion
 
   // #region Валидация для второго клиента
-  secondCustomer: z.object({
+  secondPerson: z.object({
     lastName: z.string().min(1, 'Фамилия второго клиента обязательна'),
     firstName: z.string().min(1, 'Имя второго клиента обязательно'),
     secondName: z.string().min(1, 'Отчество второго клиента обязательно'),
@@ -30,6 +31,9 @@ export const coupleSchema = z.object({
   onlinePlatform: z.string().optional(),
   meetingFormat: z.string().optional(),
   meetingTimeDay: z.string().optional(),
+  dateFirstRequest: z.string().optional(),
+  dateFirstConsultation: z.string().optional(),
+  financialCondition: z.number().optional(),
 
   // #region Подробнее
   birth: z.string().optional(),
@@ -39,6 +43,15 @@ export const coupleSchema = z.object({
   familyStatus: z.string().min(1, 'Семейное положение обязательно'),
   takingMedic: z.string().optional(),
   prevExperience: z.string().optional(),
+  specialTermsContact: z.string().optional(),
+  supervisionStatusThisClient: z.string().optional(),
+  contactSupervisor: z.string().optional(),
+  supervisionMaterial: z.string().optional(),
+  fullNameCotherapy: z.string().optional(),
+  phoneNumberCotherapy: z.string().optional(),
+  mailCotherapy: z.string().email('Некорректный email').optional(),
+  financialTermsCotherapists: z.string().optional(),
+  notes: z.string().optional(),
   // #endregion
 })
 

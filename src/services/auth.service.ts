@@ -36,12 +36,6 @@ export const authService = {
   },
 
   async logout() {
-    const response = await axiosClassic.post<boolean>('/auth/logout')
-
-    if (response.data) {
-      removeTokenStorage()
-    }
-
-    return response
+    removeTokenStorage()
   },
 }

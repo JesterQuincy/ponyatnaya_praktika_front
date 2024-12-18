@@ -37,6 +37,9 @@ export const childSchema = z.object({
   onlinePlatform: z.string().optional(),
   meetingFormat: z.string().optional(),
   meetingTimeDay: z.string().optional(),
+  dateFirstRequest: z.string().optional(),
+  dateFirstConsultation: z.string().optional(),
+  financialCondition: z.number().optional(),
   // #endregion
   birth: z.string().optional(),
   residenceAddress: z.string().optional(),
@@ -45,6 +48,12 @@ export const childSchema = z.object({
   familyStatus: z.string().optional(),
   takingMedic: z.string().optional(),
   prevExperience: z.string().optional(),
+
+  specialTermsContact: z.string().optional(),
+  supervisionStatusThisClient: z.string().optional(),
+  contactSupervisor: z.string().optional(),
+  supervisionMaterial: z.string().optional(),
+  notes: z.string().optional(),
 })
 
 export type IChildSchema = z.infer<typeof childSchema>

@@ -4,23 +4,27 @@ import { Form } from '@/components/ui/form'
 import { useForm } from 'react-hook-form'
 import { useMemo, useState } from 'react'
 import {
+  answerOptions,
   appealOptions,
   channelOptions,
   communicationFormatOptions,
   familyStatusOptions,
   genderOptions,
   serviceOptions,
+  statusOptions,
 } from '@/components/ui/forms/constants/selectOptions'
 import { removeEmptyValues } from '@/helpers/utils/removeEmptyValues'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { ICouple } from '@/types/couple'
-import { SelectCouple, InputCouple } from '@/components/layout/card-page/Couple'
+import { SelectCouple, InputCouple, TextareaCouple } from '@/components/layout/card-page/Couple'
 import { coupleSchema, ICoupleSchema } from '@/models/coupleSchema'
 import { useUpdateCouple } from '@/api/hooks/couple/useUpdateCouple'
 import { useGetLink } from '@/api/hooks/profile-link/useGetLink'
 import { getLink } from '@/helpers/utils/getLink'
 import { FormPrompt } from '@/components/form-prompt'
 import { isEmpty } from '@/helpers/utils/isEmpty'
+import { InputChild, SelectChild, TextareaChild } from '@/components/layout/card-page/Child'
+import { InputAdult, SelectAdult } from '@/components/layout/card-page/Adult'
 
 interface ICardFormProps {
   user: ICouple
@@ -51,6 +55,18 @@ export const CardFormCouple = ({ user }: ICardFormProps) => {
     onlinePlatform,
     meetingTimeDay,
     residenceAddress,
+    dateFirstRequest,
+    dateFirstConsultation,
+    financialCondition,
+    specialTermsContact,
+    supervisionStatusThisClient,
+    contactSupervisor,
+    supervisionMaterial,
+    fullNameCotherapy,
+    phoneNumberCotherapy,
+    mailCotherapy,
+    financialTermsCotherapists,
+    notes,
   } = {
     ...removeEmptyValues(user),
   }
@@ -84,11 +100,23 @@ export const CardFormCouple = ({ user }: ICardFormProps) => {
       secondClientRequestTherapyReason,
       clientSecondRequestTherapyDesiredOutcome,
       familyStatus,
-      secondCustomer: secondClientData,
+      secondPerson: secondClientData,
       meetingFormat,
       onlinePlatform,
       meetingTimeDay,
       residenceAddress,
+      dateFirstRequest,
+      dateFirstConsultation,
+      financialCondition,
+      specialTermsContact,
+      supervisionStatusThisClient,
+      contactSupervisor,
+      supervisionMaterial,
+      fullNameCotherapy,
+      phoneNumberCotherapy,
+      mailCotherapy,
+      financialTermsCotherapists,
+      notes,
     },
   })
 
@@ -97,9 +125,7 @@ export const CardFormCouple = ({ user }: ICardFormProps) => {
       mutate({ ...data, id })
 
       form.reset(data)
-    } catch (error) {
-      console.log(error)
-    }
+    } catch {}
   }
 
   const { formState } = form
@@ -112,6 +138,7 @@ export const CardFormCouple = ({ user }: ICardFormProps) => {
           <form onSubmit={form.handleSubmit(handleSubmit)} className="w-full flex justify-between">
             <div className="grid grid-cols-[auto_1fr] gap-y-[10px] gap-x-[49px]">
               {/*region: first client*/}
+              <SelectCouple form={form} options={statusOptions} name={'clientStatus'} label={'Статус'} />
               <InputCouple form={form} name={'lastName'} label={'Фамилия первого клиента'} />
               <InputCouple form={form} name={'firstName'} label={'Имя первого клиента'} />
               <InputCouple form={form} name={'secondName'} label={'Отчество первого клиента'} />
@@ -131,20 +158,20 @@ export const CardFormCouple = ({ user }: ICardFormProps) => {
               {/*endregion*/}
 
               {/*region: second client*/}
-              <InputCouple form={form} name={'secondCustomer.lastName'} label={'Фамилия второго клиента'} />
-              <InputCouple form={form} name={'secondCustomer.firstName'} label={'Имя второго клиента'} />
-              <InputCouple form={form} name={'secondCustomer.secondName'} label={'Отчество второго клиента'} />
+              <InputCouple form={form} name={'secondPerson.lastName'} label={'Фамилия второго клиента'} />
+              <InputCouple form={form} name={'secondPerson.firstName'} label={'Имя второго клиента'} />
+              <InputCouple form={form} name={'secondPerson.secondName'} label={'Отчество второго клиента'} />
               <InputCouple
                 type={'number'}
                 form={form}
-                name={'secondCustomer.phoneNumber'}
+                name={'secondPerson.phoneNumber'}
                 label={'Телефон второго клиента'}
               />
-              <InputCouple form={form} name={'secondCustomer.mail'} label={'Почта второго клиента'} />
+              <InputCouple form={form} name={'secondPerson.mail'} label={'Почта второго клиента'} />
               <SelectCouple
                 form={form}
                 options={genderOptions}
-                name={'secondCustomer.gender'}
+                name={'secondPerson.gender'}
                 label={'Пол второго клиента'}
               />
               <InputCouple
@@ -170,6 +197,14 @@ export const CardFormCouple = ({ user }: ICardFormProps) => {
                 label={'Предпочтительный формат встречи'}
               />
               <InputCouple form={form} name={'meetingTimeDay'} label={'Фиксированное время встречи'} />
+              <InputCouple form={form} name={'dateFirstRequest'} label={'Дата первого обращения'} type={'date'} />
+              <InputCouple
+                form={form}
+                name={'dateFirstConsultation'}
+                label={'Дата первой консультации'}
+                type={'date'}
+              />
+              <InputCouple form={form} name={'financialCondition'} label={'Финансовые условия'} type={'number'} />
               {/*endregion*/}
 
               {isMore && (
@@ -201,6 +236,33 @@ export const CardFormCouple = ({ user }: ICardFormProps) => {
                     name={'residenceAddress'}
                     label={'Предыдущий опыт получения психологической помощи'}
                   />
+                  <InputCouple form={form} name={'specialTermsContact'} label={'Особые условия контракта'} />
+                  <SelectCouple
+                    form={form}
+                    options={answerOptions}
+                    name={'supervisionStatusThisClient'}
+                    label={'Берется ли супервизия на данного клиента'}
+                  />
+                  <InputCouple form={form} name={'contactSupervisor'} label={'ФИО и контакты супервизора'} />
+                  <InputCouple
+                    form={form}
+                    name={'supervisionMaterial'}
+                    label={'Материал для следующих сеансов из супервизии'}
+                  />
+                  <InputCouple form={form} name={'fullNameCotherapy'} label={'ФИО ко-терапевта'} />
+                  <InputCouple
+                    form={form}
+                    name={'phoneNumberCotherapy'}
+                    label={'Телефон ко-терапевта'}
+                    type={'number'}
+                  />
+                  <InputCouple form={form} name={'mailCotherapy'} label={'Почта ко-терапевта'} type={'email'} />
+                  <InputCouple
+                    form={form}
+                    name={'financialTermsCotherapists'}
+                    label={'Условия распределения гонорара между ко-терапевтами'}
+                  />
+                  <TextareaCouple form={form} name={'notes'} label={'Заметки'} />
                 </>
               )}
             </div>

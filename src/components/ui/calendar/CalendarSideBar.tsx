@@ -3,7 +3,7 @@
 import React, { PropsWithChildren, useEffect, useState } from 'react'
 import Image from 'next/image'
 import Logo from '@/public/LogoSVG.svg'
-import PersonFoto from '@/public/Ellipse 1.png'
+import PersonPhoto from '@/public/person-default.png'
 import ExitLogo from '@/public/Out.png'
 import LetterLogo from '@/public/img/letterLogo.svg'
 import { calendarService } from '@/services/calendar.service'
@@ -11,7 +11,7 @@ import { authService } from '@/services/auth.service'
 import { Button } from '@/components/ui/button'
 import { usePathname, useRouter } from 'next/navigation'
 import Link from 'next/link'
-import { ClientIcon, CalendarIcon, NotificationIcon, AnalyticsIcon, TestsIcon } from '@/components/ui/calendar/icons'
+import { ClientIcon, CalendarIcon, TestsIcon } from '@/components/ui/calendar/icons'
 
 export default function SideBar({ children }: PropsWithChildren) {
   const [showAll, setShowAll] = useState(false)
@@ -71,12 +71,14 @@ export default function SideBar({ children }: PropsWithChildren) {
   // @ts-ignore
   const userMail = userData?.userMail || 'не удалось загрузить'
   // @ts-ignore
-  const userImage = userData?.userPicture || PersonFoto
+  const userImage = userData?.userPicture || PersonPhoto
 
   const displayedMeetings = showAll ? meetings : meetings.slice(0, 6)
 
   const handleExitOut = () => {
     authService.logout().then()
+
+    router.push('/login')
   }
 
   const activeLink = (path: string) => {
@@ -116,22 +118,6 @@ export default function SideBar({ children }: PropsWithChildren) {
             className={`p-2 flex w-full border-[1px] justify-start ${activeLink('/calendar')} transition-colors`}>
             <CalendarIcon isActive={isActivePath('/calendar')} />
             Календарь
-          </Button>
-        </Link>
-        <Link href="/notification">
-          <Button
-            variant="link"
-            className={`p-2 flex w-full border-[1px] justify-start ${activeLink('/notifications')} transition-colors`}>
-            <NotificationIcon isActive={isActivePath('/notifications')} />
-            Уведомления
-          </Button>
-        </Link>
-        <Link href="/analytic">
-          <Button
-            variant="link"
-            className={`p-2 flex w-full border-[1px] justify-start ${activeLink('/analytic')} transition-colors`}>
-            <AnalyticsIcon isActive={isActivePath('/analytic')} />
-            Аналитика
           </Button>
         </Link>
         <Link href="/tests">
