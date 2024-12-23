@@ -66,6 +66,7 @@ export function CardFormAdult({ user }: ICardFormProps) {
     supervisionMaterial,
     notes,
     onlinePlatform,
+    clientTherapyRequest,
   } = { ...removeEmptyValues(user) }
 
   const form = useForm<IClientSchema>({
@@ -97,6 +98,7 @@ export function CardFormAdult({ user }: ICardFormProps) {
       supervisionMaterial,
       notes,
       onlinePlatform,
+      clientTherapyRequest,
     },
   })
 
