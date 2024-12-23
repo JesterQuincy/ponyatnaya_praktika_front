@@ -67,7 +67,7 @@ export function MeetContent({ content, modalOpen }: IMeetFormProps) {
 
   const handleFormSubmit = async (data: IMeetingSchema) => {
     try {
-      await updateMeet({ ...content, ...data })
+      await updateMeet({ id: content.id, ...data })
 
       form.reset(data)
     } catch {}

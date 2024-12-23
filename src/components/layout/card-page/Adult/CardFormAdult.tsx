@@ -1,25 +1,29 @@
 'use client'
 
 import {
+  answerOptions,
   appealOptions,
   channelOptions,
+  communicationFormatOptions,
   familyStatusOptions,
   genderOptions,
   serviceOptions,
+  statusOptions,
 } from '../../../ui/forms/constants/selectOptions'
 import { Form } from '@/components/ui/form'
 import { useForm } from 'react-hook-form'
 import { IClient } from '@/types/clients'
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import { useClientUpdate } from '@/api/hooks/card/useClientUpdate'
 import { removeEmptyValues } from '@/helpers/utils/removeEmptyValues'
 import { clientSchema, IClientSchema } from '@/models/clientSchema'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useGetLink } from '@/api/hooks/profile-link/useGetLink'
-import { getLink } from '@/helpers/utils/getLink'
 import { FormPrompt } from '@/components/form-prompt'
 import { isEmpty } from '@/helpers/utils/isEmpty'
 import { InputAdult, SelectAdult } from '@/components/layout/card-page/Adult'
+import { TextareaAdult } from '@/components/layout/card-page/Adult/TextareaAdult'
+import { CardButtons } from '@/components/layout/card-page/CardButtons'
 
 interface ICardFormProps {
   user: IClient
@@ -27,6 +31,9 @@ interface ICardFormProps {
 
 export function CardFormAdult({ user }: ICardFormProps) {
   const [isMore, setIsMore] = useState(false)
+  const [popoverData, setPopoverData] = useState('')
+
+  const popoverTimeout = useRef<NodeJS.Timeout | null>(null)
 
   const { mutate, isPending } = useClientUpdate()
   const { mutateAsync: linkData, isPending: isPendingLink } = useGetLink()
@@ -48,6 +55,18 @@ export function CardFormAdult({ user }: ICardFormProps) {
     meetingTimeDay,
     takingMedic,
     prevExperience,
+    clientStatus,
+    dateFirstRequest,
+    dateFirstConsultation,
+    meetingFormat,
+    financialCondition,
+    specialTermsContact,
+    supervisionStatusThisClient,
+    contactSupervisor,
+    supervisionMaterial,
+    notes,
+    onlinePlatform,
+    clientTherapyRequest,
   } = { ...removeEmptyValues(user) }
 
   const form = useForm<IClientSchema>({
@@ -68,27 +87,42 @@ export function CardFormAdult({ user }: ICardFormProps) {
       meetingTimeDay,
       takingMedic,
       prevExperience,
+      clientStatus,
+      dateFirstRequest,
+      dateFirstConsultation,
+      meetingFormat,
+      financialCondition,
+      specialTermsContact,
+      supervisionStatusThisClient,
+      contactSupervisor,
+      supervisionMaterial,
+      notes,
+      onlinePlatform,
+      clientTherapyRequest,
     },
   })
 
-  const { formState } = form
+  const {
+    formState: { isSubmitting, isValid, isValidating, dirtyFields },
+    handleSubmit,
+  } = form
 
-  const handleSubmit = (data: IClientSchema) => {
+  const onSubmit = (data: IClientSchema) => {
     try {
       mutate({ ...removeEmptyValues(data), id })
 
       form.reset(data)
-    } catch (error) {
-      console.log(error)
-    }
+    } catch {}
   }
+
+  const isSubmitLoading = isPending || isSubmitting || !isValid || isValidating || isEmpty(dirtyFields)
 
   return (
     <>
       <div className="bg-[#F1F1F1] px-[16px] py-[25px] rounded-tr-[4px] rounded-br-[4px] rounded-bl-[4px]">
-        <FormPrompt hasUnsavedChanges={!isEmpty(formState.dirtyFields)} />
+        <FormPrompt hasUnsavedChanges={!isEmpty(dirtyFields)} />
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(handleSubmit)} className="w-full flex justify-between">
+          <form onSubmit={handleSubmit(onSubmit)} className="w-full flex justify-between">
             <div className="grid grid-cols-[auto_1fr] gap-y-[10px] gap-x-[49px]">
               <InputAdult form={form} name={'lastName'} label={'Фамилия'} />
               <InputAdult form={form} name={'firstName'} label={'Имя'} />
@@ -96,6 +130,18 @@ export function CardFormAdult({ user }: ICardFormProps) {
               <InputAdult type={'number'} form={form} name={'phoneNumber'} label={'Телефон'} />
               <InputAdult form={form} name={'mail'} label={'Почта'} />
               <SelectAdult form={form} options={genderOptions} name={'gender'} label={'Пол'} />
+
+              <SelectAdult form={form} options={statusOptions} name={'clientStatus'} label={'Статус'} />
+              <InputAdult form={form} name={'dateFirstRequest'} label={'Дата первого обращения'} type={'date'} />
+              <InputAdult form={form} name={'dateFirstConsultation'} label={'Дата первой консультации'} type={'date'} />
+              <SelectAdult
+                form={form}
+                options={communicationFormatOptions}
+                name={'meetingFormat'}
+                label={'Предпочтительный формат встречи'}
+              />
+              <InputAdult form={form} name={'financialCondition'} label={'Финансовые условия'} type={'number'} />
+
               <SelectAdult form={form} options={appealOptions} name={'contactMethod'} label={'Откуда обратился'} />
               <SelectAdult form={form} options={serviceOptions} name={'onlinePlatform'} label={'Площадка'} />
               <InputAdult form={form} name={'clientTherapyRequest'} label={'Первичный запрос'} />
@@ -129,34 +175,25 @@ export function CardFormAdult({ user }: ICardFormProps) {
                     name={'prevExperience'}
                     label={'Предыдущий опыт получения психологической помощи'}
                   />
+
+                  <InputAdult form={form} name={'specialTermsContact'} label={'Особые условия контракта'} />
+                  <SelectAdult
+                    form={form}
+                    options={answerOptions}
+                    name={'supervisionStatusThisClient'}
+                    label={'Берется ли супервизия на данного клиента'}
+                  />
+                  <InputAdult form={form} name={'contactSupervisor'} label={'ФИО и контакты супервизора'} />
+                  <InputAdult
+                    form={form}
+                    name={'supervisionMaterial'}
+                    label={'Материал для следующих сеансов из супервизии'}
+                  />
+                  <TextareaAdult form={form} name={'notes'} label={'Заметки'} />
                 </>
               )}
             </div>
-            <div className="ml-auto">
-              <div className="w-full flex-col items-end px-4 flex">
-                <button
-                  type={'submit'}
-                  className="bg-[#5A5A5A] text-white py-2 px-4 rounded-[6px] mb-3 disabled:cursor-not-allowed disabled:bg-[#8E8E8E]"
-                  disabled={
-                    isPending ||
-                    formState.isSubmitting ||
-                    !formState.isValid ||
-                    formState.isValidating ||
-                    isEmpty(formState.dirtyFields)
-                  }>
-                  Сохранить
-                </button>
-                <button
-                  type={'button'}
-                  onClick={() => {
-                    return getLink(linkData, id)
-                  }}
-                  disabled={isPendingLink}
-                  className="bg-[#5A5A5A] text-white py-2 px-4 rounded-[6px]  disabled:cursor-not-allowed disabled:bg-[#8E8E8E]">
-                  Ссылка на анкету
-                </button>
-              </div>
-            </div>
+            <CardButtons id={id} linkData={linkData} isPendingLink={isPendingLink} isLoading={isSubmitLoading} />
           </form>
         </Form>
         {!isMore && (

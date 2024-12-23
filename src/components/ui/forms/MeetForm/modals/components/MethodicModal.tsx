@@ -13,6 +13,7 @@ import { Button } from '@/components/ui/buttons/Button'
 import React, { ChangeEvent, FC, DragEvent } from 'react'
 import { IState } from '@/components/ui/forms/MeetForm/modals/types'
 import { IMethodic } from '@/types/methods'
+import { toast } from 'react-toastify'
 
 interface IMethodicModalProps {
   isOpen: boolean
@@ -52,7 +53,6 @@ export const MethodicModal: FC<IMethodicModalProps> = ({
       const clipboardItems = await navigator.clipboard.read()
       const images: { file: File; url: string }[] = []
 
-      // Проходим по элементам в буфере обмена
       for (const item of clipboardItems) {
         if (item.types.includes('image/png') || item.types.includes('image/jpeg')) {
           const blob = await item.getType('image/png')
@@ -62,10 +62,9 @@ export const MethodicModal: FC<IMethodicModalProps> = ({
         }
       }
 
-      // Добавляем изображения в состояние
       onInputChange('images', [...values.images, ...images])
-    } catch (error) {
-      console.error('Ошибка при вставке изображения:', error)
+    } catch {
+      toast.error('Ошибка при вставке изображения')
     }
   }
 

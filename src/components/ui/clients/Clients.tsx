@@ -42,7 +42,7 @@ function Clients() {
   const router = useRouter()
 
   const handleClick = (client: any): void => {
-    router.push(`card/${client.customerId}?clientType=${client.clientType}`)
+    router.push(`/card/${client.customerId}?clientType=${client.clientType}`)
   }
 
   async function fetchClients() {

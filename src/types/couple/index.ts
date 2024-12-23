@@ -20,7 +20,7 @@ export interface ICouple {
   offlineAddress: string
   clientTherapyRequest: string
   meetingTimeDay: string
-  financialCondition: 0
+  financialCondition: number
   residenceAddress: string
   peerRecommendation: string
   specialTermsContact: string

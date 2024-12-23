@@ -10,6 +10,7 @@ import { customStyles } from '@/constants/customStyles'
 interface Option {
   value: number
   label: string
+  type: string
 }
 
 // @ts-ignore
@@ -22,12 +23,14 @@ export default function Header({ onOpenModal, onOpenModalMeet }) {
   const fetchClients = async (inputValue: string) => {
     setIsLoading(true)
     try {
-      const response = await calendarService.getUsersByName(inputValue)
-      const data = response.data
-      const formattedOptions = data.map((client: { customerId: number; fullName: string }) => ({
+      const { data } = await calendarService.getUsersByName(inputValue)
+
+      const formattedOptions = data.map((client: { customerId: number; fullName: string; clientType: string }) => ({
         value: client.customerId,
         label: client.fullName,
+        type: client.clientType,
       }))
+
       setOptions(formattedOptions)
     } catch (error) {
       console.error('Ошибка при поиске клиентов:', error)
@@ -45,7 +48,7 @@ export default function Header({ onOpenModal, onOpenModalMeet }) {
   const handleChange = (selected: Option | null) => {
     setSelectedOption(selected)
     if (selected) {
-      router.push(`/card/${selected.value}`)
+      router.push(`/card/${selected.value}?clientType=${selected.type}`)
     }
   }
 
