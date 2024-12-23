@@ -113,14 +113,13 @@ export const AddClientModal: FC<IAddClientModalProps> = ({ isOpen, onClose }) =>
         lastName: data.lastName,
         secondName: data.secondName,
         firstName: data.firstName,
-        fullName: `${data.firstName} ${data.secondName} ${data.lastName}`,
         birth: data.birth,
         phoneNumber: data.phoneNumber,
         mail: data.mail,
         gender: data.gender,
         meetingFormat: data.communicationFormat,
         // @ts-ignore
-        secondCustomer: {
+        secondPerson: {
           lastName: data.client2LastName,
           secondName: data.client2SecondName,
           firstName: data.client2FirstName,
@@ -437,15 +436,6 @@ export const AddClientModal: FC<IAddClientModalProps> = ({ isOpen, onClose }) =>
                       />
                     </div>
                     <div className="flex flex-row w-full space-x-[10px]">
-                      <div className="flex flex-col space-y-[5px]">
-                        <label className="font-montserrat text-xs font-medium">Дата рождения</label>
-                        <input
-                          className="flex h-[36px] w-full rounded-xl border border-gray bg-background px-3 py-2 text-sm"
-                          type="date"
-                          required
-                          {...register('parentBirthDate')}
-                        />
-                      </div>
                       <div className="flex flex-col w-full space-y-[5px]">
                         <label className="font-montserrat text-xs font-medium">Пол</label>
                         <Select
@@ -466,26 +456,6 @@ export const AddClientModal: FC<IAddClientModalProps> = ({ isOpen, onClose }) =>
                           }}
                         />
                       </div>
-                    </div>
-                    <div className="flex flex-col space-y-[5px]">
-                      <label className="font-montserrat text-xs font-medium">Формат коммуникации</label>
-                      <Select
-                        options={communicationFormatOptions}
-                        onChange={(option) => setValue('parentCommunicationFormat', option?.value)}
-                        className="w-full"
-                        placeholder="Выберите формат"
-                        components={{ DropdownIndicator }}
-                        styles={{
-                          control: (base) => ({
-                            ...base,
-                            height: '36px',
-                            minHeight: '36px',
-                            padding: '0 0 5px 0',
-                            borderRadius: '12px',
-                          }),
-                          indicatorSeparator: () => ({ display: 'none' }),
-                        }}
-                      />
                     </div>
                     <div className="space-y-[5px]">
                       <label className="font-montserrat text-xs font-medium">Телефон</label>
@@ -650,15 +620,6 @@ export const AddClientModal: FC<IAddClientModalProps> = ({ isOpen, onClose }) =>
                     </div>
 
                     <div className="flex flex-row w-full space-x-[10px]">
-                      <div className="flex flex-col space-y-[5px]">
-                        <label className="font-montserrat text-xs font-medium">Дата рождения</label>
-                        <input
-                          className="flex h-[36px] w-full rounded-xl border border-gray bg-background px-3 py-2 text-sm"
-                          type="date"
-                          required
-                          {...register('client2BirthDate')}
-                        />
-                      </div>
                       <div className="flex flex-col w-full space-y-[5px]">
                         <label className="font-montserrat text-xs font-medium">Пол</label>
                         <Select
@@ -679,26 +640,6 @@ export const AddClientModal: FC<IAddClientModalProps> = ({ isOpen, onClose }) =>
                           }}
                         />
                       </div>
-                    </div>
-                    <div className="flex flex-col space-y-[5px]">
-                      <label className="font-montserrat text-xs font-medium">Формат коммуникации</label>
-                      <Select
-                        options={communicationFormatOptions}
-                        onChange={(option) => setValue('client2CommunicationFormat', option?.value)}
-                        className="w-full"
-                        placeholder="Выберите формат"
-                        components={{ DropdownIndicator }}
-                        styles={{
-                          control: (base) => ({
-                            ...base,
-                            height: '36px',
-                            minHeight: '36px',
-                            padding: '0 0 5px 0',
-                            borderRadius: '12px',
-                          }),
-                          indicatorSeparator: () => ({ display: 'none' }),
-                        }}
-                      />
                     </div>
                     <div className="space-y-[5px]">
                       <label className="font-montserrat text-xs font-medium">Телефон клиента №2</label>

@@ -1,5 +1,10 @@
-export const getAge = (birthDate: string | Date): number => {
+/**
+ * Возвращает возраст по дате рождения
+ * @param birthDate - Дата рождения
+ */
+export const getAge = (birthDate: string | Date | undefined): number | undefined => {
   // Преобразуем дату рождения в объект Date, если она передана в виде строки
+  if (!birthDate) return
   const birthDateObj = typeof birthDate === 'string' ? new Date(birthDate) : birthDate
 
   const today = new Date()

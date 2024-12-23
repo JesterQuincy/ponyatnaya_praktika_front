@@ -77,6 +77,7 @@ export const familyStatusOptions = [
   { value: 'Официальный брак с раздельным проживанием', label: 'Официальный брак с раздельным проживанием' },
   { value: 'Одиночество/Не в постоянных отношениях', label: 'Одиночество/Не в постоянных отношениях' },
   { value: 'Семьи с детьми', label: 'Семьи с детьми' },
+  { value: 'Пара', label: 'Пара' },
 ]
 
 export const channelOptions = [
@@ -87,4 +88,9 @@ export const channelOptions = [
   { value: 'Discord', label: 'Discord' },
   { value: 'Почта', label: 'Почта' },
   { value: 'Snapchat', label: 'Snapchat' },
+]
+
+export const answerOptions = [
+  { value: 'Да', label: 'Да' },
+  { value: 'Нет', label: 'Нет' },
 ]
