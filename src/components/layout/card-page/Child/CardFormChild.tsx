@@ -20,10 +20,10 @@ import { childSchema, IChildSchema } from '@/models/childSchema'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useUpdateChild } from '@/api/hooks/child/useUpdateChild'
 import { useGetLink } from '@/api/hooks/profile-link/useGetLink'
-import { getLink } from '@/helpers/utils/getLink'
 import { FormPrompt } from '@/components/form-prompt'
 import { isEmpty } from '@/helpers/utils/isEmpty'
 import { TextareaChild } from '@/components/layout/card-page/Child/TextareaChild'
+import { CardButtons } from '@/components/layout/card-page/CardButtons'
 
 type TParent = Pick<IChild['firstParent'], 'gender' | 'mail' | 'phoneNumber' | 'secondName' | 'firstName' | 'lastName'>
 
@@ -125,7 +125,10 @@ export const CardFormChild = ({ user }: ICardFormProps) => {
     },
   })
 
-  const { formState } = form
+  const {
+    formState: { isSubmitting, isValid, isValidating, dirtyFields },
+    handleSubmit: onSubmit,
+  } = form
 
   const handleSubmit = (data: IChildSchema) => {
     try {
@@ -135,12 +138,14 @@ export const CardFormChild = ({ user }: ICardFormProps) => {
     } catch {}
   }
 
+  const isSubmitLoading = isPending || isSubmitting || !isValid || isValidating || isEmpty(dirtyFields)
+
   return (
     <>
       <div className="bg-[#F1F1F1] px-[16px] py-[25px] rounded-tr-[4px] rounded-br-[4px] rounded-bl-[4px]">
-        <FormPrompt hasUnsavedChanges={!isEmpty(formState.dirtyFields)} />
+        <FormPrompt hasUnsavedChanges={!isEmpty(dirtyFields)} />
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(handleSubmit)} className="w-full flex justify-between">
+          <form onSubmit={onSubmit(handleSubmit)} className="w-full flex justify-between">
             <div className="grid grid-cols-[auto_1fr] gap-y-[10px] gap-x-[49px]">
               {/*region: child*/}
               <InputChild form={form} name={'lastName'} label={'Фамилия ребенка'} />
@@ -265,31 +270,7 @@ export const CardFormChild = ({ user }: ICardFormProps) => {
                 </>
               )}
             </div>
-            <div className="ml-auto">
-              <div className="w-full flex-col items-end px-4 flex">
-                <button
-                  type={'submit'}
-                  className="bg-[#5A5A5A] text-white py-2 px-4 rounded-[6px] mb-3 disabled:cursor-not-allowed disabled:bg-[#8E8E8E]"
-                  disabled={
-                    isPending ||
-                    formState.isSubmitting ||
-                    !formState.isValid ||
-                    formState.isValidating ||
-                    isEmpty(formState.dirtyFields)
-                  }>
-                  Сохранить
-                </button>
-                <button
-                  onClick={() => {
-                    return getLink(linkData, id)
-                  }}
-                  disabled={isPendingLink}
-                  type={'button'}
-                  className="bg-[#5A5A5A] text-white py-2 px-4 rounded-[6px]  disabled:cursor-not-allowed disabled:bg-[#8E8E8E]">
-                  Ссылка на анкету
-                </button>
-              </div>
-            </div>
+            <CardButtons id={id} linkData={linkData} isPendingLink={isPendingLink} isLoading={isSubmitLoading} />
           </form>
         </Form>
         {!isMore && (

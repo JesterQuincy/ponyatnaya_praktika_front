@@ -3,6 +3,9 @@ import { getTokens, removeTokenStorage } from '@/services/auth-token.service'
 import { errorCatch } from '@/api/error'
 import { authService } from '@/services/auth.service'
 
+// const host = 'http://localhost:3330'
+export const BASE_HOST = 'http://xn----7sbba3blbsaikfnxh3rd.xn--p1ai:3000'
+
 const options: CreateAxiosDefaults = {
   baseURL: 'http://195.151.1.151:3330/',
   headers: {
@@ -10,6 +13,7 @@ const options: CreateAxiosDefaults = {
   },
   withCredentials: true,
 }
+
 const axiosClassic = axios.create(options)
 
 const axiosWithAuth = axios.create(options)
