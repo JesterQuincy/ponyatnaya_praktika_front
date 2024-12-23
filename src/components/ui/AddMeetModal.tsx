@@ -7,7 +7,6 @@ import { calendarService } from '@/services/calendar.service'
 import { toast } from 'react-toastify'
 import { UserMeeting } from '@/helpers/types/calendar'
 import Select from 'react-select'
-import { useRouter } from 'next/navigation'
 import { customSelectStyles } from '@/constants/customStyles'
 
 interface MeetForm {
@@ -107,7 +106,7 @@ const AddMeetModal = ({ isOpen, onClose }) => {
   }
 
   const onSubmit: SubmitHandler<MeetForm> = (data) => {
-    const { id, clientName, dateMeet, time, duration, formatMeet, location, paymentType, meetingName } = data
+    const { id, clientName, dateMeet, time, duration, formatMeet, paymentType, meetingName } = data
 
     const formattedTime = formatTime(time)
     const [hours, minutes] = formattedTime.split(':').map(Number)
