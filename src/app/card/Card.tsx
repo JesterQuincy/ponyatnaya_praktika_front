@@ -19,19 +19,25 @@ import { EClientType } from '@/types/common'
 import { CardFormCouple } from '@/components/layout/card-page/Couple'
 import { ICouple } from '@/types/couple'
 import { getAge } from '@/helpers/utils/getAge'
+import { useGetMeetingCustomer } from '@/api/hooks/meet/useGetMeetingCustomer'
+import { emptyRowField } from '@/constants'
 
 type TUserType =
   | { type: EClientType.ADULT; client: IClient }
   | { type: EClientType.CHILD; client: IChild }
   | { type: EClientType.COUPLE; client: ICouple }
 
-export function Card(id: any) {
+export function Card({ id }: { id: string }) {
   const searchParams = useSearchParams()
   const clientType = searchParams.get('clientType')
 
   const [isLoading, setIsLoading] = useState(false)
   const [clientData, setClientData] = useState<TUserType>()
   const [activeTab, setActiveTab] = useState<TTab>('card')
+
+  const { data, status } = useGetMeetingCustomer(id)
+
+  const isLoadingCustomerInfo = status === 'pending'
 
   useEffect(() => {
     const fetchData = async () => {
@@ -40,13 +46,13 @@ export function Card(id: any) {
 
         let data
         if (clientType === 'Взрослый') {
-          data = await clientService.getClientById(id.id)
+          data = await clientService.getClientById(Number(id))
           setClientData({ type: EClientType.ADULT, client: data.data })
         } else if (clientType === 'Ребенок') {
-          data = await clientService.getChildById(id.id)
+          data = await clientService.getChildById(Number(id))
           setClientData({ type: EClientType.CHILD, client: data.data })
         } else if (clientType === 'Пара') {
-          data = await clientService.getPairById(id.id)
+          data = await clientService.getPairById(Number(id))
           setClientData({ type: EClientType.COUPLE, client: data.data })
         }
       } catch (error) {
@@ -71,19 +77,23 @@ export function Card(id: any) {
                 <Image src={HumanIcon} alt="Human" className="mr-2" /> {clientData?.client.clientType}
               </div>
             </div>
-            {/*TODO: вернуть, когда обновят сваггер*/}
-            {/*<div className="text-[11px]">*/}
-            {/*  <span className="text-[#7E7E7E]">Возраст:</span> {getAge(clientData.client?.birth)}*/}
-            {/*</div>*/}
-            {/*<div className="text-[11px]">*/}
-            {/*  <span className="text-[#7E7E7E]">Всего встреч:</span> {client?.countMeet}*/}
-            {/*</div>*/}
-            {/*<div className="text-[11px]">*/}
-            {/*  <span className="text-[#7E7E7E]">Последняя:</span> {client?.lastMeeting || null}*/}
-            {/*</div>*/}
-            {/*<div className="text-[11px]">*/}
-            {/*  <span className="text-[#7E7E7E]">Следующая:</span> {client?.nextMeeting || null}*/}
-            {/*</div>*/}
+            {isLoadingCustomerInfo && <Spinner />}
+            <div className="text-[11px]">
+              <span className="text-[#7E7E7E]">Возраст:</span> {getAge(clientData?.client?.birth)}
+            </div>
+            {!isLoadingCustomerInfo && data?.data && (
+              <>
+                <div className="text-[11px]">
+                  <span className="text-[#7E7E7E]">Всего встреч:</span> {data?.data?.countMeet ?? emptyRowField}
+                </div>
+                <div className="text-[11px]">
+                  <span className="text-[#7E7E7E]">Последняя:</span> {data?.data?.lastMeetDate ?? emptyRowField}
+                </div>
+                <div className="text-[11px]">
+                  <span className="text-[#7E7E7E]">Следующая:</span> {data?.data?.nextMeetDate ?? emptyRowField}
+                </div>
+              </>
+            )}
           </div>
           <Tabs changeActiveTab={setActiveTab} activeTab={activeTab} />
           {activeTab === 'card' && clientData.type === EClientType.ADULT && <CardFormAdult user={clientData.client} />}

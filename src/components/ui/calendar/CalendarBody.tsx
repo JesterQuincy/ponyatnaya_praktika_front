@@ -10,8 +10,17 @@ import moment from 'moment'
 import 'moment/locale/ru'
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
+import { EventClickArg } from '@fullcalendar/core'
 
 moment.locale('kz')
+
+interface IMeeting {
+  startTime: moment.MomentInput
+  endTime: any
+  formatMeet: any
+  id: number
+  title: string
+}
 
 export default function CalendarBody() {
   const [events, setEvents] = useState<any[]>([])
@@ -20,13 +29,14 @@ export default function CalendarBody() {
 
   const generateEvents = (serverData: { clientsData: any[] }) => {
     return serverData.clientsData.flatMap((client) =>
-      client.meetings.map((meeting: { startTime: moment.MomentInput; endTime: any; formatMeet: any }) => ({
-        title: `${client.fullName} - ${moment(meeting.startTime).format('HH:mm')}`,
+      client.meetings.map((meeting: IMeeting) => ({
+        title: `${client.fullName || meeting.title} - ${moment(meeting.startTime).format('HH:mm')}`,
         start: meeting.startTime,
         end: meeting.endTime,
         allDay: false,
         extendedProps: {
           formatMeet: meeting.formatMeet,
+          id: 5,
         },
       })),
     )
@@ -47,8 +57,8 @@ export default function CalendarBody() {
     fetchData()
   }, [])
 
-  const handleEventClick = () => {
-    router.push('/meet')
+  const handleEventClick = (eventInfo: EventClickArg) => {
+    router.push(`/meet?id=${eventInfo.event.extendedProps.id}`)
   }
 
   return (
@@ -110,11 +120,11 @@ export default function CalendarBody() {
             let badgeColor = 'bg-[#6E6E6E]'
             let badgeText = 'Другое'
 
-            if (formatMeet === 'online') {
+            if (formatMeet === 'Онлайн') {
               bgColor = 'bg-[#86DAFF4D]'
               badgeColor = 'bg-[#049ADB]'
               badgeText = 'Онлайн'
-            } else if (formatMeet === 'offline') {
+            } else if (formatMeet === 'Офлайн') {
               bgColor = 'bg-[#EA660C33]'
               badgeColor = 'bg-[#EA660C]'
               badgeText = 'Офлайн'
@@ -142,7 +152,9 @@ export default function CalendarBody() {
             )
           }}
           eventClassNames="w-full h-full hover:cursor-pointer"
-          eventClick={handleEventClick}
+          eventClick={(event) => {
+            handleEventClick(event)
+          }}
         />
       </div>
     </div>
