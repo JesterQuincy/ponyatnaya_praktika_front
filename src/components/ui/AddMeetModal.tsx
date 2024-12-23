@@ -57,8 +57,6 @@ const AddMeetModal = ({ isOpen, onClose }) => {
   const watchType = watch('type')
   const watchFormat = watch('formatMeet')
 
-  const router = useRouter()
-
   const { mutate } = useMutation({
     mutationKey: ['createMeeting'],
     mutationFn: (data: UserMeeting) => calendarService.createMeeting(data),
@@ -130,7 +128,7 @@ const AddMeetModal = ({ isOpen, onClose }) => {
           id: id || 0,
           fullName: clientName || '',
         },
-        nameMeet: meetingName || 'Без названия',
+        nameMeet: meetingName,
         dateMeet,
         startMeet: formattedTime,
         endMeet: formattedEndTime,
@@ -139,7 +137,7 @@ const AddMeetModal = ({ isOpen, onClose }) => {
       }
     } else if (watchType === 'other') {
       payload = {
-        nameMeet: meetingName || 'Без названия',
+        nameMeet: meetingName,
         dateMeet,
         startMeet: formattedTime,
         endMeet: formattedEndTime,
@@ -152,8 +150,6 @@ const AddMeetModal = ({ isOpen, onClose }) => {
 
     mutate(payload)
   }
-
-  console.log(watchType)
 
   return (
     <Modal
