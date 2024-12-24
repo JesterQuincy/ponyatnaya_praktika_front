@@ -15,4 +15,4 @@ export const registrationSchema = z
     message: 'Пароли должны совпадать',
   })
 
-export type IRegistrationFields = Omit<z.infer<typeof registrationSchema>, 'confirmPassword' | 'email'>
+export type IRegistrationFields = Omit<z.infer<typeof registrationSchema>, 'confirmPassword'>
