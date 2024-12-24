@@ -10,14 +10,13 @@ export const authService = {
   },
 
   async register(signInRequest: {
-    lastName: string
-    name: string
-    patronymic?: string
+    firstName: string
+    secondName: string
+    lastName?: string
     username: string
-    email: string
     password: string
   }) {
-    const response = await axiosClassic.put('/registration/sign-up', null, {
+    const response = await axiosClassic.post('/registration/sign-up', null, {
       params: signInRequest,
     })
 

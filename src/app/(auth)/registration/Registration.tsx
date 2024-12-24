@@ -20,8 +20,8 @@ export function Registration() {
     resolver: zodResolver(registrationSchema),
     defaultValues: {
       lastName: '',
-      name: '',
-      patronymic: '',
+      firstName: '',
+      secondName: '',
       username: '',
       email: '',
       password: '',
@@ -33,8 +33,10 @@ export function Registration() {
   const { mutateAsync: loginMutate, status: loginStatus } = useLogin()
 
   const onSubmit = form.handleSubmit(async (data) => {
+    const { firstName, secondName, lastName, username, password } = data
+
     try {
-      await mutateAsync(data)
+      await mutateAsync({ firstName, secondName, lastName, username, password })
       await loginMutate({ username: data.username, password: data.password })
 
       form.reset()
@@ -54,7 +56,7 @@ export function Registration() {
           <form onSubmit={onSubmit} className="space-y-3">
             <FormField
               control={form.control}
-              name="lastName"
+              name="secondName"
               render={({ field }) => (
                 <FormItem>
                   <FormControl>
@@ -66,7 +68,7 @@ export function Registration() {
             />
             <FormField
               control={form.control}
-              name="name"
+              name="firstName"
               render={({ field }) => (
                 <FormItem>
                   <FormControl>
@@ -78,7 +80,7 @@ export function Registration() {
             />
             <FormField
               control={form.control}
-              name="patronymic"
+              name="lastName"
               render={({ field }) => (
                 <FormItem>
                   <FormControl>
