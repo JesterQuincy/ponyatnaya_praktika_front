@@ -22,7 +22,7 @@ export function SelectAdult({ options, form, name, label }: ISelectHandlerProps)
         render={({ field }) => {
           return (
             <FormItem className="max-h-[38px]">
-              <Select onValueChange={field.onChange} value={field.value}>
+              <Select onValueChange={field.onChange} value={field.value ? String(field.value) : undefined}>
                 <FormControl>
                   <SelectTrigger className="border-gray rounded-xl bg-white">
                     <SelectValue placeholder="Выберите" />
