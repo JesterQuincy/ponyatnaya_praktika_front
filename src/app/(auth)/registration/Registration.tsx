@@ -33,10 +33,10 @@ export function Registration() {
   const { mutateAsync: loginMutate, status: loginStatus } = useLogin()
 
   const onSubmit = form.handleSubmit(async (data) => {
-    const { firstName, secondName, lastName, username, password } = data
+    const { firstName, secondName, lastName, username, password, email } = data
 
     try {
-      await mutateAsync({ firstName, secondName, lastName, username, password })
+      await mutateAsync({ firstName, secondName, lastName, username, password, email })
       await loginMutate({ username: data.username, password: data.password })
 
       form.reset()

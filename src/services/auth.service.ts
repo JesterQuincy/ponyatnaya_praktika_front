@@ -15,10 +15,9 @@ export const authService = {
     lastName?: string
     username: string
     password: string
+    email: string
   }) {
-    const response = await axiosClassic.post('/registration/sign-up', null, {
-      params: signInRequest,
-    })
+    const response = await axiosClassic.post('/registration/sign-up', signInRequest)
 
     if (response.data.access) saveTokenStorage(response.data.access, response.data.refresh)
     return response
