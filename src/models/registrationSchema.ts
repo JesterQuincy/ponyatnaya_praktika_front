@@ -2,9 +2,9 @@ import { z } from 'zod'
 
 export const registrationSchema = z
   .object({
-    lastName: z.string().min(1, 'Фамилия не должна быть пустой'),
-    name: z.string().min(1, 'Имя не должно быть пустым'),
-    patronymic: z.string().optional(),
+    secondName: z.string().min(1, 'Фамилия не должна быть пустой'),
+    firstName: z.string().min(1, 'Имя не должно быть пустым'),
+    lastName: z.string().optional(),
     username: z.string().min(1, 'Логин не должен быть пустым'),
     email: z.string().email('Некорректный адрес электронной почты'),
     password: z.string().min(3, 'Пароль должен быть не менее 3 символов'),
@@ -14,3 +14,5 @@ export const registrationSchema = z
     path: ['confirmPassword'],
     message: 'Пароли должны совпадать',
   })
+
+export type IRegistrationFields = Omit<z.infer<typeof registrationSchema>, 'confirmPassword' | 'email'>
