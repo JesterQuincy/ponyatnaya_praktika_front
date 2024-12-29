@@ -7,9 +7,9 @@ export enum ETestType {
 }
 
 export interface ITestCardProps {
-  type: 'test' | 'survey' | 'form'
+  test: boolean
   title: string
-  date: string
+  dateCreated: string
 }
 
 export type AssessmentType = 'test' | 'survey' | 'form'
