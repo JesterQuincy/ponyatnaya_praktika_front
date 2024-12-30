@@ -1,24 +1,23 @@
-import { useFieldArray, useFormContext } from 'react-hook-form';
-import { FormField, FormItem, FormControl, FormLabel, FormMessage } from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { DndContext, closestCenter, PointerSensor, useSensor, useSensors } from '@dnd-kit/core';
-import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
-import { SortableItem } from './SortableItem';
-import { Grip, Plus, Trash2 } from 'lucide-react';
-import { Button } from '@/components/ui/buttons/Button';
-import { useState } from 'react';
-import { QuestionItemProps } from '@/helpers/types/testPoll';
-import { Separator } from '../ui/separator';
-import Image from 'next/image';
+import { useFieldArray, useFormContext } from 'react-hook-form'
+import { FormField, FormItem, FormControl, FormLabel, FormMessage } from '@/components/ui/form'
+import { Input } from '@/components/ui/input'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import { DndContext, closestCenter, PointerSensor, useSensor, useSensors } from '@dnd-kit/core'
+import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable'
+import { SortableItem } from './SortableItem'
+import { Grip, Plus } from 'lucide-react'
+import { Button } from '@/components/ui/buttons/Button'
+import { useState } from 'react'
+import { QuestionItemProps } from '@/helpers/types/testPoll'
+import Image from 'next/image'
 import variantTrash from '@/public/icon/variantTrash.svg'
 
 export function QuestionItem({ questionField, index, removeQuestion, dragHandleProps }: QuestionItemProps) {
-  const { control, watch, setValue } = useFormContext();
+  const { control, watch, setValue } = useFormContext()
 
-  const sensors = useSensors(useSensor(PointerSensor));
+  const sensors = useSensors(useSensor(PointerSensor))
 
-  const [optionCounter, setOptionCounter] = useState(1);
+  const [optionCounter, setOptionCounter] = useState(1)
 
   const {
     fields: optionFields,
@@ -28,68 +27,64 @@ export function QuestionItem({ questionField, index, removeQuestion, dragHandleP
   } = useFieldArray({
     control,
     name: `questions.${index}.answerOptions`,
-  });
+  })
 
   const handleOptionDragEnd = (event: any) => {
-    const { active, over } = event;
+    const { active, over } = event
 
     if (active.id !== over.id) {
-      const oldIndex = optionFields.findIndex((field) => field.id === active.id);
-      const newIndex = optionFields.findIndex((field) => field.id === over.id);
+      const oldIndex = optionFields.findIndex((field) => field.id === active.id)
+      const newIndex = optionFields.findIndex((field) => field.id === over.id)
 
-      moveOption(oldIndex, newIndex);
+      moveOption(oldIndex, newIndex)
     }
-  };
+  }
 
   const handleAddOption = () => {
-    appendOption({ id: optionCounter, text: '', correct: false });
-    setOptionCounter(optionCounter + 1);
-  };
+    appendOption({ id: optionCounter, text: '', correct: false })
+    setOptionCounter(optionCounter + 1)
+  }
 
   return (
     <div className="space-y-2 p-4 border-none rounded-[6px] bg-white">
       <Grip color="gray" width={20} height={20} className="mx-auto cursor-grab outline-none" {...dragHandleProps} />
-      <div className='flex gap-2'><FormField
-        control={control}
-        name={`questions.${index}.text`}
-        render={({ field }) => (
-          <FormItem>
-            <FormControl>
-              <Input {...field} placeholder="Вопрос" className='w-[50vw]' />
-            </FormControl>
-            <FormMessage />
-          </FormItem>
-        )}
-      />
-      <Button
-        type="button"
-        onClick={() => removeQuestion(index)}
-        className='w-[20vw]'
-      >
-                      <Image alt="variantTrash" src={variantTrash} width={29} height={29} color="gray" className="mb-1" />
-      </Button></div>
-      
+      <div className="flex gap-2">
+        <FormField
+          control={control}
+          name={`questions.${index}.text`}
+          render={({ field }) => (
+            <FormItem>
+              <FormControl>
+                <Input {...field} placeholder="Вопрос" className="w-[50vw]" />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <Button type="button" onClick={() => removeQuestion(index)} className="w-[20vw]">
+          <Image alt="variantTrash" src={variantTrash} width={29} height={29} color="gray" className="mb-1" />
+        </Button>
+      </div>
+
       <FormField
         control={control}
         name={`questions.${index}.type`}
         render={({ field }) => (
           <FormItem>
             <FormControl>
-              <div className='flex gap-2'><h1 className='text-[14px] w-[14%] my-auto'>Формат ответа:</h1>
-              <Select
-                value={field.value}
-                onValueChange={(value) => setValue(`questions.${index}.type`, value)}
-              >
-                <SelectTrigger className="border-gray rounded-[6px] w-[23%]">
-                  <SelectValue placeholder="Выберите формат ответа" />
-                </SelectTrigger>
-                <SelectContent className="border-gray bg-white rounded-[6px]">
-                  <SelectItem value="Один из списка">Один из списка</SelectItem>
-                  <SelectItem value="Несколько из списка">Несколько из списка</SelectItem>
-                  <SelectItem value="Развёрнутый ответ">Развёрнутый ответ</SelectItem>
-                </SelectContent>
-              </Select></div>
-              
+              <div className="flex gap-2">
+                <h1 className="text-[14px] w-[14%] my-auto">Формат ответа:</h1>
+                <Select value={field.value} onValueChange={(value) => setValue(`questions.${index}.type`, value)}>
+                  <SelectTrigger className="border-gray rounded-[6px] w-[23%]">
+                    <SelectValue placeholder="Выберите формат ответа" />
+                  </SelectTrigger>
+                  <SelectContent className="border-gray bg-white rounded-[6px]">
+                    <SelectItem value="Один из списка">Один из списка</SelectItem>
+                    <SelectItem value="Несколько из списка">Несколько из списка</SelectItem>
+                    <SelectItem value="Развёрнутый ответ">Развёрнутый ответ</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
             </FormControl>
             <FormMessage />
           </FormItem>
@@ -111,11 +106,14 @@ export function QuestionItem({ questionField, index, removeQuestion, dragHandleP
               ))}
             </SortableContext>
           </DndContext>
-          <Button type="button" onClick={handleAddOption} className='flex justify-center items-center text-[12px] underline'>
+          <Button
+            type="button"
+            onClick={handleAddOption}
+            className="flex justify-center items-center text-[12px] underline">
             <Plus size={14} /> Добавить вариант
           </Button>
         </div>
       )}
     </div>
-  );
+  )
 }

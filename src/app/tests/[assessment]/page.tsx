@@ -1,6 +1,5 @@
 'use client'
 
-import { Badge } from '@/components/ui/badge'
 import { Heading } from '@/components/ui/Heading'
 import { componentMap } from '@/helpers/constants/tests'
 import { ETestType } from '@/helpers/types/tests'
@@ -19,8 +18,9 @@ export default function Page({ params }: Props) {
   const name = nameParts.join(' ')
 
   const type = ETestType[typeKey as keyof typeof ETestType]
+  const router = useRouter()
+
   if (!type) {
-    const router = useRouter()
     router.push('/tests')
     return null
   }

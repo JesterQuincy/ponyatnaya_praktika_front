@@ -1,27 +1,24 @@
-import { Button } from '@/components/ui/buttons/Button';
-import { Form, FormControl, FormField, FormItem, FormMessage } from '@/components/ui/form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useFieldArray, useForm } from 'react-hook-form';
-
-import { TestPollSchema, TestPollSchemaType } from '@/models/testPollSchema';
-import { DndContext, closestCenter, PointerSensor, useSensor, useSensors } from '@dnd-kit/core';
-import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
-import { SortableQuestionItem } from './SortableQuestionItem';
-import PollActionsPanel from './PollActionsPanel';
-import { Textarea } from '../ui/textarea';
-import Image from 'next/image';
-import addQuestion from '@/public/icon/addQuestion.svg';
-import { useCreateQuestionnaire } from '@/api/hooks/therapistQuestionnaires/useCreateQuestionnaire';
-
+import { Button } from '@/components/ui/buttons/Button'
+import { Form, FormControl, FormField, FormItem, FormMessage } from '@/components/ui/form'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { useFieldArray, useForm } from 'react-hook-form'
+import { TestPollSchema, TestPollSchemaType } from '@/models/testPollSchema'
+import { DndContext, closestCenter, PointerSensor, useSensor, useSensors } from '@dnd-kit/core'
+import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable'
+import { SortableQuestionItem } from './SortableQuestionItem'
+import { Textarea } from '../ui/textarea'
+import Image from 'next/image'
+import addQuestion from '@/public/icon/addQuestion.svg'
+import { useCreateQuestionnaire } from '@/api/hooks/therapistQuestionnaires/useCreateQuestionnaire'
 
 type PollFormProps = {
-  type: string;
-  name: string;
-};
+  type: string
+  name: string
+}
 
 export function PollForm({ type, name }: PollFormProps) {
-  const isTest = type === 'test';
-  const createQuestionnaire = useCreateQuestionnaire();
+  const isTest = type === 'test'
+  const createQuestionnaire = useCreateQuestionnaire()
   const form = useForm<TestPollSchemaType>({
     resolver: zodResolver(TestPollSchema),
     defaultValues: {
@@ -35,9 +32,9 @@ export function PollForm({ type, name }: PollFormProps) {
         },
       ],
     },
-  });
+  })
 
-  const { control, handleSubmit, setValue } = form;
+  const { control, handleSubmit, setValue } = form
 
   const {
     fields: questionFields,
@@ -47,20 +44,20 @@ export function PollForm({ type, name }: PollFormProps) {
   } = useFieldArray({
     control,
     name: 'questions',
-  });
+  })
 
-  const sensors = useSensors(useSensor(PointerSensor));
+  const sensors = useSensors(useSensor(PointerSensor))
 
   const handleQuestionDragEnd = (event: any) => {
-    const { active, over } = event;
+    const { active, over } = event
 
     if (active.id !== over.id) {
-      const oldIndex = questionFields.findIndex((field) => field.id === active.id);
-      const newIndex = questionFields.findIndex((field) => field.id === over.id);
+      const oldIndex = questionFields.findIndex((field) => field.id === active.id)
+      const newIndex = questionFields.findIndex((field) => field.id === over.id)
 
-      moveQuestion(oldIndex, newIndex);
+      moveQuestion(oldIndex, newIndex)
     }
-  };
+  }
 
   const handleAddQuestion = () => {
     appendQuestion({
@@ -68,14 +65,14 @@ export function PollForm({ type, name }: PollFormProps) {
       text: '',
       type: 'Один из списка',
       answerOptions: [{ id: 0, text: '', correct: false }],
-    });
-  };
+    })
+  }
 
   const onSubmit = handleSubmit((data) => {
     const payload = {
       title: name,
       description: data.description,
-      dateCreated: new Date().toISOString().split('T')[0], 
+      dateCreated: new Date().toISOString().split('T')[0],
       questions: data.questions.map((question) => ({
         id: question.id,
         text: question.text,
@@ -87,10 +84,10 @@ export function PollForm({ type, name }: PollFormProps) {
         })),
       })),
       test: isTest,
-    };
+    }
 
-    createQuestionnaire.mutate(payload);
-  });
+    createQuestionnaire.mutate(payload)
+  })
 
   return (
     <Form {...form}>
@@ -144,5 +141,5 @@ ${'\n'}Использовать методы релаксации (наприм�
         </div>
       </form>
     </Form>
-  );
+  )
 }
