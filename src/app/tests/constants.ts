@@ -1,10 +1,3 @@
-import { ISort } from '@/app/tests/page'
-
-export const initialSortValue: ISort = {
-  type: { value: 'Тест', label: 'Тест' },
-  date: { value: 'Раньше', label: 'Раньше' },
-}
-
 export const typeOption = [
   {
     value: 'Тест',
