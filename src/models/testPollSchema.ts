@@ -1,4 +1,4 @@
-import { z } from 'zod';
+import { z } from 'zod'
 
 export const TestPollSchema = z.object({
   description: z.string().min(1, 'Описание не может быть пустым'),
@@ -12,10 +12,10 @@ export const TestPollSchema = z.object({
           id: z.number(), // ID варианта ответа
           text: z.string().min(1, 'Текст варианта ответа не может быть пустым'),
           correct: z.boolean(), // Флаг правильности
-        })
+        }),
       ),
-    })
+    }),
   ),
-});
+})
 
-export type TestPollSchemaType = z.infer<typeof TestPollSchema>;
+export type TestPollSchemaType = z.infer<typeof TestPollSchema>
