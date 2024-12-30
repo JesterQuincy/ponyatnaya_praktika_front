@@ -14,7 +14,6 @@ import { Button } from '../buttons/Button'
 import { Pagination } from '../Pagination'
 import { DropdownMenu } from './DropDownMenu'
 
-import { projectMethodics } from './mocks/projectMetodics'
 import { clientService } from '@/services/clients.service'
 import { useGetProjMethodsByCustomerId } from '@/api/hooks/methods/useGetProjMethodsByCustomerId'
 import { Spinner } from '@/components/Spinner'

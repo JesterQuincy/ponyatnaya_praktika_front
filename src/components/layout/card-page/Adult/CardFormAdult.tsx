@@ -13,7 +13,7 @@ import {
 import { Form } from '@/components/ui/form'
 import { useForm } from 'react-hook-form'
 import { IClient } from '@/types/clients'
-import { useRef, useState } from 'react'
+import { useState } from 'react'
 import { useClientUpdate } from '@/api/hooks/card/useClientUpdate'
 import { removeEmptyValues } from '@/helpers/utils/removeEmptyValues'
 import { clientSchema, IClientSchema } from '@/models/clientSchema'
