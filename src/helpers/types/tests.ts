@@ -3,18 +3,22 @@ import { ComponentType } from 'react'
 export enum ETestType {
   test = 'Тест',
   survey = 'Опрос',
-  form = 'Анкета',
 }
 
 export interface ITestCardProps {
-  type: 'test' | 'survey' | 'form'
+  test: boolean
   title: string
-  date: string
+  dateCreated: string
 }
 
-export type AssessmentType = 'test' | 'survey' | 'form'
+export type AssessmentType = 'test' | 'survey'
+
+export interface AssessmentComponentProps {
+  type: string
+  name: string
+}
 
 export interface ComponentMapping {
-  Form: ComponentType
-  ActionsPanel: ComponentType
+  Form: ComponentType<AssessmentComponentProps>
+  ActionsPanel?: ComponentType<AssessmentComponentProps>
 }

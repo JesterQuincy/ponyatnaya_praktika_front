@@ -5,10 +5,7 @@ import { Textarea } from '../ui/textarea'
 const PollActionsPanel = () => {
   return (
     <div className="flex flex-col gap-2 max-h-[500px]">
-      <Button className="py-1.5 px-5 bg-taupe text-white rounded-[6px] w-[70%]">Удалить опрос</Button>
-      <Button className="py-1.5 px-5 bg-taupe text-white rounded-[6px] w-[70%]">Создать копию</Button>
-      <Button className="py-1.5 px-5 bg-taupe text-white rounded-[6px] w-[70%]">Переименовать</Button>
-      <Button className="py-1.5 px-5 bg-taupe text-white rounded-[6px] w-[70%]">Получить ссылку</Button>
+      <Button className="py-1.5 px-5 bg-taupe text-white rounded-[6px] w-[50%]">Сохранить</Button>
 
       <div className="mt-7">
         <h1 className="text-xl font-semibold">Заметка к материалу</h1>

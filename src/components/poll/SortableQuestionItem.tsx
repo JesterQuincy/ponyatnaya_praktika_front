@@ -1,7 +1,7 @@
+import { SortableQuestionItemProps } from '@/helpers/types/testPoll'
 import { useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
 import { QuestionItem } from './QuestionItem'
-import { SortableQuestionItemProps } from '@/helpers/types/testPoll'
 
 export function SortableQuestionItem({ id, questionField, index, removeQuestion }: SortableQuestionItemProps) {
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({ id })

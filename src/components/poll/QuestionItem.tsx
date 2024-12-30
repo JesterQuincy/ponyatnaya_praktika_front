@@ -1,16 +1,18 @@
 import { useFieldArray, useFormContext } from 'react-hook-form'
-import { FormField, FormItem, FormControl, FormLabel, FormMessage } from '@/components/ui/form'
+import { FormField, FormItem, FormControl, FormMessage } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { DndContext, closestCenter, PointerSensor, useSensor, useSensors } from '@dnd-kit/core'
 import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable'
 import { SortableItem } from './SortableItem'
-import { Grip, GripVertical, Plus, Trash2 } from 'lucide-react'
+import { Grip, Plus } from 'lucide-react'
 import { Button } from '@/components/ui/buttons/Button'
 import { useState } from 'react'
 import { QuestionItemProps } from '@/helpers/types/testPoll'
+import Image from 'next/image'
+import variantTrash from '@/public/icon/variantTrash.svg'
 
-export function QuestionItem({ questionField, index, removeQuestion, dragHandleProps }: QuestionItemProps) {
+export function QuestionItem({ index, removeQuestion, dragHandleProps }: QuestionItemProps) {
   const { control, watch, setValue } = useFormContext()
 
   const sensors = useSensors(useSensor(PointerSensor))
@@ -24,7 +26,7 @@ export function QuestionItem({ questionField, index, removeQuestion, dragHandleP
     move: moveOption,
   } = useFieldArray({
     control,
-    name: `questions.${index}.options`,
+    name: `questions.${index}.answerOptions`,
   })
 
   const handleOptionDragEnd = (event: any) => {
@@ -39,81 +41,76 @@ export function QuestionItem({ questionField, index, removeQuestion, dragHandleP
   }
 
   const handleAddOption = () => {
-    const newId = `variant${optionCounter}`
-    appendOption({ id: newId, value: '' })
+    appendOption({ id: optionCounter, text: '', correct: false })
     setOptionCounter(optionCounter + 1)
-  }
-
-  const handleRemoveOption = (optionIndex: number) => {
-    removeOption(optionIndex)
   }
 
   return (
     <div className="space-y-2 p-4 border-none rounded-[6px] bg-white">
       <Grip color="gray" width={20} height={20} className="mx-auto cursor-grab outline-none" {...dragHandleProps} />
-      <div className="flex items-center">
+      <div className="flex gap-2">
         <FormField
           control={control}
-          name={`questions.${index}.question`}
+          name={`questions.${index}.text`}
           render={({ field }) => (
-            <FormItem className="w-full border-b border-gray pb-4 flex items-center justify-between">
+            <FormItem>
               <FormControl>
-                <Input {...field} placeholder="Вопрос" className="w-[40vw]" />
+                <Input {...field} placeholder="Вопрос" className="w-[50vw]" />
               </FormControl>
-              <Button type="button" onClick={() => removeQuestion(index)}>
-                <Trash2 width={22} height={22} color="gray" className="mb-2" />
-              </Button>
-              <FormMessage className="mb-2" />
+              <FormMessage />
             </FormItem>
           )}
         />
+        <Button type="button" onClick={() => removeQuestion(index)} className="w-[20vw]">
+          <Image alt="variantTrash" src={variantTrash} width={29} height={29} color="gray" className="mb-1" />
+        </Button>
       </div>
+
       <FormField
         control={control}
-        name={`questions.${index}.answerFormat`}
+        name={`questions.${index}.type`}
         render={({ field }) => (
-          <FormItem className="flex items-center gap-2">
-            <FormLabel className="min-w-[13%] mt-1 font-medium text-[14px]">Формат ответа:</FormLabel>
+          <FormItem>
             <FormControl>
-              <Select onValueChange={(value) => setValue(`questions.${index}.answerFormat`, value)} value={field.value}>
-                <SelectTrigger className="border-gray rounded-[6px] w-[23%]">
-                  <SelectValue placeholder="Формат ответа" />
-                </SelectTrigger>
-                <SelectContent className="border-gray bg-white rounded-[6px]">
-                  <SelectItem value="Один из списка">Один из списка</SelectItem>
-                  <SelectItem value="Несколько из списка">Несколько из списка</SelectItem>
-                  <SelectItem value="Развёрнутый ответ">Развёрнутый ответ</SelectItem>
-                </SelectContent>
-              </Select>
+              <div className="flex gap-2">
+                <h1 className="text-[14px] w-[14%] my-auto">Формат ответа:</h1>
+                <Select value={field.value} onValueChange={(value) => setValue(`questions.${index}.type`, value)}>
+                  <SelectTrigger className="border-gray rounded-[6px] w-[23%]">
+                    <SelectValue placeholder="Выберите формат ответа" />
+                  </SelectTrigger>
+                  <SelectContent className="border-gray bg-white rounded-[6px]">
+                    <SelectItem value="Один из списка">Один из списка</SelectItem>
+                    <SelectItem value="Несколько из списка">Несколько из списка</SelectItem>
+                    <SelectItem value="Развёрнутый ответ">Развёрнутый ответ</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
             </FormControl>
             <FormMessage />
           </FormItem>
         )}
       />
-      {watch(`questions.${index}.answerFormat`) !== 'Развёрнутый ответ' && (
-        <div className="mt-4">
-          <span className="font-medium text-[14px]">Варианты ответа:</span>
+      {watch(`questions.${index}.type`) !== 'Развёрнутый ответ' && (
+        <div className="mt-2">
           <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleOptionDragEnd}>
             <SortableContext items={optionFields.map((field) => field.id)} strategy={verticalListSortingStrategy}>
-              <div className="space-y-1">
-                {optionFields.map((optionField, optionIndex) => (
-                  <SortableItem
-                    key={optionField.id}
-                    id={optionField.id}
-                    fieldName={`questions.${index}.options.${optionIndex}.value`}
-                    removeOption={() => handleRemoveOption(optionIndex)}
-                    control={control}
-                    label={`Вариант ${optionIndex + 1}`}
-                  />
-                ))}
-              </div>
+              {optionFields.map((optionField, optionIndex) => (
+                <SortableItem
+                  key={optionField.id}
+                  id={optionField.id}
+                  label={`Вариант ${optionIndex + 1}`}
+                  fieldName={`questions.${index}.answerOptions.${optionIndex}.text`}
+                  removeOption={() => removeOption(optionIndex)}
+                  control={control}
+                />
+              ))}
             </SortableContext>
           </DndContext>
-          <Button type="button" onClick={handleAddOption} className="flex items-center mt-2">
-            <Plus width={15} height={15} color="#5A5A5A" className="mr-1 font-black" />
-            <span className="text-[#282728] text-[13px] font-medium underline underline-offset-2">
-              Добавить вариант
-            </span>
+          <Button
+            type="button"
+            onClick={handleAddOption}
+            className="flex justify-center items-center text-[12px] underline">
+            <Plus size={14} /> Добавить вариант
           </Button>
         </div>
       )}

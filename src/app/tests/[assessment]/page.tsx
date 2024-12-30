@@ -1,21 +1,31 @@
 'use client'
 
-import { Badge } from '@/components/ui/badge'
 import { Heading } from '@/components/ui/Heading'
 import { componentMap } from '@/helpers/constants/tests'
 import { ETestType } from '@/helpers/types/tests'
 import { ArrowLeft } from 'lucide-react'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 
 type Props = {
-  params: { assessment: 'test' | 'survey' | 'form' }
+  params: { assessment: string }
 }
 
 export default function Page({ params }: Props) {
   const { assessment } = params
-  const type = ETestType[assessment]
 
-  const { Form, ActionsPanel } = componentMap[assessment]
+  const [typeKey, ...nameParts] = assessment.split('-')
+  const name = nameParts.join(' ')
+
+  const type = ETestType[typeKey as keyof typeof ETestType]
+  const router = useRouter()
+
+  if (!type) {
+    router.push('/tests')
+    return null
+  }
+
+  const { Form } = componentMap[typeKey as keyof typeof componentMap]
 
   return (
     <>
@@ -23,18 +33,8 @@ export default function Page({ params }: Props) {
         <ArrowLeft width={12} height={12} />
         <p className="text-xs underline">Все материалы</p>
       </Link>
-      <Badge variant={assessment} className="font-medium mt-7 mb-2">
-        {type}
-      </Badge>
-      <Heading title={`${type} по завершении терапии`} />
-      <div className="flex justify-between items-start mt-5 gap-5">
-        <div className="w-2/3 bg-grey rounded-[5px] py-3 px-4">
-          <Form />
-        </div>
-        <div className="w-1/3 bg-grey rounded-[5px] py-3 px-4">
-          <ActionsPanel />
-        </div>
-      </div>
+      <Heading title={`${type} по завершению терапии`} />
+      <Form type={typeKey} name={name} />
     </>
   )
 }
