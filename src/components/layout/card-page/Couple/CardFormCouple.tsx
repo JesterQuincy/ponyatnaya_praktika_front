@@ -105,7 +105,7 @@ export const CardFormCouple = ({ user }: ICardFormProps) => {
       residenceAddress,
       dateFirstRequest,
       dateFirstConsultation,
-      financialCondition,
+      financialCondition: String(financialCondition),
       specialTermsContact,
       supervisionStatusThisClient,
       contactSupervisor,
@@ -120,7 +120,7 @@ export const CardFormCouple = ({ user }: ICardFormProps) => {
 
   const handleSubmit = (data: ICoupleSchema) => {
     try {
-      mutate({ ...data, id })
+      mutate({ ...data, financialCondition: Number(data.financialCondition), id })
 
       form.reset(data)
     } catch {}

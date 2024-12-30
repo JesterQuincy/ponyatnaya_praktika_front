@@ -12,7 +12,7 @@ export const clientSchema = z.object({
   dateFirstRequest: z.string().optional(),
   dateFirstConsultation: z.string().optional(),
   meetingFormat: z.string().optional(),
-  financialCondition: z.number().optional(),
+  financialCondition: z.string().optional(),
   contactMethod: z.string().optional(),
   onlinePlatform: z.string().optional(),
   clientTherapyRequest: z.string().optional(),

@@ -114,7 +114,7 @@ export const CardFormChild = ({ user }: ICardFormProps) => {
       prevExperience,
       peerRecommendation,
       contactMethod,
-      financialCondition,
+      financialCondition: String(financialCondition),
       specialTermsContact,
       supervisionStatusThisClient,
       contactSupervisor,
@@ -132,7 +132,7 @@ export const CardFormChild = ({ user }: ICardFormProps) => {
 
   const handleSubmit = (data: IChildSchema) => {
     try {
-      mutate({ ...data, id })
+      mutate({ ...data, financialCondition: Number(data.financialCondition), id })
 
       form.reset(data)
     } catch {}
