@@ -17,6 +17,15 @@ import { DropdownMenu } from './DropDownMenu'
 import { clientService } from '@/services/clients.service'
 import { useGetProjMethodsByCustomerId } from '@/api/hooks/methods/useGetProjMethodsByCustomerId'
 import { Spinner } from '@/components/Spinner'
+import { ViewMethodicModal } from '@/components/ui/forms/MeetForm/modals/components'
+import { useGetTypePhoto } from '@/api/hooks/photoMethods/useGetTypePhoto'
+import { toast } from 'react-toastify'
+import { IMeetProjMethod, IPhotoProjectiveMethod } from '@/types/methods/meetMethods'
+
+interface IMethodState {
+  methodId: number
+  photos: IPhotoProjectiveMethod[]
+}
 
 interface ICardFormProps {
   user: any
@@ -37,8 +46,10 @@ export function MeetingsListForm({ user }: ICardFormProps) {
   const [activeDropdown, setActiveDropdown] = useState<number | null>(null)
   const [meetsList, setMeetsList] = useState<any[]>([]) // Состояние для хранения встреч
   const [showAll, setShowAll] = useState(false)
+  const [method, setMethod] = useState<IMethodState | null>(null)
 
   const { data: projMethods, isLoading: isProjMethodsLoading } = useGetProjMethodsByCustomerId(id ?? '')
+  const { mutateAsync: typePhotos } = useGetTypePhoto()
 
   const itemsPerPage = 7
   const indexOfLastItem = currentPage * itemsPerPage
@@ -71,6 +82,16 @@ export function MeetingsListForm({ user }: ICardFormProps) {
       setActiveDropdown(null)
     } else {
       setActiveDropdown(id)
+    }
+  }
+
+  const handleMethodClick = async (item: IMeetProjMethod) => {
+    try {
+      const photos = await typePhotos(item.typeMethod.id)
+
+      setMethod(() => ({ methodId: item.id, photos }))
+    } catch {
+      toast.error('Произошла ошибка')
     }
   }
 
@@ -151,7 +172,13 @@ export function MeetingsListForm({ user }: ICardFormProps) {
                   <span className="bg-[#6E6E6E] text-white text-[12px] p-[2px] rounded-[3px] text-center min-w-[75px]">
                     {item.dateCreateMethod}
                   </span>
-                  <span className="text-[15px]">{item.typeMethod.nameMethod}</span>
+                  <span
+                    className="text-[15px] hover:underline cursor-pointer"
+                    onClick={() => {
+                      return handleMethodClick(item)
+                    }}>
+                    {item.typeMethod.nameMethod}
+                  </span>
                 </div>
               ))}
             </div>
@@ -175,6 +202,14 @@ export function MeetingsListForm({ user }: ICardFormProps) {
           </div>
         </div>
       </div>
+      {method && (
+        <ViewMethodicModal
+          id={method.methodId}
+          onClose={() => setMethod(null)}
+          isOpen={!!method}
+          allPhotos={method.photos}
+        />
+      )}
     </div>
   )
 }

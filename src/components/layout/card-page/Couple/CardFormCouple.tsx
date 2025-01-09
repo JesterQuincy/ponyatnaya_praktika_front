@@ -65,6 +65,8 @@ export const CardFormCouple = ({ user }: ICardFormProps) => {
     mailCotherapy,
     financialTermsCotherapists,
     notes,
+    clientStatus,
+    contactMethod,
   } = {
     ...removeEmptyValues(user),
   }
@@ -115,6 +117,8 @@ export const CardFormCouple = ({ user }: ICardFormProps) => {
       mailCotherapy,
       financialTermsCotherapists,
       notes,
+      clientStatus,
+      contactMethod,
     },
   })
 
