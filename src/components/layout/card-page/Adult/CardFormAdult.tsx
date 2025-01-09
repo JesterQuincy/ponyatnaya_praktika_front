@@ -13,7 +13,7 @@ import {
 import { Form } from '@/components/ui/form'
 import { useForm } from 'react-hook-form'
 import { IClient } from '@/types/clients'
-import { useRef, useState } from 'react'
+import { useState } from 'react'
 import { useClientUpdate } from '@/api/hooks/card/useClientUpdate'
 import { removeEmptyValues } from '@/helpers/utils/removeEmptyValues'
 import { clientSchema, IClientSchema } from '@/models/clientSchema'
@@ -31,9 +31,6 @@ interface ICardFormProps {
 
 export function CardFormAdult({ user }: ICardFormProps) {
   const [isMore, setIsMore] = useState(false)
-  const [popoverData, setPopoverData] = useState('')
-
-  const popoverTimeout = useRef<NodeJS.Timeout | null>(null)
 
   const { mutate, isPending } = useClientUpdate()
   const { mutateAsync: linkData, isPending: isPendingLink } = useGetLink()
@@ -91,7 +88,7 @@ export function CardFormAdult({ user }: ICardFormProps) {
       dateFirstRequest,
       dateFirstConsultation,
       meetingFormat,
-      financialCondition,
+      financialCondition: String(financialCondition),
       specialTermsContact,
       supervisionStatusThisClient,
       contactSupervisor,
@@ -109,7 +106,7 @@ export function CardFormAdult({ user }: ICardFormProps) {
 
   const onSubmit = (data: IClientSchema) => {
     try {
-      mutate({ ...removeEmptyValues(data), id })
+      mutate({ ...removeEmptyValues(data), financialCondition: Number(data.financialCondition), id })
 
       form.reset(data)
     } catch {}

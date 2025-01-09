@@ -33,7 +33,7 @@ export const coupleSchema = z.object({
   meetingTimeDay: z.string().optional(),
   dateFirstRequest: z.string().optional(),
   dateFirstConsultation: z.string().optional(),
-  financialCondition: z.number().optional(),
+  financialCondition: z.string().optional(),
 
   // #region Подробнее
   birth: z.string().optional(),

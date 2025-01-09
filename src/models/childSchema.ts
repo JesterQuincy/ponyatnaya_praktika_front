@@ -39,7 +39,7 @@ export const childSchema = z.object({
   meetingTimeDay: z.string().optional(),
   dateFirstRequest: z.string().optional(),
   dateFirstConsultation: z.string().optional(),
-  financialCondition: z.number().optional(),
+  financialCondition: z.string().optional(),
   // #endregion
   birth: z.string().optional(),
   residenceAddress: z.string().optional(),

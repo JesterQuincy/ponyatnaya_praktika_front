@@ -1,8 +1,8 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import Image from 'next/image'
-import { useRouter } from 'next/navigation'
+import { useParams, useRouter } from 'next/navigation'
 
 import { useMeet } from '@/app/context/meetContext'
 
@@ -14,8 +14,18 @@ import { Button } from '../buttons/Button'
 import { Pagination } from '../Pagination'
 import { DropdownMenu } from './DropDownMenu'
 
-import { projectMethodics } from './mocks/projectMetodics'
 import { clientService } from '@/services/clients.service'
+import { useGetProjMethodsByCustomerId } from '@/api/hooks/methods/useGetProjMethodsByCustomerId'
+import { Spinner } from '@/components/Spinner'
+import { ViewMethodicModal } from '@/components/ui/forms/MeetForm/modals/components'
+import { useGetTypePhoto } from '@/api/hooks/photoMethods/useGetTypePhoto'
+import { toast } from 'react-toastify'
+import { IMeetProjMethod, IPhotoProjectiveMethod } from '@/types/methods/meetMethods'
+
+interface IMethodState {
+  methodId: number
+  photos: IPhotoProjectiveMethod[]
+}
 
 interface ICardFormProps {
   user: any
@@ -23,12 +33,25 @@ interface ICardFormProps {
 
 export function MeetingsListForm({ user }: ICardFormProps) {
   const router = useRouter()
+  const params = useParams()
+
+  const id = useMemo(() => {
+    const { id } = params
+    return typeof id === 'string' ? id : undefined
+  }, [params])
+
   const { setMeet } = useMeet()
+
   const [currentPage, setCurrentPage] = useState(1)
   const [activeDropdown, setActiveDropdown] = useState<number | null>(null)
   const [meetsList, setMeetsList] = useState<any[]>([]) // Состояние для хранения встреч
-  const itemsPerPage = 7
+  const [showAll, setShowAll] = useState(false)
+  const [method, setMethod] = useState<IMethodState | null>(null)
 
+  const { data: projMethods, isLoading: isProjMethodsLoading } = useGetProjMethodsByCustomerId(id ?? '')
+  const { mutateAsync: typePhotos } = useGetTypePhoto()
+
+  const itemsPerPage = 7
   const indexOfLastItem = currentPage * itemsPerPage
   const indexOfFirstItem = indexOfLastItem - itemsPerPage
 
@@ -61,6 +84,18 @@ export function MeetingsListForm({ user }: ICardFormProps) {
       setActiveDropdown(id)
     }
   }
+
+  const handleMethodClick = async (item: IMeetProjMethod) => {
+    try {
+      const photos = await typePhotos(item.typeMethod.id)
+
+      setMethod(() => ({ methodId: item.id, photos }))
+    } catch {
+      toast.error('Произошла ошибка')
+    }
+  }
+
+  const visibleMetodics = showAll ? projMethods?.data : projMethods?.data?.slice(0, 5)
 
   return (
     <div className="flex gap-[15px]">
@@ -127,22 +162,39 @@ export function MeetingsListForm({ user }: ICardFormProps) {
             </Button>
           </div>
         </div>
-        <div className="mt-[27px]">
-          <span className="font-bold text-[20px]">Проективные методики</span>
-          <div className="flex flex-col gap-[10px] mt-[10px]">
-            {projectMethodics.map((item) => (
-              <div key={item.id} className="bg-white rounded-[6px] p-[5px] flex items-center gap-[10px]">
-                <span className="bg-[#6E6E6E] text-white text-[12px] p-[2px] rounded-[3px] text-center min-w-[75px]">
-                  {item.date}
-                </span>
-                <span className="text-[15px]">{item.title}</span>
+        {isProjMethodsLoading && <Spinner />}
+        {!isProjMethodsLoading && !!projMethods?.data?.length && (
+          <div className="mt-[27px]">
+            <span className="font-bold text-[20px]">Проективные методики</span>
+            <div className="flex flex-col gap-[10px] mt-[10px]">
+              {visibleMetodics?.map((item) => (
+                <div key={item.id} className="bg-white rounded-[6px] p-[5px] flex items-center gap-[10px]">
+                  <span className="bg-[#6E6E6E] text-white text-[12px] p-[2px] rounded-[3px] text-center min-w-[75px]">
+                    {item.dateCreateMethod}
+                  </span>
+                  <span
+                    className="text-[15px] hover:underline cursor-pointer"
+                    onClick={() => {
+                      return handleMethodClick(item)
+                    }}>
+                    {item.typeMethod.nameMethod}
+                  </span>
+                </div>
+              ))}
+            </div>
+            {!showAll && projMethods?.data?.length > 5 && (
+              <div className="mt-[9px]">
+                <Button
+                  className="border border-[#D9D9D9] px-[10px] py-[5px] rounded-[6px]"
+                  onClick={() => {
+                    setShowAll(true)
+                  }}>
+                  Ещё
+                </Button>
               </div>
-            ))}
+            )}
           </div>
-          <div className="mt-[9px]">
-            <Button className="border border-[#D9D9D9] px-[10px] py-[5px] rounded-[6px]">Ещё</Button>
-          </div>
-        </div>
+        )}
         <div className="mt-[27px]">
           <span className="font-bold text-[20px]">Основные терапевтические гипотезы</span>
           <div className="mt-[5px]">
@@ -150,6 +202,14 @@ export function MeetingsListForm({ user }: ICardFormProps) {
           </div>
         </div>
       </div>
+      {method && (
+        <ViewMethodicModal
+          id={method.methodId}
+          onClose={() => setMethod(null)}
+          isOpen={!!method}
+          allPhotos={method.photos}
+        />
+      )}
     </div>
   )
 }

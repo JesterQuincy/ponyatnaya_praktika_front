@@ -1,6 +1,6 @@
 import { axiosWithAuth } from '@/api/interceptors'
 import { DeepPartial, IMutateResponse } from '@/types/common'
-import { IPhotoProjectiveMethod } from '@/types/methods/photo'
+import { IPhotoProjectiveMethod } from '@/types/methods/meetMethods'
 
 export const photoMethodsService = {
   async createPhoto(data: DeepPartial<IPhotoProjectiveMethod>): Promise<IMutateResponse> {
@@ -17,5 +17,13 @@ export const photoMethodsService = {
 
   async getPhoto(id: number): Promise<any> {
     return await axiosWithAuth.get(`/api/innerOptions/photoMethods/get/${id}`)
+  },
+
+  async getMethodTypesPhoto(typeMethodId: number) {
+    const { data } = await axiosWithAuth.get<IPhotoProjectiveMethod[]>(
+      `/api/innerOptions/projectiveMethods/getAllPhotos/${typeMethodId}`,
+    )
+
+    return data
   },
 }
