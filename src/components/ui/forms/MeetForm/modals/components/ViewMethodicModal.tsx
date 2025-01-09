@@ -13,6 +13,7 @@ import Select from 'react-select'
 import { useGetMethodById } from '@/api/hooks/methods/useGetMethodById'
 import { base64ToFile } from '@/helpers/utils/base64ToFile'
 import { X } from 'lucide-react'
+import { IPhotoProjectiveMethod } from '@/types/methods/meetMethods'
 
 interface IState {
   method: string | number
@@ -24,9 +25,10 @@ interface IMeetingModalProps {
   isOpen: boolean
   onClose: () => void
   id: number
+  allPhotos?: IPhotoProjectiveMethod[]
 }
 
-export const ViewMethodicModal = ({ isOpen, onClose, id }: IMeetingModalProps) => {
+export const ViewMethodicModal = ({ isOpen, onClose, id, allPhotos }: IMeetingModalProps) => {
   const { data: methodTypes, isPending: isPendingTypes } = useGetAllTypes()
   const { data: method, isPending: isPendingMethod } = useGetMethodById(id)
 
@@ -52,7 +54,7 @@ export const ViewMethodicModal = ({ isOpen, onClose, id }: IMeetingModalProps) =
       ...prev,
       method: methodTypesOptions?.find((option) => option.value === method?.data.typeMethod.id)?.value ?? '',
       images:
-        method?.data?.photoProjectiveMethods.map((p) => ({
+        (allPhotos ?? method?.data?.photoProjectiveMethods)?.map((p) => ({
           file: base64ToFile(p.photoMethod, 'current_photo'),
           url: p.photoMethod,
           createdAt: p.dateCreatePhoto,
