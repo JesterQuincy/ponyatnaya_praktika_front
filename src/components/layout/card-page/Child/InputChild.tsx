@@ -18,22 +18,30 @@ export const InputChild = forwardRef<HTMLInputElement, InputCustomProps>(
         <FormField
           control={form.control}
           name={name}
-          render={({ field }) => (
-            <FormItem>
-              <FormControl>
-                <input
-                  {...field}
-                  {...props}
-                  type={type}
-                  ref={ref}
-                  className="p-2 border rounded-xl border-[#D9D9D9] text-sm"
-                  placeholder="Введите"
-                  value={field.value !== null && field.value !== undefined ? String(field.value) : ''} // Приводим значение к строке
-                />
-              </FormControl>
-              <FormMessage className="text-orange" />
-            </FormItem>
-          )}
+          render={({ field }) => {
+            const inputValue = (value: typeof field.value) => {
+              if (value === null || value === undefined) return ''
+
+              return String(value)
+            }
+
+            return (
+              <FormItem>
+                <FormControl>
+                  <input
+                    {...field}
+                    {...props}
+                    type={type}
+                    ref={ref}
+                    className="p-2 border rounded-xl border-[#D9D9D9] text-sm"
+                    placeholder="Введите"
+                    value={inputValue(field.value)}
+                  />
+                </FormControl>
+                <FormMessage className="text-orange" />
+              </FormItem>
+            )
+          }}
         />
       </>
     )

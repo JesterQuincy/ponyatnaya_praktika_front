@@ -37,7 +37,8 @@ export const genderOptions = [
 
 export const appealOptions = [
   { value: 'Мессенджер', label: 'Мессенджер' },
-  { value: 'ИРЛ', label: 'ИРЛ' },
+  { value: 'Социальная сеть', label: 'Социальная сеть' },
+  { value: 'Агрегатор', label: 'Агрегатор' },
 ]
 
 export const firstDateAppealOptions = [
@@ -52,6 +53,10 @@ export const firstDateAdviceOptions = [
 
 export const serviceOptions = [
   { value: 'Zoom', label: 'Zoom' },
+  { value: 'Телемост', label: 'Телемост' },
+  { value: 'Telegram', label: 'Telegram' },
+  { value: 'WhatsApp', label: 'WhatsApp' },
+  { value: 'Skype', label: 'Skype' },
   { value: 'Google Meet', label: 'Google Meet' },
   { value: 'Discord', label: 'Discord' },
 ]

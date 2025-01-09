@@ -13,9 +13,10 @@ import { useMethodForm } from '@/components/ui/forms/MeetForm/modals/useMethodFo
 interface IMeetingModalProps {
   isOpen: boolean
   onClose: () => void
+  customerId: number
 }
 
-export const CreateMethodicModal = ({ isOpen, onClose }: IMeetingModalProps) => {
+export const CreateMethodicModal = ({ isOpen, onClose, customerId }: IMeetingModalProps) => {
   const paramsId = useSearchParams().get('id')
 
   const { data: methodTypes, isPending: isPendingTypes } = useGetAllTypes()
@@ -59,6 +60,7 @@ export const CreateMethodicModal = ({ isOpen, onClose }: IMeetingModalProps) => 
         typeMethod: { id: type },
         meet: { id: Number(paramsId) },
         photoProjectiveMethods: base64Images.map((base64Image) => ({ photoMethod: base64Image })),
+        customer: { id: customerId },
       })
 
       toast.success('Вы успешно добавили методику')

@@ -31,4 +31,8 @@ export const methodsService = {
   async getMeetProjMethods(meetId: number): Promise<{ data: IMeetProjMethod[] }> {
     return await axiosWithAuth.get(`/api/innerOptions/projectiveMethods/byMeet/${meetId}`)
   },
+
+  async getProjMethodsByClient(customerId: number): Promise<{ data: IMeetProjMethod[] }> {
+    return await axiosWithAuth.get(`/api/innerOptions/projectiveMethods/byCustomer/${customerId}`)
+  },
 }

@@ -1,8 +1,7 @@
 import React, { Dispatch, FC, SetStateAction } from 'react'
-import Select, { SingleValue } from 'react-select'
 import { dateOption, typeOption } from '@/app/tests/constants'
-import { DropdownIndicator } from '@/components/drop-down-indicator'
-import { ISort, IValueLabelModel } from '@/app/tests/page'
+import { ISort } from '@/app/tests/page'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 
 interface IFiltersProps {
   sort: ISort
@@ -10,7 +9,7 @@ interface IFiltersProps {
 }
 
 export const Filters: FC<IFiltersProps> = ({ sort, setSort }) => {
-  const handleSortChange = (key: keyof ISort, value: SingleValue<IValueLabelModel>) => {
+  const handleSortChange = <K extends keyof ISort>(key: K, value: ISort[K]) => {
     setSort((prev) => ({
       ...prev,
       [key]: value,
@@ -20,32 +19,42 @@ export const Filters: FC<IFiltersProps> = ({ sort, setSort }) => {
   return (
     <div className="flex gap-[28px] mt-[31px] mb-[8px]">
       <div className="flex gap-[8px] items-center">
-        <p>Сортировать по типу</p>{' '}
+        <p className="flex-none">Сортировать по типу</p>
         <Select
           value={sort.type}
-          onChange={(value) => {
+          onValueChange={(value) => {
             handleSortChange('type', value)
-          }}
-          options={typeOption}
-          styles={{
-            indicatorSeparator: () => ({ display: 'none' }),
-          }}
-          components={{ DropdownIndicator }}
-        />
+          }}>
+          <SelectTrigger className="rounded-[6px] border-[#D9D9D9]">
+            <SelectValue placeholder={'Выберите'} />
+          </SelectTrigger>
+          <SelectContent className="bg-white border-none rounded-[6px]">
+            {typeOption.map((el) => (
+              <SelectItem value={el.value} key={el.value}>
+                {el.label}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
       </div>
       <div className="flex gap-[8px] items-center">
-        <p>По дате создания</p>{' '}
+        <p className={'flex-none'}>По дате создания</p>
         <Select
           value={sort.date}
-          onChange={(value) => {
+          onValueChange={(value) => {
             handleSortChange('date', value)
-          }}
-          options={dateOption}
-          styles={{
-            indicatorSeparator: () => ({ display: 'none' }),
-          }}
-          components={{ DropdownIndicator }}
-        />
+          }}>
+          <SelectTrigger className="rounded-[6px] border-[#D9D9D9]">
+            <SelectValue placeholder={'Выберите'} />
+          </SelectTrigger>
+          <SelectContent className="bg-white border-none rounded-[6px]">
+            {dateOption.map((el) => (
+              <SelectItem value={el.value} key={el.value}>
+                {el.label}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
       </div>
     </div>
   )
