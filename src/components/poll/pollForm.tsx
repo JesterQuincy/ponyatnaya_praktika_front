@@ -113,7 +113,7 @@ export function PollForm({ type, name }: PollFormProps) {
             </Button>
           </div>
           <div className="w-1/3 bg-grey rounded-[5px] py-3 px-4">
-            <Button type="submit" className="py-1.5 px-5 bg-taupe text-white rounded-[6px] w-[50%]">
+            <Button type="submit" className="py-1.5 px-5 bg-taupe text-white rounded-[6px] w-[50%] mb-4">
               Сохранить
             </Button>
             <FormField

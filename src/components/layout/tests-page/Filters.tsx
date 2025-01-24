@@ -17,7 +17,7 @@ export const Filters: FC<IFiltersProps> = ({ sort, setSort }) => {
   }
 
   return (
-    <div className="flex gap-[28px] mt-[31px] mb-[8px]">
+    <div className="flex gap-[28px]">
       <div className="flex gap-[8px] items-center">
         <p className="flex-none">Сортировать по типу</p>
         <Select

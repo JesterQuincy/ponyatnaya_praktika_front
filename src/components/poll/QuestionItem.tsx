@@ -53,15 +53,15 @@ export function QuestionItem({ index, removeQuestion, dragHandleProps }: Questio
           control={control}
           name={`questions.${index}.text`}
           render={({ field }) => (
-            <FormItem>
+            <FormItem className="w-full">
               <FormControl>
-                <Input {...field} placeholder="Вопрос" className="w-[50vw]" />
+                <Input {...field} placeholder="Вопрос" className="w-full" />
               </FormControl>
               <FormMessage />
             </FormItem>
           )}
         />
-        <Button type="button" onClick={() => removeQuestion(index)} className="w-[20vw]">
+        <Button type="button" onClick={() => removeQuestion(index)} className="">
           <Image alt="variantTrash" src={variantTrash} width={29} height={29} color="gray" className="mb-1" />
         </Button>
       </div>
@@ -73,9 +73,9 @@ export function QuestionItem({ index, removeQuestion, dragHandleProps }: Questio
           <FormItem>
             <FormControl>
               <div className="flex gap-2">
-                <h1 className="text-[14px] w-[14%] my-auto">Формат ответа:</h1>
+                <h1 className="text-[14px] w-fit my-auto">Формат ответа:</h1>
                 <Select value={field.value} onValueChange={(value) => setValue(`questions.${index}.type`, value)}>
-                  <SelectTrigger className="border-gray rounded-[6px] w-[23%]">
+                  <SelectTrigger className="border-gray rounded-[6px] w-fit">
                     <SelectValue placeholder="Выберите формат ответа" />
                   </SelectTrigger>
                   <SelectContent className="border-gray bg-white rounded-[6px]">
@@ -109,7 +109,7 @@ export function QuestionItem({ index, removeQuestion, dragHandleProps }: Questio
           <Button
             type="button"
             onClick={handleAddOption}
-            className="flex justify-center items-center text-[12px] underline">
+            className="flex justify-center items-center text-[12px] underline mt-4">
             <Plus size={14} /> Добавить вариант
           </Button>
         </div>

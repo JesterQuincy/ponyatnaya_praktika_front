@@ -29,7 +29,7 @@ export default function Page({ params }: Props) {
 
   return (
     <>
-      <Link href="/tests" className="flex items-center gap-2 text-taupe">
+      <Link href="/tests" className="flex items-center gap-2 text-taupe mb-4">
         <ArrowLeft width={12} height={12} />
         <p className="text-xs underline">Все материалы</p>
       </Link>

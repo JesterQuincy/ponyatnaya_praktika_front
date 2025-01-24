@@ -23,8 +23,8 @@ export function SortableItem({ id, fieldName, removeOption, control, label }: So
         control={control}
         name={fieldName}
         render={({ field }) => (
-          <FormItem className="flex items-center gap-1">
-            <div className="flex gap-1 items-center mt-2 mr-4 w-[10%] cursor-grab" {...attributes} {...listeners}>
+          <FormItem className="flex items-center gap-4">
+            <div className="flex gap-1 items-center mt-2 mr-4 cursor-grab" {...attributes} {...listeners}>
               <GripVertical color="gray" width={15} height={15} className="mb-1" />
               <FormLabel className="font-medium text-[13px]">{label}</FormLabel>
             </div>
