@@ -1,29 +1,31 @@
 import React, { Dispatch, FC, SetStateAction } from 'react'
-import { dateOption, typeOption } from '@/app/tests/constants'
 import { ISort } from '@/app/tests/page'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import { dateOption, typeOption } from '@/components/ui/forms/constants/selectOptions'
 
 interface IFiltersProps {
-  sort: ISort
-  setSort: Dispatch<SetStateAction<ISort>>
+  sort: ISort | undefined
+  setSort: Dispatch<SetStateAction<ISort | undefined>>
 }
 
 export const Filters: FC<IFiltersProps> = ({ sort, setSort }) => {
   const handleSortChange = <K extends keyof ISort>(key: K, value: ISort[K]) => {
-    setSort((prev) => ({
-      ...prev,
-      [key]: value,
-    }))
+    setSort((prev) => {
+      return {
+        ...prev,
+        [key]: value,
+      }
+    })
   }
 
   return (
-    <div className="flex gap-[28px] mt-[31px] mb-[8px]">
+    <div className="flex gap-[28px]">
       <div className="flex gap-[8px] items-center">
         <p className="flex-none">Сортировать по типу</p>
         <Select
-          value={sort.type}
-          onValueChange={(value) => {
-            handleSortChange('type', value)
+          value={sort?.type}
+          onValueChange={(value: string) => {
+            handleSortChange('type', value as ISort['type'])
           }}>
           <SelectTrigger className="rounded-[6px] border-[#D9D9D9]">
             <SelectValue placeholder={'Выберите'} />
@@ -40,9 +42,9 @@ export const Filters: FC<IFiltersProps> = ({ sort, setSort }) => {
       <div className="flex gap-[8px] items-center">
         <p className={'flex-none'}>По дате создания</p>
         <Select
-          value={sort.date}
-          onValueChange={(value) => {
-            handleSortChange('date', value)
+          value={sort?.date}
+          onValueChange={(value: string) => {
+            handleSortChange('date', value as ISort['date'])
           }}>
           <SelectTrigger className="rounded-[6px] border-[#D9D9D9]">
             <SelectValue placeholder={'Выберите'} />

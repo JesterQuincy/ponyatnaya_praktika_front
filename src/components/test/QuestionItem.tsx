@@ -6,9 +6,10 @@ import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/buttons/Button'
 import { Grip, Trash2 } from 'lucide-react'
 import { QuestionItemProps } from '@/helpers/types/testPoll'
+import { TestSchemaType } from '@/models/testSchema'
 
 export function QuestionItem({ index, removeQuestion, dragHandleProps }: QuestionItemProps) {
-  const { control } = useFormContext()
+  const { control } = useFormContext<TestSchemaType>()
 
   return (
     <div className="space-y-2 p-4 border-none rounded-[6px] bg-white">
@@ -16,7 +17,7 @@ export function QuestionItem({ index, removeQuestion, dragHandleProps }: Questio
       <div className="flex items-center">
         <FormField
           control={control}
-          name={`questions.${index}.question`}
+          name={`questions.${index}.text`}
           render={({ field }) => (
             <FormItem className="w-full border-b border-gray pb-4 flex items-center justify-between">
               <FormControl>
@@ -36,7 +37,7 @@ export function QuestionItem({ index, removeQuestion, dragHandleProps }: Questio
             <span className="w-3 h-3 rounded-full bg-green-500" />
             <FormField
               control={control}
-              name={`questions.${index}.correctAnswer`}
+              name={`questions.${index}.answerOptions.0.text`}
               render={({ field }) => (
                 <FormItem className="flex items-center gap-2 w-full">
                   <FormLabel className="w-[20%]">Вариант правильный</FormLabel>
@@ -52,7 +53,7 @@ export function QuestionItem({ index, removeQuestion, dragHandleProps }: Questio
             <span className="w-3 h-3 rounded-full bg-red-500" />
             <FormField
               control={control}
-              name={`questions.${index}.incorrectAnswer`}
+              name={`questions.${index}.answerOptions.1.text`}
               render={({ field }) => (
                 <FormItem className="flex items-center gap-2 w-full">
                   <FormLabel className="w-[20%]">Вариант неправильный</FormLabel>

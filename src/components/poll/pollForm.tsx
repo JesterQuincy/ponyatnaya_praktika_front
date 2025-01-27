@@ -10,6 +10,11 @@ import { Textarea } from '../ui/textarea'
 import Image from 'next/image'
 import addQuestion from '@/public/icon/addQuestion.svg'
 import { useCreateQuestionnaire } from '@/api/hooks/therapistQuestionnaires/useCreateQuestionnaire'
+import { useRouter, useSearchParams } from 'next/navigation'
+import { useGetQuestionnaire } from '@/api/hooks/therapistQuestionnaires/useGetQuestionnaire'
+import { useEffect } from 'react'
+import { IQuestionnaireRequest } from '@/types/questionnaire'
+import { Input } from '@/components/ui/input'
 
 type PollFormProps = {
   type: string
@@ -17,24 +22,45 @@ type PollFormProps = {
 }
 
 export function PollForm({ type, name }: PollFormProps) {
-  const isTest = type === 'test'
+  const searchParams = useSearchParams()
+  const id = searchParams.get('id')
+
+  const router = useRouter()
+
   const createQuestionnaire = useCreateQuestionnaire()
+  const { data: questionnaire } = useGetQuestionnaire(id)
+
+  const isTest = type === 'test'
+
   const form = useForm<TestPollSchemaType>({
     resolver: zodResolver(TestPollSchema),
     defaultValues: {
+      title: name,
       description: '',
       questions: [
         {
           id: 0,
           text: '',
           type: 'Один из списка',
-          answerOptions: [{ id: 0, text: '', correct: false }],
+          answerOptions: [{ id: 0, text: '', correct: true }],
         },
       ],
+      test: isTest,
     },
   })
 
-  const { control, handleSubmit } = form
+  const { control, handleSubmit, reset } = form
+
+  useEffect(() => {
+    if (questionnaire) {
+      reset({
+        description: questionnaire.description,
+        questions: questionnaire.questions,
+        test: questionnaire.test,
+        title: questionnaire.title,
+      })
+    }
+  }, [questionnaire, reset])
 
   const {
     fields: questionFields,
@@ -64,21 +90,19 @@ export function PollForm({ type, name }: PollFormProps) {
       id: 0,
       text: '',
       type: 'Один из списка',
-      answerOptions: [{ id: 0, text: '', correct: false }],
+      answerOptions: [{ id: 0, text: '', correct: true }],
     })
   }
 
-  const onSubmit = handleSubmit((data) => {
-    const payload = {
-      title: name,
+  const onSubmit = handleSubmit(async (data) => {
+    const payload: IQuestionnaireRequest = {
+      title: data.title,
       description: data.description,
       dateCreated: new Date().toISOString().split('T')[0],
       questions: data.questions.map((question) => ({
-        id: question.id,
         text: question.text,
         type: question.type,
         answerOptions: question.answerOptions.map((option) => ({
-          id: option.id,
           text: option.text,
           correct: option.correct,
         })),
@@ -86,12 +110,43 @@ export function PollForm({ type, name }: PollFormProps) {
       test: isTest,
     }
 
-    createQuestionnaire.mutate(payload)
+    if (id && questionnaire) {
+      payload.id = Number(id)
+
+      payload.questions = payload.questions.map((question, index) => ({
+        ...question,
+        id: data.questions[index].id,
+      }))
+    }
+
+    try {
+      const questionnaireId = await createQuestionnaire.mutateAsync(payload)
+
+      if (!id) {
+        const url = new URL(window.location.href)
+
+        url.searchParams.set('id', String(questionnaireId))
+
+        router.push(url.toString())
+      }
+    } catch {}
   })
 
   return (
     <Form {...form}>
       <form onSubmit={onSubmit} className="space-y-4">
+        <FormField
+          render={({ field }) => (
+            <FormItem>
+              <FormControl>
+                <Input placeholder={'Введите название'} className="w-fit" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+          name={'title'}
+          control={control}
+        />
         <div className="flex justify-between items-start mt-5 gap-5">
           <div className="w-2/3 bg-grey rounded-[5px] py-3 px-4">
             <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleQuestionDragEnd}>
@@ -113,7 +168,7 @@ export function PollForm({ type, name }: PollFormProps) {
             </Button>
           </div>
           <div className="w-1/3 bg-grey rounded-[5px] py-3 px-4">
-            <Button type="submit" className="py-1.5 px-5 bg-taupe text-white rounded-[6px] w-[50%]">
+            <Button type="submit" className="py-1.5 px-5 bg-taupe text-white rounded-[6px] w-[50%] mb-4">
               Сохранить
             </Button>
             <FormField
