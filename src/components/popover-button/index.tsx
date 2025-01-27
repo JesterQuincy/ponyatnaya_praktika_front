@@ -1,6 +1,6 @@
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 import { Ellipsis } from 'lucide-react'
-import { Children, FC, ReactNode, useState } from 'react'
+import { Children, FC, isValidElement, ReactNode, useState } from 'react'
 import { cn } from '@/lib/utils'
 import { Command, CommandItem, CommandList } from '@/components/ui/command'
 
@@ -27,16 +27,18 @@ export const PopoverButton: FC<IPopoverButtonProps> = ({ contentClassName, child
             <CommandList>
               {childrenArray.map((el, i) => {
                 return (
-                  <div key={i} className="hover:bg-red">
-                    <CommandItem
-                      onSelect={() => {
-                        setOpen(false)
-                      }}
-                      key={i}
-                      className='data-[selected="true"]:bg-[#D9D9D9] w-full cursor-pointer text-[14px]'>
-                      {el}
-                    </CommandItem>
-                  </div>
+                  <CommandItem
+                    onSelect={() => {
+                      if (isValidElement(el) && el.props.modalOpen !== undefined) {
+                        return
+                      }
+
+                      setOpen(false)
+                    }}
+                    key={i}
+                    className='data-[selected="true"]:bg-[#D9D9D9] w-full cursor-pointer text-[14px]'>
+                    {el}
+                  </CommandItem>
                 )
               })}
             </CommandList>

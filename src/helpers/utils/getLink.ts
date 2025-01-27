@@ -25,7 +25,7 @@ export const getLink = async (
 }
 
 /** Костыль-функция для копирования ссылки для http протокола */
-export const copyToClipboard = async (
+export const copyAndLoadToClipboard = async (
   linkData: (
     variables: string,
     options?: MutateOptions<{ data: string }, Error, string, unknown> | undefined,
@@ -57,4 +57,18 @@ export const copyToClipboard = async (
   }
 
   document.body.removeChild(textArea)
+}
+
+export const copyLink = async (link: string) => {
+  const url = `${BASE_HOST}/${link}`
+
+  try {
+    await navigator.clipboard.writeText(url)
+    toast.success('Ссылка скопирована в буфер обмена')
+    console.log('url', url)
+    return url
+  } catch (error) {
+    console.error('Ошибка копирования:', error)
+    toast.error('Ошибка при копировании ссылки')
+  }
 }

@@ -1,12 +1,22 @@
 import { useQuery } from '@tanstack/react-query'
+import { questionnaireService } from '@/services/questionnaire.service'
+import { EInvalidationTags } from '@/api/hooks/constants'
 
-import { Questionnaire } from '@/types/questionnaire'
-import { questionnaireService } from '@/services/questionnaireService'
-
-export function useQuestionnaires(offset: number, limit: number = 7) {
+export function useQuestionnaires({
+  offset,
+  limit = 7,
+  orderIsTest,
+  orderDate,
+}: {
+  offset: number
+  limit?: number
+  orderIsTest?: 'asc' | 'desc'
+  orderDate?: 'desc' | 'asc'
+}) {
   return useQuery({
-    queryKey: ['questionnaires', offset, limit],
-    queryFn: () => questionnaireService.getQuestionnaires(offset, limit).then((res) => res.data),
+    queryKey: [EInvalidationTags.QUESTIONNAIRES, offset, limit, orderDate, orderIsTest],
+    queryFn: () =>
+      questionnaireService.getQuestionnaires({ offset, limit, orderDate, orderIsTest }).then((res) => res.data),
     staleTime: 5000,
   })
 }
