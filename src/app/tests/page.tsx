@@ -1,50 +1,34 @@
 'use client'
 
-import React, { useState } from 'react'
+import React, { useMemo, useState } from 'react'
 import { Heading } from '@/components/ui/Heading'
 import { TestCard } from '@/components/test-card'
-
 import { FormProvider, useForm } from 'react-hook-form'
-import { toast } from 'react-toastify'
 import { Filters } from '@/components/layout/tests-page/Filters'
-import { Panel } from '@/components/layout/tests-page/Panel'
 import { CreateMaterialModal } from '@/components/layout/tests-page/CreateMaterialModal'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { ITestsFilter } from '@/models/testsFilterSchema'
 import { createMaterialSchema, ICreateMaterial } from '@/models/createMaterialSchema'
 import { useQuestionnaires } from '@/api/hooks/therapistQuestionnaires/useQuestionnaires'
 import { Button } from '@/components/ui/buttons/Button'
+import { Spinner } from '@/components/Spinner'
 
 export interface ISort {
-  type: string
-  date: string
+  type?: 'desc' | 'asc'
+  date?: 'desc' | 'asc'
 }
 
+const pageSize = 7
+
 const TestsPage = () => {
-  const [sort, setSort] = useState<ISort>({ type: '', date: '' })
+  const [sort, setSort] = useState<ISort>()
   const [modalOpen, setModalOpen] = useState(false)
   const [currentPage, setCurrentPage] = useState(1)
 
-  // Получаем данные с сервера (пагинация по 7 элементов)
-  const { data, isLoading, isError } = useQuestionnaires((currentPage - 1) * 7)
-
-  const handlePanelSubmit = (values: ITestsFilter) => {
-    console.log(values)
-  }
-
-  const handleCreateSubmit = (values: ICreateMaterial) => {
-    console.log(values)
-    toast.success('Тест успешно создан!')
-    setTimeout(() => {
-      setModalOpen(false)
-    }, 1000)
-  }
-
-  const form = useForm<ITestsFilter>({
-    defaultValues: {
-      search: '',
-      type: 'Опросник',
-    },
+  const { data, isLoading, isError } = useQuestionnaires({
+    offset: currentPage - 1,
+    limit: pageSize,
+    orderIsTest: sort?.type,
+    orderDate: sort?.date,
   })
 
   const createMaterialForm = useForm<ICreateMaterial>({
@@ -59,25 +43,27 @@ const TestsPage = () => {
     setCurrentPage(page)
   }
 
-  if (isLoading) return <div>Loading...</div>
+  const pageCount = useMemo(() => {
+    if (!data) return 1
+    return Math.ceil(data.total / pageSize)
+  }, [data])
+
   if (isError) return <div>Error loading data</div>
 
   return (
     <div className="w-full h-full pb-8">
       <Heading title="Опросники и тесты" />
-      <Filters sort={sort} setSort={setSort} />
-      <div className="flex gap-x-[20px] items-start justify-between">
-        <div className="w-2/3 bg-[#F1F1F1] rounded-[5px] py-[12px] px-[16px] flex flex-col gap-y-[12px] mb-8 min-h-[55vh]">
-          {data?.map((el) => <TestCard key={el.id} test={el.test} title={el.title} dateCreated={el.dateCreated} />)}
-        </div>
-        <div className="flex flex-col items-start gap-y-[20px] w-1/3">
-          <FormProvider {...form}>
-            <Panel onSubmit={handlePanelSubmit} />
-          </FormProvider>
-          <FormProvider {...createMaterialForm}>
-            <CreateMaterialModal modalOpen={modalOpen} setModalOpen={setModalOpen} />
-          </FormProvider>
-        </div>
+      <div className="flex items-center mt-[31px] mb-[8px]">
+        <Filters sort={sort} setSort={setSort} />
+        <FormProvider {...createMaterialForm}>
+          <CreateMaterialModal modalOpen={modalOpen} setModalOpen={setModalOpen} />
+        </FormProvider>
+      </div>
+      <div className="w-full bg-[#F1F1F1] rounded-[5px] py-[12px] px-[16px] flex flex-col gap-y-[12px] mb-8 min-h-[55vh]">
+        {isLoading && <Spinner />}
+        {data?.data.map((el) => (
+          <TestCard key={el.id} test={el.test} title={el.title} dateCreated={el.dateCreated} id={el.id} />
+        ))}
       </div>
 
       <div className="flex justify-center items-center gap-x-2 mt-4">
@@ -87,7 +73,7 @@ const TestsPage = () => {
           className="px-3 py-1 border rounded disabled:opacity-50">
           &lt;
         </button>
-        {[...Array(5)].map((_, index) => {
+        {[...Array(pageCount)].map((_, index) => {
           const page = index + 1
           return (
             <Button
@@ -100,7 +86,7 @@ const TestsPage = () => {
         })}
         <button
           onClick={() => handlePageChange(currentPage + 1)}
-          disabled={data && data?.length < 7}
+          disabled={currentPage === pageCount || (data && data.data.length < pageSize) || isLoading}
           className="px-3 py-1 border rounded disabled:opacity-50">
           &gt;
         </button>

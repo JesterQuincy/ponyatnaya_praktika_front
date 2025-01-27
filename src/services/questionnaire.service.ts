@@ -1,29 +1,38 @@
 import { axiosWithAuth } from '@/api/interceptors'
-
-export interface AnswerOption {
-  id: number
-  text: string
-  correct: boolean
-}
-
-export interface Question {
-  id: number
-  type: string
-  text: string
-  answerOptions: AnswerOption[]
-}
-
-export interface QuestionnaireRequest {
-  id?: number
-  title: string
-  description: string
-  dateCreated: string
-  questions: Question[]
-  test: boolean
-}
+import { IQuestionnaireRequest, IQuestionnaireResponse } from '@/types/questionnaire'
 
 export const questionnaireService = {
-  async createQuestionnaire(data: QuestionnaireRequest): Promise<void> {
-    return await axiosWithAuth.post('/api/questionnaire/create', data)
+  async getQuestionnaires({
+    offset,
+    limit = 5,
+    orderIsTest,
+    orderDate,
+  }: {
+    offset: number
+    limit?: number
+    orderIsTest?: 'asc' | 'desc'
+    orderDate?: 'desc' | 'asc'
+  }) {
+    return await axiosWithAuth.get<IQuestionnaireResponse>(`/api/questionnaire/get/byUser/${offset}/${limit}`, {
+      params: { orderDate, orderIsTest },
+    })
+  },
+
+  async createQuestionnaire(data: IQuestionnaireRequest) {
+    return await axiosWithAuth.post<number>('/api/questionnaire/create', data)
+  },
+
+  async getQuestionnaireById(id: string | null) {
+    const { data } = await axiosWithAuth.get<IQuestionnaireRequest>(`/api/questionnaire/get/${id}`)
+    return data
+  },
+
+  async getQuestionnaireLink({ customerId, questionnaireId }: { customerId: number; questionnaireId: number }) {
+    const { data } = await axiosWithAuth.get<string>(`/api/questionnaire/get/link/${customerId}/${questionnaireId}`)
+    return data
+  },
+
+  async deleteQuestionnaire(id: number) {
+    return await axiosWithAuth.delete(`/api/questionnaire/delete/${id}`)
   },
 }
