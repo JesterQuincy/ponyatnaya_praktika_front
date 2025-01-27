@@ -9,6 +9,7 @@ export interface ITestCardProps {
   test: boolean
   title: string
   dateCreated: string
+  id: number
 }
 
 export type AssessmentType = 'test' | 'survey'

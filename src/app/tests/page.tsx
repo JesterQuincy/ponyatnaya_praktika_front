@@ -10,21 +10,26 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { createMaterialSchema, ICreateMaterial } from '@/models/createMaterialSchema'
 import { useQuestionnaires } from '@/api/hooks/therapistQuestionnaires/useQuestionnaires'
 import { Button } from '@/components/ui/buttons/Button'
+import { Spinner } from '@/components/Spinner'
 
 export interface ISort {
-  type: string
-  date: string
+  type?: 'desc' | 'asc'
+  date?: 'desc' | 'asc'
 }
 
 const pageSize = 7
 
 const TestsPage = () => {
-  const [sort, setSort] = useState<ISort>({ type: '', date: '' })
+  const [sort, setSort] = useState<ISort>()
   const [modalOpen, setModalOpen] = useState(false)
   const [currentPage, setCurrentPage] = useState(1)
 
-  // Получаем данные с сервера (пагинация по 7 элементов)
-  const { data, isLoading, isError } = useQuestionnaires((currentPage - 1) * 7, pageSize)
+  const { data, isLoading, isError } = useQuestionnaires({
+    offset: currentPage - 1,
+    limit: pageSize,
+    orderIsTest: sort?.type,
+    orderDate: sort?.date,
+  })
 
   const createMaterialForm = useForm<ICreateMaterial>({
     resolver: zodResolver(createMaterialSchema),
@@ -40,10 +45,9 @@ const TestsPage = () => {
 
   const pageCount = useMemo(() => {
     if (!data) return 1
-    return Math.ceil(data.length / pageSize)
+    return Math.ceil(data.total / pageSize)
   }, [data])
 
-  if (isLoading) return <div>Loading...</div>
   if (isError) return <div>Error loading data</div>
 
   return (
@@ -56,7 +60,10 @@ const TestsPage = () => {
         </FormProvider>
       </div>
       <div className="w-full bg-[#F1F1F1] rounded-[5px] py-[12px] px-[16px] flex flex-col gap-y-[12px] mb-8 min-h-[55vh]">
-        {data?.map((el) => <TestCard key={el.id} test={el.test} title={el.title} dateCreated={el.dateCreated} />)}
+        {isLoading && <Spinner />}
+        {data?.data.map((el) => (
+          <TestCard key={el.id} test={el.test} title={el.title} dateCreated={el.dateCreated} id={el.id} />
+        ))}
       </div>
 
       <div className="flex justify-center items-center gap-x-2 mt-4">
@@ -79,7 +86,7 @@ const TestsPage = () => {
         })}
         <button
           onClick={() => handlePageChange(currentPage + 1)}
-          disabled={data && data?.length < 7}
+          disabled={currentPage === pageCount || (data && data.data.length < pageSize) || isLoading}
           className="px-3 py-1 border rounded disabled:opacity-50">
           &gt;
         </button>

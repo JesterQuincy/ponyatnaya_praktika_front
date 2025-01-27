@@ -1,6 +1,5 @@
 'use client'
 
-import { Heading } from '@/components/ui/Heading'
 import { componentMap } from '@/helpers/constants/tests'
 import { ETestType } from '@/helpers/types/tests'
 import { ArrowLeft } from 'lucide-react'
@@ -14,7 +13,8 @@ type Props = {
 export default function Page({ params }: Props) {
   const { assessment } = params
 
-  const [typeKey, ...nameParts] = assessment.split('-')
+  const decodedAssessment = decodeURIComponent(assessment)
+  const [typeKey, ...nameParts] = decodedAssessment.split('-')
   const name = nameParts.join(' ')
 
   const type = ETestType[typeKey as keyof typeof ETestType]
@@ -29,11 +29,10 @@ export default function Page({ params }: Props) {
 
   return (
     <>
-      <Link href="/tests" className="flex items-center gap-2 text-taupe mb-4">
+      <Link href="/tests" className="group flex items-center gap-2 text-taupe mb-4 w-fit">
         <ArrowLeft width={12} height={12} />
-        <p className="text-xs underline">Все материалы</p>
+        <p className="text-xs group-hover:underline">Все материалы</p>
       </Link>
-      <Heading title={`${type} по завершению терапии`} />
       <Form type={typeKey} name={name} />
     </>
   )

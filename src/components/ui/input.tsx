@@ -5,12 +5,13 @@ import Image from 'next/image'
 export interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   iconSrc?: string // Пропс для пути к SVG-иконке
   iconAlt?: string // Пропс для описания иконки
+  layoutClassName?: string
 }
 
 const Input = React.forwardRef<HTMLInputElement, InputProps>(
-  ({ className, type = 'text', iconSrc, iconAlt, ...props }, ref) => {
+  ({ className, type = 'text', iconSrc, iconAlt, layoutClassName, ...props }, ref) => {
     return (
-      <div className="relative">
+      <div className={cn('relative', layoutClassName)}>
         <input
           type={type}
           className={cn(

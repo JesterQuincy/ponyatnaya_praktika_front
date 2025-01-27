@@ -81,7 +81,7 @@ export function QuestionItem({ index, removeQuestion, dragHandleProps }: Questio
                   <SelectContent className="border-gray bg-white rounded-[6px]">
                     <SelectItem value="Один из списка">Один из списка</SelectItem>
                     <SelectItem value="Несколько из списка">Несколько из списка</SelectItem>
-                    <SelectItem value="Развёрнутый ответ">Развёрнутый ответ</SelectItem>
+                    <SelectItem value="Развернутый ответ">Развернутый ответ</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
@@ -90,7 +90,7 @@ export function QuestionItem({ index, removeQuestion, dragHandleProps }: Questio
           </FormItem>
         )}
       />
-      {watch(`questions.${index}.type`) !== 'Развёрнутый ответ' && (
+      {watch(`questions.${index}.type`) !== 'Развернутый ответ' && (
         <div className="mt-2">
           <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleOptionDragEnd}>
             <SortableContext items={optionFields.map((field) => field.id)} strategy={verticalListSortingStrategy}>
