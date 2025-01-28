@@ -20,16 +20,14 @@ export const questionnaireChildSchema = z.object({
     mail: z.string().email('Некорректный email первого родителя').min(1, 'Email первого родителя обязателен'),
     gender: z.string().min(1, 'Пол первого родителя обязателен'),
   }),
-  secondParent: z
-    .object({
-      lastName: z.string().optional(),
-      firstName: z.string().optional(),
-      secondName: z.string().optional(),
-      phoneNumber: z.string().optional(),
-      mail: z.string().email('Некорректный email второго родителя').optional(),
-      gender: z.string().optional(),
-    })
-    .optional(),
+  secondParent: z.object({
+    lastName: z.string().optional(),
+    firstName: z.string().optional(),
+    secondName: z.string().optional(),
+    phoneNumber: z.string().optional(),
+    mail: z.string().email('Некорректный email второго родителя').optional(),
+    gender: z.string().optional(),
+  }),
   payerFullName: z.string().optional(),
   contactMethod: z.string().optional(),
   onlinePlatform: z.string().optional(),
