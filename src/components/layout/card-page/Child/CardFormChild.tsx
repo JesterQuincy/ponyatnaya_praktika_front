@@ -191,7 +191,6 @@ export const CardFormChild = ({ user }: ICardFormProps) => {
                 name={'firstParent.gender'}
                 label={'Пол первого родителя'}
               />
-              {/*<InputChild form={form} name={'firstParent.clientTherapyRequest'} label={'Город первого родителя'} />*/}
               {/*endregion*/}
               {/*region: parent 2*/}
               <InputChild form={form} name={'secondParent.lastName'} label={'Фамилия второго родителя'} />
