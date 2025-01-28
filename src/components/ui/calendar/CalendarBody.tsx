@@ -44,7 +44,10 @@ export default function CalendarBody() {
 
   const fetchData = async () => {
     try {
-      const serverData = await calendarService.getCalendarData(2024)
+      const currentYear = new Date().getFullYear()
+
+      const serverData = await calendarService.getCalendarData(currentYear)
+
       const generatedEvents = generateEvents(serverData.data)
 
       setEvents([...generatedEvents])
