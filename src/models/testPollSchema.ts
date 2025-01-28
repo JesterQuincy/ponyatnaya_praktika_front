@@ -9,6 +9,7 @@ export const TestPollSchema = z.object({
         id: z.number(),
         text: z.string().min(1, 'Вопрос не может быть пустым'),
         type: z.enum(['Один из списка', 'Несколько из списка', 'Развернутый ответ']),
+        order: z.number(),
         answerOptions: z.array(
           z.object({
             id: z.number(),

@@ -42,6 +42,7 @@ export function PollForm({ type, name }: PollFormProps) {
           id: 0,
           text: '',
           type: 'Один из списка',
+          order: 0,
           answerOptions: [{ id: 0, text: '', correct: true }],
         },
       ],
@@ -82,6 +83,10 @@ export function PollForm({ type, name }: PollFormProps) {
       const newIndex = questionFields.findIndex((field) => field.id === over.id)
 
       moveQuestion(oldIndex, newIndex)
+
+      questionFields.forEach((_, index) => {
+        form.setValue(`questions.${index}.order`, index + 1) // Проставляем новый order
+      })
     }
   }
 
@@ -91,32 +96,24 @@ export function PollForm({ type, name }: PollFormProps) {
       text: '',
       type: 'Один из списка',
       answerOptions: [{ id: 0, text: '', correct: true }],
+      order: questionFields.length + 1, // Новый порядок
     })
   }
 
   const onSubmit = handleSubmit(async (data) => {
     const payload: IQuestionnaireRequest = {
+      id: id && questionnaire ? Number(id) : undefined,
       title: data.title,
       description: data.description,
       dateCreated: new Date().toISOString().split('T')[0],
-      questions: data.questions.map((question) => ({
-        text: question.text,
-        type: question.type,
-        answerOptions: question.answerOptions.map((option) => ({
-          text: option.text,
-          correct: option.correct,
-        })),
-      })),
+      questions: data.questions
+        .map((question, index) => ({
+          ...question,
+          id: id && questionnaire ? Number(data.questions[index].id) : undefined,
+          order: index + 1, // Убедиться, что порядок обновлен
+        }))
+        .sort((a, b) => a.order - b.order), // Сортировка по порядку
       test: isTest,
-    }
-
-    if (id && questionnaire) {
-      payload.id = Number(id)
-
-      payload.questions = payload.questions.map((question, index) => ({
-        ...question,
-        id: data.questions[index].id,
-      }))
     }
 
     try {
