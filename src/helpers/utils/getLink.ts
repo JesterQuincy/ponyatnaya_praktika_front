@@ -37,7 +37,14 @@ export const copyAndLoadToClipboard = async (
   try {
     const { data } = await linkData(String(id)) // Запрос данных
 
-    textArea.value = `${BASE_HOST}/${data}`
+    const parts = data.split('/')
+
+    const typeValue = parts[0] // Тип
+    const tokenValue = parts[1] // Токен
+
+    const newString = `type=${typeValue}&token=${tokenValue}`
+
+    textArea.value = `${BASE_HOST}/questionnaire?${newString}`
     textArea.style.position = 'fixed' // Чтобы текстовое поле не отображалось
     document.body.appendChild(textArea)
     textArea.focus()

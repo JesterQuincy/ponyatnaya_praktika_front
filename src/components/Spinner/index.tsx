@@ -1,6 +1,8 @@
-export const Spinner = () => {
+import { cn } from '@/lib/utils'
+
+export const Spinner = ({ classname }: { classname?: string }) => {
   return (
-    <div className="h-[100%] flex items-center justify-center">
+    <div className={cn('h-[100%] flex items-center justify-center', classname)}>
       <svg
         xmlns="http://www.w3.org/2000/svg"
         width="24"
