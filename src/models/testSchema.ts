@@ -5,6 +5,7 @@ export const TestSchema = z.object({
   description: z.string().min(1, 'Описание не может быть пустым'),
   questions: z.array(
     z.object({
+      order: z.number(),
       id: z.number(),
       text: z.string().min(1, 'Текст вопроса не может быть пустым'),
       answerOptions: z.array(

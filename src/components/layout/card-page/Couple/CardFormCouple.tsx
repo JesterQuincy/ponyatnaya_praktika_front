@@ -233,14 +233,14 @@ export const CardFormCouple = ({ user }: ICardFormProps) => {
                   />
                   <InputCouple
                     form={form}
-                    name={'residenceAddress'}
+                    name={'takingMedic'}
                     label={
                       'Прием медицинских препаратов оказывающих влияние на сознание/эмоциональное состояние клиента'
                     }
                   />
                   <InputCouple
                     form={form}
-                    name={'residenceAddress'}
+                    name={'prevExperience'}
                     label={'Предыдущий опыт получения психологической помощи'}
                   />
                   <InputCouple form={form} name={'specialTermsContact'} label={'Особые условия контракта'} />
