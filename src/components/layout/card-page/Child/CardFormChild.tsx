@@ -155,9 +155,6 @@ export const CardFormChild = ({ user }: ICardFormProps) => {
               <InputChild form={form} name={'mail'} label={'Почта ребенка'} />
               <SelectChild form={form} options={genderOptions} name={'gender'} label={'Пол ребенка'} />
               <SelectChild form={form} options={statusOptions} name={'clientStatus'} label={'Статус'} />
-              {/*TODO*/}
-              {/*<InputChild form={form} name={'clientTherapyRequest'} label={'Запрос ребенка на терапию'} />*/}
-              {/*<InputChild form={form} name={'adultRequestForTherapyReason'} label={'Запрос ребенка на терапию'} />*/}
               <InputChild
                 form={form}
                 name={'adultRequestForTherapyDesiredOutcome'}
@@ -191,7 +188,6 @@ export const CardFormChild = ({ user }: ICardFormProps) => {
                 name={'firstParent.gender'}
                 label={'Пол первого родителя'}
               />
-              {/*<InputChild form={form} name={'firstParent.clientTherapyRequest'} label={'Город первого родителя'} />*/}
               {/*endregion*/}
               {/*region: parent 2*/}
               <InputChild form={form} name={'secondParent.lastName'} label={'Фамилия второго родителя'} />
@@ -243,7 +239,7 @@ export const CardFormChild = ({ user }: ICardFormProps) => {
                   />
                   <InputChild
                     form={form}
-                    name={'residenceAddress'}
+                    name={'takingMedic'}
                     label={
                       'Прием медицинских препаратов оказывающих влияние на сознание/эмоциональное состояние клиента'
                     }

@@ -25,7 +25,7 @@ export const getLink = async (
 }
 
 /** Костыль-функция для копирования ссылки для http протокола */
-export const copyToClipboard = async (
+export const copyAndLoadToClipboard = async (
   linkData: (
     variables: string,
     options?: MutateOptions<{ data: string }, Error, string, unknown> | undefined,
@@ -37,7 +37,14 @@ export const copyToClipboard = async (
   try {
     const { data } = await linkData(String(id)) // Запрос данных
 
-    textArea.value = `${BASE_HOST}/${data}`
+    const parts = data.split('/')
+
+    const typeValue = parts[0] // Тип
+    const tokenValue = parts[1] // Токен
+
+    const newString = `type=${typeValue}&token=${tokenValue}`
+
+    textArea.value = `${BASE_HOST}/questionnaire?${newString}`
     textArea.style.position = 'fixed' // Чтобы текстовое поле не отображалось
     document.body.appendChild(textArea)
     textArea.focus()
@@ -57,4 +64,18 @@ export const copyToClipboard = async (
   }
 
   document.body.removeChild(textArea)
+}
+
+export const copyLink = async (link: string) => {
+  const url = `${BASE_HOST}/${link}`
+
+  try {
+    await navigator.clipboard.writeText(url)
+    toast.success('Ссылка скопирована в буфер обмена')
+    console.log('url', url)
+    return url
+  } catch (error) {
+    console.error('Ошибка копирования:', error)
+    toast.error('Ошибка при копировании ссылки')
+  }
 }

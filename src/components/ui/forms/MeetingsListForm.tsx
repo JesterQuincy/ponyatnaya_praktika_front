@@ -139,32 +139,10 @@ export function MeetingsListForm({ user }: ICardFormProps) {
           <Pagination currentPage={currentPage} totalPages={totalPages} paginate={paginate} />
         </div>
       </div>
-      <div className="bg-[#F1F1F1] w-[40%] rounded-[4px] py-[29px] px-[11px]">
-        <div className="flex">
-          <Image src={CorrectFile} alt="CorrectFile" className="mr-2" />
-          <div className="max-w-[355px] text-[20px] text-[#EA660C] underline underline-offset-[3.5px]">
-            Контракт и подробные условия оказания психологической помощи
-          </div>
-        </div>
-        <div className="max-w-[260px] text-[13px] pl-[30px] mt-[4px]">
-          <span className="text-[#7E7E7E]">Дата согласия:</span> 12.01.2025
-        </div>
-        <div className="border-2 border-dashed border-[#5A5A5A] rounded-[6px] mt-[21px] p-6 flex flex-col items-center justify-center text-center">
-          <div className="mb-[7px]">
-            <Image src={ImageIcon} alt="CorrectFile" className="mr-2" />
-          </div>
-          <p className="font-semibold">Перетащите изображение сюда</p>
-          <p className="text-[#5A5A5A] text-sm">или нажмите кнопку</p>
-          <div className="mt-4 flex gap-4">
-            <Button className="bg-[#5A5A5A] text-white py-1 px-4 rounded-[6px]">Выбрать файл</Button>
-            <Button className="border border-[#5A5A5A] text-[#5A5A5A] py-1 px-4 rounded-[6px]">
-              Вставить из буфера
-            </Button>
-          </div>
-        </div>
+      <div className="bg-[#F1F1F1] w-[40%] rounded-[4px] py-[25px] px-[11px]">
         {isProjMethodsLoading && <Spinner />}
         {!isProjMethodsLoading && !!projMethods?.data?.length && (
-          <div className="mt-[27px]">
+          <div>
             <span className="font-bold text-[20px]">Проективные методики</span>
             <div className="flex flex-col gap-[10px] mt-[10px]">
               {visibleMetodics?.map((item) => (

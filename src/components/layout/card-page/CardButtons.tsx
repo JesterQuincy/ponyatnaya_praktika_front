@@ -1,5 +1,5 @@
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
-import { copyToClipboard } from '@/helpers/utils/getLink'
+import { copyAndLoadToClipboard } from '@/helpers/utils/getLink'
 import { FC, useRef, useState } from 'react'
 import { MutateOptions } from '@tanstack/react-query'
 
@@ -32,7 +32,7 @@ export const CardButtons: FC<ICardButtonsProps> = ({ linkData, id, isPendingLink
             <button
               type={'button'}
               onClick={async () => {
-                const text = await copyToClipboard(linkData, id)
+                const text = await copyAndLoadToClipboard(linkData, id)
 
                 if (!text) {
                   return

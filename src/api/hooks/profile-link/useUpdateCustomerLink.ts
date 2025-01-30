@@ -6,7 +6,8 @@ import { IClient } from '@/types/clients'
 
 export function useUpdateCustomerLink() {
   return useMutation({
-    mutationFn: (data: DeepPartial<IClient>) => profileLinkService.updateCustomerLink(data),
+    mutationFn: ({ data, token }: { data: DeepPartial<IClient>; token: string }) =>
+      profileLinkService.updateCustomerLink(data, token),
     onError: () => {
       toast.error('Произошла ошибка')
     },

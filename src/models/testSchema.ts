@@ -5,12 +5,12 @@ export const TestSchema = z.object({
   description: z.string().min(1, 'Описание не может быть пустым'),
   questions: z.array(
     z.object({
-      id: z.number().default(0),
-      type: z.string().min(1, 'Тип вопроса не может быть пустым'),
+      order: z.number(),
+      id: z.number(),
       text: z.string().min(1, 'Текст вопроса не может быть пустым'),
       answerOptions: z.array(
         z.object({
-          id: z.number().default(0),
+          id: z.number(),
           text: z.string().min(1, 'Текст варианта ответа не может быть пустым'),
           correct: z.boolean(),
         }),

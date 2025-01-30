@@ -1,6 +1,28 @@
-export const methodicOptions = [
-  { value: 'Методика 1', label: 'Методика 1' },
-  { value: 'Методика 2', label: 'Методика 2' },
+interface ISort {
+  value: 'asc' | 'desc'
+  label: string
+}
+
+export const typeOption: ISort[] = [
+  {
+    value: 'desc',
+    label: 'Тест',
+  },
+  {
+    value: 'asc',
+    label: 'Опрос',
+  },
+]
+
+export const dateOption: ISort[] = [
+  {
+    value: 'asc',
+    label: 'Раньше',
+  },
+  {
+    value: 'desc',
+    label: 'Позже',
+  },
 ]
 
 export const communicationFormatOptions = [

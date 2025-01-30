@@ -42,7 +42,7 @@ export const CreateMaterialModal: FC<ICreateMaterialModalProps> = ({ modalOpen, 
         setModalOpen(prev)
         createMaterialForm.reset()
       }}>
-      <DialogTrigger asChild>
+      <DialogTrigger className="ml-auto" asChild>
         <Button variant="grey">
           <FilePlus2 />
           Создать материал

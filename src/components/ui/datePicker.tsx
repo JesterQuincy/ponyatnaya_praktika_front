@@ -15,14 +15,21 @@ interface DatePickerProps {
   onChange?: (date: string) => void
   placeholder?: string
   className?: string
+  formatDate?: 'dd.MM.yyyy' | 'yyyy-MM-dd'
 }
 
-function DatePicker({ value, onChange, placeholder = 'Выберите дату', className }: DatePickerProps) {
-  const selectedDate = value ? parse(value, 'dd.MM.yyyy', new Date()) : undefined
+function DatePicker({
+  value,
+  onChange,
+  placeholder = 'Выберите дату',
+  className,
+  formatDate = 'dd.MM.yyyy',
+}: DatePickerProps) {
+  const selectedDate = value ? parse(value, formatDate, new Date()) : undefined
 
   const handleDateChange = (date: Date | undefined) => {
     if (date && onChange) {
-      onChange(format(date, 'dd.MM.yyyy'))
+      onChange(format(date, formatDate))
     }
   }
 
