@@ -8,8 +8,8 @@ export const coupleSchema = z.object({
   phoneNumber: z.string().min(1, 'Телефон ребенка обязателен'),
   mail: z.string().email('Некорректный email'),
   gender: z.string().min(1, 'Пол обязателен'),
-  clientFirstRequestTherapyReason: z.string().min(1, 'Причина обращения обязательна'),
-  clientFirstRequestTherapyDesiredOutcome: z.string().min(1, 'Желаемый результат обязателен'),
+  clientFirstRequestTherapyReason: z.string().optional(),
+  clientFirstRequestTherapyDesiredOutcome: z.string().optional(),
   clientStatus: z.string().min(1, 'Статус обязателен'),
   // #endregion
 
