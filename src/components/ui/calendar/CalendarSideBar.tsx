@@ -104,7 +104,7 @@ export default function SideBar({ children }: PropsWithChildren) {
         </div>
       </div>
       <nav className="mt-[50px] flex flex-col space-y-2 w-full">
-        <Link href="/clients">  
+        <Link href="/clients">
           <Button
             variant="link"
             className={`p-2 flex w-full border-[1px] justify-start ${activeLink('/clients')} transition-colors`}>
