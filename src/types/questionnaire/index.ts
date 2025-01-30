@@ -31,3 +31,13 @@ export interface IQuestionnaireRequest {
   questions: IQuestion[]
   test: boolean
 }
+
+export interface IQuestionnaireResult {
+  questionnaireId: number
+  clientChoices: IChoice[]
+}
+
+interface IChoice {
+  answerOptionId: number
+  text?: string
+}

@@ -1,4 +1,4 @@
-import { axiosWithAuth } from '@/api/interceptors'
+import { axiosClassic, axiosWithAuth } from '@/api/interceptors'
 import { IQuestionnaireRequest, IQuestionnaireResponse } from '@/types/questionnaire'
 
 export const questionnaireService = {
@@ -22,7 +22,14 @@ export const questionnaireService = {
     return await axiosWithAuth.post<number>('/api/questionnaire/create', data)
   },
 
-  async getQuestionnaireById(id: string | null) {
+  async getQuestionnaireById(id: string | null, token?: string | null) {
+    if (token) {
+      const { data } = await axiosClassic.get<IQuestionnaireRequest>(`/api/questionnaire/get/${id}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      })
+      return data
+    }
+
     const { data } = await axiosWithAuth.get<IQuestionnaireRequest>(`/api/questionnaire/get/${id}`)
     return data
   },

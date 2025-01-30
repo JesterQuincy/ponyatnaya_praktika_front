@@ -95,6 +95,7 @@ export const CreateMaterialModal: FC<ICreateMaterialModalProps> = ({ modalOpen, 
                   onClick={() => {
                     setModalOpen(false)
                   }}
+                  variant="grey"
                   type={'button'}>
                   Отмена
                 </Button>
