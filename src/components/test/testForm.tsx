@@ -42,6 +42,7 @@ export function TestForm({ type, name }: TestFormProps) {
         {
           id: 0,
           text: '',
+          order: 1,
           answerOptions: [
             { text: '', correct: true, id: 0 },
             { text: '', correct: false, id: 0 },
@@ -85,28 +86,28 @@ export function TestForm({ type, name }: TestFormProps) {
       const newIndex = questionFields.findIndex((field) => field.id === over.id)
 
       moveQuestion(oldIndex, newIndex)
+
+      questionFields.forEach((_, index) => {
+        form.setValue(`questions.${index}.order`, index + 1) // Проставляем новый order
+      })
     }
   }
 
   const onSubmit = handleSubmit(async (data) => {
     const payload: IQuestionnaireRequest = {
+      id: id && questionnaire ? Number(id) : undefined,
       title: data.title,
       description: data.description,
       dateCreated: new Date().toISOString().split('T')[0],
-      questions: data.questions.map((q) => ({
-        text: q.text,
-        answerOptions: q.answerOptions.map((o) => ({ text: o.text, correct: o.correct })),
-      })),
+      questions: data.questions
+        .map((q, index) => ({
+          id: id && questionnaire ? Number(data.questions[index].id) : undefined,
+          text: q.text,
+          order: index + 1,
+          answerOptions: q.answerOptions.map((o) => ({ text: o.text, correct: o.correct })),
+        }))
+        .sort((a, b) => a.order - b.order),
       test: data.test,
-    }
-
-    if (id && questionnaire) {
-      payload.id = Number(id)
-
-      payload.questions = payload.questions.map((q, index) => ({
-        ...q,
-        id: data.questions[index].id,
-      }))
     }
 
     try {
@@ -158,6 +159,7 @@ export function TestForm({ type, name }: TestFormProps) {
                 appendQuestion({
                   id: 0,
                   text: '',
+                  order: questionFields.length + 1,
                   answerOptions: [
                     { text: '', correct: true, id: 0 },
                     { text: '', correct: false, id: 0 },
