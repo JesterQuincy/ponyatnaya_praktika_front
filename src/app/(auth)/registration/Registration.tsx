@@ -56,7 +56,7 @@ export function Registration() {
           <form onSubmit={onSubmit} className="space-y-3">
             <FormField
               control={form.control}
-              name="secondName"
+              name="lastName"
               render={({ field }) => (
                 <FormItem>
                   <FormControl>
@@ -80,7 +80,7 @@ export function Registration() {
             />
             <FormField
               control={form.control}
-              name="lastName"
+              name="secondName"
               render={({ field }) => (
                 <FormItem>
                   <FormControl>
