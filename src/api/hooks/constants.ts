@@ -10,4 +10,5 @@ export enum EInvalidationTags {
   ACCOUNT = 'account',
   QUESTIONNAIRE_LINK = 'questionnaire_link',
   QUESTIONNAIRES = 'questionnaires',
+  QUESTIONNAIRES_CLIENT = 'questionnaires_client',
 }

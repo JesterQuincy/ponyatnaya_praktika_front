@@ -5,9 +5,6 @@ import Image from 'next/image'
 import { useParams, useRouter } from 'next/navigation'
 
 import { useMeet } from '@/app/context/meetContext'
-
-import CorrectFile from '@/public/icon/correct-file.svg'
-import ImageIcon from '@/public/icon/image.svg'
 import TripleDots from '@/public/icon/tripleDots.svg'
 
 import { Button } from '../buttons/Button'

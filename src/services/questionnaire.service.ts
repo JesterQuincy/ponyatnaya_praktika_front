@@ -48,4 +48,32 @@ export const questionnaireService = {
       headers: { Authorization: `Bearer ${token}` },
     })
   },
+
+  async getQuestionnaireClientResults({
+    id,
+    offset,
+    limit = 5,
+    orderIsTest,
+    orderDate,
+  }: {
+    id: number
+    offset: number
+    limit?: number
+    orderIsTest?: 'asc' | 'desc'
+    orderDate?: 'desc' | 'asc'
+  }) {
+    const { data } = await axiosWithAuth.get<IQuestionnaireRequest>(
+      `/api/questionnaire/get/byCustomer/${id}/${offset}/${limit}`,
+      {
+        params: { orderDate, orderIsTest },
+      },
+    )
+
+    return data
+  },
+
+  async getQuestionnaireClientResultById(id: number | null) {
+    const { data } = await axiosWithAuth.get<IQuestionnaireRequest>(`/api/questionnaire/get/result/${id}`)
+    return data
+  },
 }
