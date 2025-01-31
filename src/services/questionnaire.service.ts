@@ -1,5 +1,5 @@
 import { axiosClassic, axiosWithAuth } from '@/api/interceptors'
-import { IQuestionnaireRequest, IQuestionnaireResponse } from '@/types/questionnaire'
+import { IQuestionnaireRequest, IQuestionnaireResponse, IQuestionnaireResult } from '@/types/questionnaire'
 
 export const questionnaireService = {
   async getQuestionnaires({
@@ -41,5 +41,11 @@ export const questionnaireService = {
 
   async deleteQuestionnaire(id: number) {
     return await axiosWithAuth.delete(`/api/questionnaire/delete/${id}`)
+  },
+
+  async saveQuestionnaireResult(data: IQuestionnaireResult, token: string) {
+    return await axiosClassic.post('/api/questionnaire/create/result', data, {
+      headers: { Authorization: `Bearer ${token}` },
+    })
   },
 }

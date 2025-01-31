@@ -5,6 +5,7 @@ import { Survey } from '@/components/layout/poll-page/Survey'
 import { Spinner } from '@/components/Spinner'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { useGetQuestionnaire } from '@/api/hooks/therapistQuestionnaires/useGetQuestionnaire'
+import { Test } from '@/components/layout/poll-page/Test'
 
 export function Poll() {
   const searchParams = useSearchParams()
@@ -29,11 +30,11 @@ export function Poll() {
   }
 
   if (data?.test) {
-    return null
+    return <Test token={token} data={data} />
   }
 
   if (data) {
-    return <Survey data={data} />
+    return <Survey data={data} token={token} />
   }
 }
 
