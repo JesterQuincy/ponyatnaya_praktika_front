@@ -105,6 +105,7 @@ export function TestForm({ type, name }: TestFormProps) {
           text: q.text,
           order: index + 1,
           answerOptions: q.answerOptions.map((o) => ({ text: o.text, correct: o.correct })),
+          type: 'Один из списка' as const,
         }))
         .sort((a, b) => a.order - b.order),
       test: data.test,

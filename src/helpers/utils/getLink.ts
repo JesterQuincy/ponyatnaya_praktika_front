@@ -67,12 +67,19 @@ export const copyAndLoadToClipboard = async (
 }
 
 export const copyLink = async (link: string) => {
-  const url = `${BASE_HOST}/${link}`
+  const parts = link.split('/')
+
+  const idValue = parts[0]
+  const tokenValue = parts[1]
+
+  const newString = `id=${idValue}&token=${tokenValue}`
+
+  const url = `${BASE_HOST}/poll?${newString}`
 
   try {
     await navigator.clipboard.writeText(url)
     toast.success('Ссылка скопирована в буфер обмена')
-    console.log('url', url)
+
     return url
   } catch (error) {
     console.error('Ошибка копирования:', error)

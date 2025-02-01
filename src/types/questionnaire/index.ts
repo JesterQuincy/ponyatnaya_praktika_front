@@ -31,3 +31,50 @@ export interface IQuestionnaireRequest {
   questions: IQuestion[]
   test: boolean
 }
+
+export interface IQuestionnaireResult {
+  questionnaireId: number
+  clientChoices: IChoice[]
+  dateResult: string
+}
+
+interface IChoice {
+  answerOptionId: number
+  text?: string
+}
+
+export interface IQuestionnairesResultResponse {
+  data: IQuestionnairesResultData[]
+  total: number
+}
+
+export interface IQuestionnairesResultData {
+  resultId: number
+  questionnaireId: number
+  questionnaireTitle: string
+  dateResult: string
+  test: true
+}
+
+export interface IQuestionnaireResultResponse {
+  id: number
+  customerName: string
+  questionnaire: QuestionnaireResult
+  dateResult: string
+}
+
+interface QuestionnaireResult {
+  id: number
+  title: string
+  description: string
+  dateCreated: string
+  questions: IQuestions[]
+  test: true
+}
+
+export interface IQuestions {
+  id: number
+  type: string
+  text: string
+  answerOptions: Array<IAnswerOption & { choice: boolean }>
+}

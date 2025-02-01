@@ -1,7 +1,7 @@
 import styles from '@/styles/heading.module.css'
 
 interface HeadingProps {
-  title: string
+  title: string | undefined
 }
 
 export function Heading({ title }: HeadingProps) {
