@@ -12,9 +12,11 @@ export function useDeleteQuestionnaire() {
       toast.error('Произошла ошибка')
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: [EInvalidationTags.QUESTIONNAIRES] })
+      queryClient.invalidateQueries({
+        queryKey: [EInvalidationTags.QUESTIONNAIRES_CLIENT, EInvalidationTags.QUESTIONNAIRES],
+      })
       toast.success('Материал успешно удален!')
     },
-    mutationKey: [EInvalidationTags.QUESTIONNAIRES],
+    mutationKey: [EInvalidationTags.QUESTIONNAIRES_CLIENT, EInvalidationTags.QUESTIONNAIRES],
   })
 }

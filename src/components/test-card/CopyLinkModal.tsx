@@ -128,6 +128,7 @@ export const CopyLinkModal: FC<ICreateMaterialModalProps> = ({ modalOpen, setMod
                       />
                     </FormControl>
                     <Button
+                      variant="link"
                       type={'button'}
                       onClick={() => {
                         return copyLink(field.value)
@@ -147,6 +148,7 @@ export const CopyLinkModal: FC<ICreateMaterialModalProps> = ({ modalOpen, setMod
                   onClick={() => {
                     setModalOpen(false)
                   }}
+                  variant="grey"
                   type={'button'}>
                   Отмена
                 </Button>
