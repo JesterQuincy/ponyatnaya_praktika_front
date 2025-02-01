@@ -1,5 +1,11 @@
 import { axiosClassic, axiosWithAuth } from '@/api/interceptors'
-import { IQuestionnaireRequest, IQuestionnaireResponse, IQuestionnaireResult } from '@/types/questionnaire'
+import {
+  IQuestionnaireRequest,
+  IQuestionnaireResponse,
+  IQuestionnaireResult,
+  IQuestionnaireResultResponse,
+  IQuestionnairesResultResponse,
+} from '@/types/questionnaire'
 
 export const questionnaireService = {
   async getQuestionnaires({
@@ -59,10 +65,10 @@ export const questionnaireService = {
     id: number
     offset: number
     limit?: number
-    orderIsTest?: 'asc' | 'desc'
-    orderDate?: 'desc' | 'asc'
+    orderIsTest?: 'asc' | 'desc' | ''
+    orderDate?: 'desc' | 'asc' | ''
   }) {
-    const { data } = await axiosWithAuth.get<IQuestionnaireRequest>(
+    const { data } = await axiosWithAuth.get<IQuestionnairesResultResponse>(
       `/api/questionnaire/get/byCustomer/${id}/${offset}/${limit}`,
       {
         params: { orderDate, orderIsTest },
@@ -73,7 +79,7 @@ export const questionnaireService = {
   },
 
   async getQuestionnaireClientResultById(id: number | null) {
-    const { data } = await axiosWithAuth.get<IQuestionnaireRequest>(`/api/questionnaire/get/result/${id}`)
+    const { data } = await axiosWithAuth.get<IQuestionnaireResultResponse>(`/api/questionnaire/get/result/${id}`)
     return data
   },
 }

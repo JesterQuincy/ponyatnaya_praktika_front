@@ -28,6 +28,7 @@ export const Test: FC<ITestProps> = ({ data, token }) => {
 
     const result: IQuestionnaireResult = {
       questionnaireId: data.id,
+      dateResult: new Date().toISOString(),
       clientChoices: formData.clientChoices.map((c) => ({
         answerOptionId: Number(c.answerOptionId),
       })),

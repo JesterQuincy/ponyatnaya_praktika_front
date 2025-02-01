@@ -12,12 +12,13 @@ export function useClientQuestionnaires({
   id: number
   offset: number
   limit?: number
-  orderIsTest?: 'asc' | 'desc'
-  orderDate?: 'desc' | 'asc'
+  orderIsTest?: 'asc' | 'desc' | ''
+  orderDate?: 'desc' | 'asc' | ''
 }) {
   return useQuery({
     queryKey: [EInvalidationTags.QUESTIONNAIRES_CLIENT, offset, limit, orderDate, orderIsTest],
     queryFn: () => questionnaireService.getQuestionnaireClientResults({ id, offset, limit, orderDate, orderIsTest }),
     staleTime: 5000,
+    enabled: !!id,
   })
 }

@@ -38,6 +38,7 @@ export const Survey: FC<ISurveyProps> = ({ data, token }) => {
 
     const result: IQuestionnaireResult = {
       questionnaireId: data.id,
+      dateResult: new Date().toISOString(),
       clientChoices: formData.clientChoices.flatMap((choice, index) => {
         const question = data.questions[index]
 
