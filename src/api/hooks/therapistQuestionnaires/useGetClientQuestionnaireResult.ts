@@ -1,10 +1,10 @@
 import { useQuery } from '@tanstack/react-query'
 import { questionnaireService } from '@/services/questionnaire.service'
 
-export function useGetQuestionnaire(id: string | null, token?: string | null) {
+export function useGetClientQuestionnaireResult(id: number | null) {
   return useQuery({
     queryKey: [id],
-    queryFn: () => questionnaireService.getQuestionnaireById(id, token),
+    queryFn: () => questionnaireService.getQuestionnaireClientResultById(id),
     staleTime: 5000,
     enabled: !!id,
   })

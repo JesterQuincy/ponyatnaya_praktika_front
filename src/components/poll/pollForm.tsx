@@ -109,6 +109,7 @@ export function PollForm({ type, name }: PollFormProps) {
       questions: data.questions
         .map((question, index) => ({
           ...question,
+          answerOptions: question.answerOptions.map((o) => ({ ...o, correct: true, id: undefined })),
           id: id && questionnaire ? Number(data.questions[index].id) : undefined,
           order: index + 1, // Убедиться, что порядок обновлен
         }))
