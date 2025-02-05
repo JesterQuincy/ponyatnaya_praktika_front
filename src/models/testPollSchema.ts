@@ -2,7 +2,7 @@ import { z } from 'zod'
 
 export const TestPollSchema = z.object({
   title: z.string().min(1, 'Название не может быть пустым'),
-  description: z.string().min(1, 'Описание не может быть пустым'),
+  description: z.string().optional(),
   questions: z.array(
     z
       .object({

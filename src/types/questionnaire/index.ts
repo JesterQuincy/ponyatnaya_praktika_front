@@ -26,7 +26,7 @@ export interface IQuestion {
 export interface IQuestionnaireRequest {
   id?: number
   title: string
-  description: string
+  description?: string
   dateCreated: string
   questions: IQuestion[]
   test: boolean

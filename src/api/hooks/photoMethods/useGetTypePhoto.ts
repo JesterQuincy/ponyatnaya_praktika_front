@@ -4,7 +4,8 @@ import { photoMethodsService } from '@/services/photoMethodsService'
 
 export const useGetTypePhoto = () => {
   return useMutation({
-    mutationFn: (id: number) => photoMethodsService.getMethodTypesPhoto(id),
+    mutationFn: ({ customerId, typeMethodId }: { customerId: number; typeMethodId: number }) =>
+      photoMethodsService.getMethodTypesPhoto({ customerId, typeMethodId }),
     onError: () => {
       toast.error('Произошла ошибка при загрузке фото')
     },

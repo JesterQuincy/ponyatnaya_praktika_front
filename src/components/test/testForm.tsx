@@ -36,9 +36,13 @@ export function TestForm({ type, name }: TestFormProps) {
   const form = useForm<TestSchemaType>({
     resolver: zodResolver(TestSchema),
     defaultValues: {
-      title: name,
-      description: '',
-      questions: [
+      title: questionnaire?.title || name,
+      description: questionnaire?.description || '',
+      test: questionnaire?.test || true,
+      questions: questionnaire?.questions?.map((q, index) => ({
+        ...q,
+        id: q.id ?? index,
+      })) || [
         {
           id: 0,
           text: '',
@@ -49,7 +53,6 @@ export function TestForm({ type, name }: TestFormProps) {
           ],
         },
       ],
-      test: type === 'test',
     },
   })
 
@@ -60,11 +63,15 @@ export function TestForm({ type, name }: TestFormProps) {
       reset({
         title: questionnaire?.title,
         description: questionnaire?.description,
-        questions: questionnaire?.questions,
+        questions:
+          questionnaire?.questions?.map((q, index) => ({
+            ...q,
+            id: q.id ?? index,
+          })) || [],
         test: questionnaire?.test,
       })
     }
-  }, [form, questionnaire, reset])
+  }, [questionnaire, reset])
 
   const {
     fields: questionFields,
@@ -112,21 +119,15 @@ export function TestForm({ type, name }: TestFormProps) {
     }
 
     try {
-      const questionnaireId = await createQuestionnaire.mutateAsync(payload)
+      await createQuestionnaire.mutateAsync(payload)
 
-      if (!id) {
-        const url = new URL(window.location.href)
-
-        url.searchParams.set('id', String(questionnaireId))
-
-        router.push(url.toString())
-      }
+      router.push('/tests')
     } catch {}
   })
 
   return (
     <Form {...form}>
-      <form onSubmit={onSubmit} className="space-y-3">
+      <form onSubmit={onSubmit} key={questionnaire?.id} className="space-y-3">
         <FormField
           render={({ field }) => (
             <FormItem>
@@ -142,7 +143,10 @@ export function TestForm({ type, name }: TestFormProps) {
         <div className="flex justify-between items-start mt-5 gap-5">
           <div className="w-2/3 bg-grey rounded-[5px] py-3 px-4">
             <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleQuestionDragEnd}>
-              <SortableContext items={questionFields.map((field) => field.id)} strategy={verticalListSortingStrategy}>
+              <SortableContext
+                key={questionFields.length}
+                items={questionFields.map((field) => field.id)}
+                strategy={verticalListSortingStrategy}>
                 {questionFields.map((questionField, index) => (
                   <SortableQuestionItem
                     key={questionField.id}

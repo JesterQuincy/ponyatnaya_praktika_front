@@ -67,6 +67,10 @@ export const CardFormCouple = ({ user }: ICardFormProps) => {
     notes,
     clientStatus,
     contactMethod,
+    priorityCommunicationChannel,
+    peerRecommendation,
+    takingMedic,
+    prevExperience,
   } = {
     ...removeEmptyValues(user),
   }
@@ -119,6 +123,10 @@ export const CardFormCouple = ({ user }: ICardFormProps) => {
       notes,
       clientStatus,
       contactMethod,
+      priorityCommunicationChannel,
+      peerRecommendation,
+      takingMedic,
+      prevExperience,
     },
   })
 
