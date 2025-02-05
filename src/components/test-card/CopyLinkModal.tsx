@@ -15,6 +15,7 @@ import { customSelectStyles } from '@/constants'
 import { useGetQuestionnaireLink } from '@/api/hooks/therapistQuestionnaires/useGetQuestionnaireLink'
 import { toast } from 'react-toastify'
 import { copyLink } from '@/helpers/utils/getLink'
+import { BASE_HOST } from '@/api/interceptors'
 
 interface ICreateMaterialModalProps {
   modalOpen: boolean
@@ -67,7 +68,16 @@ export const CopyLinkModal: FC<ICreateMaterialModalProps> = ({ modalOpen, setMod
     try {
       const link = await getLink({ customerId, questionnaireId: id })
 
-      setValue('link', link, { shouldDirty: true })
+      const parts = link.split('/')
+
+      const idValue = parts[0]
+      const tokenValue = parts[1]
+
+      const newString = `id=${idValue}&token=${tokenValue}`
+
+      const url = `${BASE_HOST}/poll?${newString}`
+
+      setValue('link', url, { shouldDirty: true })
     } catch {
       toast.error('Произошла ошибка при загрузке ссылки')
     }

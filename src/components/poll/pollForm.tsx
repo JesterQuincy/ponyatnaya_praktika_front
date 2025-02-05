@@ -35,9 +35,12 @@ export function PollForm({ type, name }: PollFormProps) {
   const form = useForm<TestPollSchemaType>({
     resolver: zodResolver(TestPollSchema),
     defaultValues: {
-      title: name,
-      description: '',
-      questions: [
+      title: questionnaire?.title || name,
+      description: questionnaire?.description || '',
+      questions: questionnaire?.questions?.map((q, index) => ({
+        ...q,
+        id: q.id ?? index,
+      })) || [
         {
           id: 0,
           text: '',
@@ -46,7 +49,7 @@ export function PollForm({ type, name }: PollFormProps) {
           answerOptions: [{ id: 0, text: '', correct: true }],
         },
       ],
-      test: isTest,
+      test: questionnaire?.test || isTest,
     },
   })
 
@@ -118,15 +121,9 @@ export function PollForm({ type, name }: PollFormProps) {
     }
 
     try {
-      const questionnaireId = await createQuestionnaire.mutateAsync(payload)
+      await createQuestionnaire.mutateAsync(payload)
 
-      if (!id) {
-        const url = new URL(window.location.href)
-
-        url.searchParams.set('id', String(questionnaireId))
-
-        router.push(url.toString())
-      }
+      router.push('/tests')
     } catch {}
   })
 
