@@ -17,7 +17,7 @@ import { Spinner } from '@/components/Spinner'
 import { ViewMethodicModal } from '@/components/ui/forms/MeetForm/modals/components'
 import { useGetTypePhoto } from '@/api/hooks/photoMethods/useGetTypePhoto'
 import { toast } from 'react-toastify'
-import { IMeetProjMethod, IPhotoProjectiveMethod } from '@/types/methods/meetMethods'
+import { IMethod, IPhotoProjectiveMethod } from '@/types/methods/meetMethods'
 
 interface IMethodState {
   methodId: number
@@ -44,6 +44,7 @@ export function MeetingsListForm({ user }: ICardFormProps) {
   const [meetsList, setMeetsList] = useState<any[]>([]) // Состояние для хранения встреч
   const [showAll, setShowAll] = useState(false)
   const [method, setMethod] = useState<IMethodState | null>(null)
+  const [loadingMethodId, setLoadingMethodId] = useState<number | null>(null) // Состояние для отслеживания загружающегося метода
 
   const { data: projMethods, isLoading: isProjMethodsLoading } = useGetProjMethodsByCustomerId(id ?? '')
   const { mutateAsync: typePhotos } = useGetTypePhoto()
@@ -82,13 +83,17 @@ export function MeetingsListForm({ user }: ICardFormProps) {
     }
   }
 
-  const handleMethodClick = async (item: IMeetProjMethod) => {
+  const handleMethodClick = async (item: IMethod) => {
+    setLoadingMethodId(item.id)
+
     try {
-      const photos = await typePhotos(item.typeMethod.id)
+      const photos = await typePhotos({ customerId: user.id, typeMethodId: item.id })
 
       setMethod(() => ({ methodId: item.id, photos }))
     } catch {
       toast.error('Произошла ошибка')
+    } finally {
+      setLoadingMethodId(null)
     }
   }
 
@@ -143,17 +148,15 @@ export function MeetingsListForm({ user }: ICardFormProps) {
             <span className="font-bold text-[20px]">Проективные методики</span>
             <div className="flex flex-col gap-[10px] mt-[10px]">
               {visibleMetodics?.map((item) => (
-                <div key={item.id} className="bg-white rounded-[6px] p-[5px] flex items-center gap-[10px]">
-                  <span className="bg-[#6E6E6E] text-white text-[12px] p-[2px] rounded-[3px] text-center min-w-[75px]">
-                    {item.dateCreateMethod}
-                  </span>
+                <div key={item.id} className="bg-white rounded-[6px] p-[5px] flex items-center gap-[10px] pl-4">
                   <span
                     className="text-[15px] hover:underline cursor-pointer"
                     onClick={() => {
                       return handleMethodClick(item)
                     }}>
-                    {item.typeMethod.nameMethod}
+                    {item.nameMethod}
                   </span>
+                  {loadingMethodId === item.id && <Spinner />}
                 </div>
               ))}
             </div>

@@ -44,3 +44,33 @@ export interface IMeetProjMethod {
   photoProjectiveMethods: IPhotoProjectiveMethod[]
   customer: IClient
 }
+
+interface UserDiploma {
+  id: number
+  photoDiploma: string
+}
+
+interface User {
+  id: number
+  subscriptionActive: string
+  firstName: string
+  secondName: string
+  lastName: string
+  fullName: string
+  phoneNumber: string
+  city: string
+  mail: string
+  specialization: string
+  professionalActivityDescription: string
+  education: string
+  userImage: string
+  userDiplomasList: UserDiploma[]
+}
+
+export interface IMethod {
+  id: number
+  nameMethod: string
+  user: User
+}
+
+export type IMethodsList = IMethod[]

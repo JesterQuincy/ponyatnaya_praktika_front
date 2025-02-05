@@ -1,29 +1,15 @@
 import { axiosWithAuth } from '@/api/interceptors'
-import { DeepPartial, IMutateResponse } from '@/types/common'
 import { IPhotoProjectiveMethod } from '@/types/methods/meetMethods'
 
 export const photoMethodsService = {
-  async createPhoto(data: DeepPartial<IPhotoProjectiveMethod>): Promise<IMutateResponse> {
-    return await axiosWithAuth.post('/api/innerOptions/photoMethods', data)
-  },
-
-  async updatePhoto(data: DeepPartial<IPhotoProjectiveMethod>): Promise<IMutateResponse> {
-    return await axiosWithAuth.put('/api/innerOptions/photoMethods', data)
-  },
-
-  async deletePhoto(id: number): Promise<any> {
-    return await axiosWithAuth.delete(`/api/innerOptions/photoMethods/delete/${id}`)
-  },
-
   async getPhoto(id: number): Promise<any> {
     return await axiosWithAuth.get(`/api/innerOptions/photoMethods/get/${id}`)
   },
 
-  async getMethodTypesPhoto(typeMethodId: number) {
+  async getMethodTypesPhoto({ typeMethodId, customerId }: { typeMethodId: number; customerId: number }) {
     const { data } = await axiosWithAuth.get<IPhotoProjectiveMethod[]>(
-      `/api/innerOptions/projectiveMethods/getAllPhotos/${typeMethodId}`,
+      `/api/innerOptions/projectiveMethods/getAllPhotos/${customerId}/${typeMethodId}`,
     )
-
     return data
   },
 }

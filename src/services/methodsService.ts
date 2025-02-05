@@ -1,6 +1,6 @@
 import { axiosWithAuth } from '@/api/interceptors'
 import { IMethodic, TMethodsArray } from '@/types/methods'
-import { IMeetProjMethod, IProjectiveMethod } from '@/types/methods/meetMethods'
+import { IMeetProjMethod, IProjectiveMethod, IMethodsList } from '@/types/methods/meetMethods'
 import { DeepPartial, TPromiseNumber } from '@/types/common'
 
 export const methodsService = {
@@ -32,7 +32,7 @@ export const methodsService = {
     return await axiosWithAuth.get(`/api/innerOptions/projectiveMethods/byMeet/${meetId}`)
   },
 
-  async getProjMethodsByClient(customerId: number): Promise<{ data: IMeetProjMethod[] }> {
-    return await axiosWithAuth.get(`/api/innerOptions/projectiveMethods/byCustomer/${customerId}`)
+  async getProjMethodsByClient(customerId: number) {
+    return await axiosWithAuth.get<IMethodsList>(`/api/innerOptions/projectiveMethods/byCustomer/${customerId}`)
   },
 }
