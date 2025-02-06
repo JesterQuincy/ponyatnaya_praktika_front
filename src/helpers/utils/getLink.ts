@@ -61,9 +61,9 @@ export const copyAndLoadToClipboard = async (
     toast.error('Не удалось скопировать ссылку')
   } catch {
     toast.error('Ошибка при копировании ссылки')
+  } finally {
+    document.body.removeChild(textArea)
   }
-
-  document.body.removeChild(textArea)
 }
 
 export const copyLink = async (link: string) => {
