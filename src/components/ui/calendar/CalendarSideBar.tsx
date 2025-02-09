@@ -137,7 +137,7 @@ export default function SideBar({ children }: PropsWithChildren) {
           </Button>
         </Link>
       </nav>
-      <div className="mt-6 w-full bg-gray-100">
+      <div className="mt-6 w-full bg-gray-100 overflow-y-auto">
         <div className="text-sm mb-4">
           У вас <span className="text-orange-500 font-semibold">{meetings.length}</span> новых заявок:
         </div>
