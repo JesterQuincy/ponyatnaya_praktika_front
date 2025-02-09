@@ -151,7 +151,7 @@ export const CardFormChild = ({ user }: ICardFormProps) => {
               <InputChild form={form} name={'lastName'} label={'Фамилия ребенка'} />
               <InputChild form={form} name={'firstName'} label={'Имя ребенка'} />
               <InputChild form={form} name={'secondName'} label={'Отчество ребенка'} />
-              <InputChild type={'number'} form={form} name={'phoneNumber'} label={'Телефон ребенка'} />
+              <InputChild isPhone form={form} name={'phoneNumber'} label={'Телефон ребенка'} />
               <InputChild form={form} name={'mail'} label={'Почта ребенка'} />
               <SelectChild form={form} options={genderOptions} name={'gender'} label={'Пол ребенка'} />
               <SelectChild form={form} options={statusOptions} name={'clientStatus'} label={'Статус'} />

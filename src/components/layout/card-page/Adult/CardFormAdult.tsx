@@ -124,7 +124,7 @@ export function CardFormAdult({ user }: ICardFormProps) {
               <InputAdult form={form} name={'lastName'} label={'Фамилия'} />
               <InputAdult form={form} name={'firstName'} label={'Имя'} />
               <InputAdult form={form} name={'secondName'} label={'Отчество'} />
-              <InputAdult type={'number'} form={form} name={'phoneNumber'} label={'Телефон'} />
+              <InputAdult isPhone form={form} name={'phoneNumber'} label={'Телефон'} />
               <InputAdult form={form} name={'mail'} label={'Почта'} />
               <SelectAdult form={form} options={genderOptions} name={'gender'} label={'Пол'} />
 

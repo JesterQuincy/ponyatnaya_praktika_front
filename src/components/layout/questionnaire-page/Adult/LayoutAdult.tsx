@@ -30,10 +30,12 @@ export function LayoutAdult({ token }: IQuestionnaireLayoutProps) {
   } = form
 
   useEffect(() => {
-    if (customer) {
-      reset({ ...removeEmptyValues(customer) })
+    if (customer && !isLoadingCustomer) {
+      setTimeout(() => {
+        reset({ ...removeEmptyValues(customer) })
+      }, 0)
     }
-  }, [customer, reset])
+  }, [customer, isLoadingCustomer, reset])
 
   const onSubmit = async (data: z.infer<typeof questionnaireAdultSchema>) => {
     if (!token) return

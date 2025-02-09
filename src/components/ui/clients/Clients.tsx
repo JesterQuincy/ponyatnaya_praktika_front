@@ -37,7 +37,7 @@ function Clients() {
   const [currentPage, setCurrentPage] = useState(1)
   const [clients, setClients] = useState<IGetClientsBySearch[]>([])
   const [isLoading, setIsLoading] = useState(true)
-  const clientsPerPage = 10
+  const clientsPerPage = 8
 
   const router = useRouter()
 

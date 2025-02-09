@@ -42,7 +42,9 @@ export function LayoutCouple({ token }: IQuestionnaireLayoutProps) {
 
   useEffect(() => {
     if (couple) {
-      reset({ ...removeEmptyValues(couple) })
+      setTimeout(() => {
+        reset({ ...removeEmptyValues(couple) })
+      }, 0)
     }
   }, [couple, reset])
 

@@ -21,7 +21,7 @@ export function QuestionsAdult({ form }: QuestionsProps) {
       <InputQuestion form={form} name="lastName" label="Фамилия" />
       <InputQuestion form={form} name="firstName" label="Имя" />
       <InputQuestion form={form} name="secondName" label="Отчество" />
-      <InputQuestion form={form} name="phoneNumber" label="Телефон" type="number" />
+      <InputQuestion form={form} name="phoneNumber" label="Телефон" isPhone />
       <InputQuestion form={form} name="mail" label="Почта" />
       <SelectQuestion form={form} name="gender" label="Пол" options={genderOptions} />
       <SelectQuestion form={form} name="contactMethod" label="Откуда обратился" options={appealOptions} />

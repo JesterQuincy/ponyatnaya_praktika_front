@@ -157,7 +157,7 @@ export const CardFormCouple = ({ user }: ICardFormProps) => {
               <InputCouple form={form} name={'lastName'} label={'Фамилия первого клиента'} />
               <InputCouple form={form} name={'firstName'} label={'Имя первого клиента'} />
               <InputCouple form={form} name={'secondName'} label={'Отчество первого клиента'} />
-              <InputCouple type={'number'} form={form} name={'phoneNumber'} label={'Телефон первого клиента'} />
+              <InputCouple isPhone form={form} name={'phoneNumber'} label={'Телефон первого клиента'} />
               <InputCouple form={form} name={'mail'} label={'Почта первого клиента'} />
               <SelectCouple form={form} options={genderOptions} name={'gender'} label={'Пол первого клиента'} />
               <InputCouple
@@ -176,12 +176,7 @@ export const CardFormCouple = ({ user }: ICardFormProps) => {
               <InputCouple form={form} name={'secondPerson.lastName'} label={'Фамилия второго клиента'} />
               <InputCouple form={form} name={'secondPerson.firstName'} label={'Имя второго клиента'} />
               <InputCouple form={form} name={'secondPerson.secondName'} label={'Отчество второго клиента'} />
-              <InputCouple
-                type={'number'}
-                form={form}
-                name={'secondPerson.phoneNumber'}
-                label={'Телефон второго клиента'}
-              />
+              <InputCouple isPhone form={form} name={'secondPerson.phoneNumber'} label={'Телефон второго клиента'} />
               <InputCouple form={form} name={'secondPerson.mail'} label={'Почта второго клиента'} />
               <SelectCouple
                 form={form}
@@ -265,12 +260,7 @@ export const CardFormCouple = ({ user }: ICardFormProps) => {
                     label={'Материал для следующих сеансов из супервизии'}
                   />
                   <InputCouple form={form} name={'fullNameCotherapy'} label={'ФИО ко-терапевта'} />
-                  <InputCouple
-                    form={form}
-                    name={'phoneNumberCotherapy'}
-                    label={'Телефон ко-терапевта'}
-                    type={'number'}
-                  />
+                  <InputCouple form={form} name={'phoneNumberCotherapy'} label={'Телефон ко-терапевта'} isPhone />
                   <InputCouple form={form} name={'mailCotherapy'} label={'Почта ко-терапевта'} type={'email'} />
                   <InputCouple
                     form={form}

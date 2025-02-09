@@ -17,10 +17,11 @@ interface QuestionProps {
 
 interface InputQuestionProps extends Omit<InputHTMLAttributes<HTMLInputElement>, 'form' | 'name'>, QuestionProps {
   textarea?: boolean
+  isPhone?: boolean
 }
 
 export const InputQuestion = forwardRef<HTMLInputElement | HTMLTextAreaElement, InputQuestionProps>(
-  ({ form, name, label, textarea = false, type = 'text' }, ref) => {
+  ({ form, name, label, textarea = false, type = 'text', isPhone = false }, ref) => {
     return (
       <FormField
         control={form.control}
@@ -46,6 +47,13 @@ export const InputQuestion = forwardRef<HTMLInputElement | HTMLTextAreaElement, 
                     ref={ref as Ref<HTMLInputElement>}
                     type={type}
                     value={field.value !== null && field.value !== undefined ? String(field.value) : ''}
+                    onChange={(e) => {
+                      let value = e.target.value
+                      if (isPhone) {
+                        value = value.replace(/[^0-9+]/g, '')
+                      }
+                      field.onChange(value)
+                    }}
                   />
                 )}
               </div>

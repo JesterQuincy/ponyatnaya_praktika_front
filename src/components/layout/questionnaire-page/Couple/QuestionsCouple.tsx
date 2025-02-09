@@ -22,7 +22,7 @@ export function QuestionsCouple({ form }: QuestionsProps) {
       <InputQuestion form={form} name="lastName" label="Фамилия первого клиента" />
       <InputQuestion form={form} name="firstName" label="Имя первого клиента" />
       <InputQuestion form={form} name="secondName" label="Отчество первого клиента" />
-      <InputQuestion form={form} name="phoneNumber" label="Телефон первого клиента" type="number" />
+      <InputQuestion form={form} name="phoneNumber" label="Телефон первого клиента" isPhone />
       <InputQuestion form={form} name="mail" label="Почта первого клиента" />
       <SelectQuestion form={form} name="gender" label="Пол первого клиента" options={genderOptions} />
       <InputQuestion form={form} name="clientFirstRequestTherapyReason" label="Причина обращения первого клиента" />
@@ -37,7 +37,7 @@ export function QuestionsCouple({ form }: QuestionsProps) {
       <InputQuestion form={form} name="secondPerson.lastName" label="Фамилия второго клиента" />
       <InputQuestion form={form} name="secondPerson.firstName" label="Имя второго клиента" />
       <InputQuestion form={form} name="secondPerson.secondName" label="Отчество второго клиента" />
-      <InputQuestion form={form} type={'number'} name="secondPerson.phoneNumber" label="Телефон второго клиента" />
+      <InputQuestion form={form} isPhone name="secondPerson.phoneNumber" label="Телефон второго клиента" />
       <InputQuestion form={form} name="secondPerson.mail" label="Почта второго клиента" />
       <SelectQuestion form={form} name="secondPerson.gender" label="Пол второго клиента" options={genderOptions} />
       <InputQuestion form={form} name="secondClientRequestTherapyReason" label="Причина обращения второго клиента" />

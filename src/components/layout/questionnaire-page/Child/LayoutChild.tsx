@@ -42,7 +42,9 @@ export function LayoutChild({ token }: IQuestionnaireLayoutProps) {
 
   useEffect(() => {
     if (child) {
-      reset({ ...removeEmptyValues(child) })
+      setTimeout(() => {
+        reset({ ...removeEmptyValues(child) })
+      }, 0)
     }
   }, [child, reset])
 

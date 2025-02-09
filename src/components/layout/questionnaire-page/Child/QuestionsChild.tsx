@@ -22,7 +22,7 @@ export function QuestionsChild({ form }: QuestionsProps) {
       <InputQuestion form={form} name="lastName" label="Фамилия ребенка" />
       <InputQuestion form={form} name="firstName" label="Имя ребенка" />
       <InputQuestion form={form} name="secondName" label="Отчество ребенка" />
-      <InputQuestion form={form} name="phoneNumber" label="Телефон ребенка" type="number" />
+      <InputQuestion form={form} name="phoneNumber" label="Телефон ребенка" isPhone />
       <InputQuestion form={form} name="mail" label="Почта ребенка" />
       <SelectQuestion form={form} name="gender" label="Пол ребенка" options={genderOptions} />
       <InputQuestion
@@ -42,7 +42,7 @@ export function QuestionsChild({ form }: QuestionsProps) {
       <InputQuestion form={form} name="firstParent.lastName" label="Фамилия первого родителя" />
       <InputQuestion form={form} name="firstParent.firstName" label="Имя первого родителя" />
       <InputQuestion form={form} name="firstParent.secondName" label="Отчество первого родителя" />
-      <InputQuestion form={form} type={'number'} name="firstParent.phoneNumber" label="Телефон первого родителя" />
+      <InputQuestion form={form} isPhone name="firstParent.phoneNumber" label="Телефон первого родителя" />
       <InputQuestion form={form} name="firstParent.mail" label="Почта первого родителя" />
       <SelectQuestion form={form} name="firstParent.gender" label="Пол первого родителя" options={genderOptions} />
       {/*#endregion*/}
@@ -51,7 +51,7 @@ export function QuestionsChild({ form }: QuestionsProps) {
       <InputQuestion form={form} name="secondParent.lastName" label="Фамилия второго родителя" />
       <InputQuestion form={form} name="secondParent.firstName" label="Имя второго родителя" />
       <InputQuestion form={form} name="secondParent.secondName" label="Отчество второго родителя" />
-      <InputQuestion form={form} type={'number'} name="secondParent.phoneNumber" label="Телефон второго родителя" />
+      <InputQuestion form={form} isPhone name="secondParent.phoneNumber" label="Телефон второго родителя" />
       <InputQuestion form={form} name="secondParent.mail" label="Почта второго родителя" />
       <SelectQuestion form={form} name="secondParent.gender" label="Пол второго родителя" options={genderOptions} />
       {/*#endregion*/}

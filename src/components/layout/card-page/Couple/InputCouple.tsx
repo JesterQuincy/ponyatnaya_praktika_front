@@ -8,10 +8,11 @@ interface InputCustomProps extends Omit<InputHTMLAttributes<HTMLInputElement>, '
   form: UseFormReturn<ICoupleSchema>
   name: NonNullableNestedKeys<ICoupleSchema> // Используем тип NestedKeys для вложенных ключей
   label: string
+  isPhone?: boolean
 }
 
 export const InputCouple = forwardRef<HTMLInputElement, InputCustomProps>(
-  ({ name, form, label, type = 'text', ...props }, ref) => {
+  ({ name, form, label, type = 'text', isPhone = false, ...props }, ref) => {
     return (
       <>
         <span>{label}</span>
@@ -28,7 +29,14 @@ export const InputCouple = forwardRef<HTMLInputElement, InputCustomProps>(
                   ref={ref}
                   className="p-2 border rounded-xl border-[#D9D9D9] text-sm"
                   placeholder="Введите"
-                  value={field.value !== null && field.value !== undefined ? String(field.value) : ''} // Приводим значение к строке
+                  value={field.value !== null && field.value !== undefined ? String(field.value) : ''}
+                  onChange={(e) => {
+                    let value = e.target.value
+                    if (isPhone) {
+                      value = value.replace(/[^0-9+]/g, '')
+                    }
+                    field.onChange(value)
+                  }}
                 />
               </FormControl>
               <FormMessage className="text-orange" />
