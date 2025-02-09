@@ -133,8 +133,8 @@ export const CopyLinkModal: FC<ICreateMaterialModalProps> = ({ modalOpen, setMod
                         {...field}
                         className="text-[12px]"
                         layoutClassName={'w-full'}
-                        placeholder="Название материала"
-                        disabled
+                        placeholder="Скопируйте ссылку"
+                        // disabled
                       />
                     </FormControl>
                     <Button
