@@ -28,6 +28,10 @@ export const questionnaireService = {
     return await axiosWithAuth.post<number>('/api/questionnaire/create', data)
   },
 
+  async updateQuestionnaire(data: IQuestionnaireRequest) {
+    return await axiosWithAuth.put('/api/questionnaire', data)
+  },
+
   async getQuestionnaireById(id: string | null, token?: string | null) {
     if (token) {
       const { data } = await axiosClassic.get<IQuestionnaireRequest>(`/api/questionnaire/get/${id}`, {

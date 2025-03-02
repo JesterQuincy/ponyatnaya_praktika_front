@@ -15,6 +15,7 @@ import { useGetQuestionnaire } from '@/api/hooks/therapistQuestionnaires/useGetQ
 import { useEffect } from 'react'
 import { IQuestionnaireRequest } from '@/types/questionnaire'
 import { Input } from '@/components/ui/input'
+import { useUpdateQuestionnaire } from '@/api/hooks/therapistQuestionnaires/useUpdateQuestionnaire'
 
 type PollFormProps = {
   type: string
@@ -28,6 +29,7 @@ export function PollForm({ type, name }: PollFormProps) {
   const router = useRouter()
 
   const createQuestionnaire = useCreateQuestionnaire()
+  const updateQuestionnaire = useUpdateQuestionnaire()
   const { data: questionnaire } = useGetQuestionnaire(id)
 
   const isTest = type === 'test'
@@ -104,16 +106,22 @@ export function PollForm({ type, name }: PollFormProps) {
   }
 
   const onSubmit = handleSubmit(async (data) => {
+    const isUpdating = Boolean(id && questionnaire)
+
     const payload: IQuestionnaireRequest = {
-      id: id && questionnaire ? Number(id) : undefined,
+      ...(isUpdating && { id: Number(id) }),
       title: data.title,
       description: data.description,
       dateCreated: new Date().toISOString().split('T')[0],
       questions: data.questions
         .map((question, index) => ({
           ...question,
-          answerOptions: question.answerOptions.map((o) => ({ ...o, correct: true, id: undefined })),
-          id: id && questionnaire ? Number(data.questions[index].id) : undefined,
+          answerOptions: question.answerOptions.map((o) => ({
+            ...o,
+            correct: true,
+            id: undefined,
+          })),
+          ...(isUpdating && { id: Number(data.questions[index].id) }),
           order: index + 1, // Убедиться, что порядок обновлен
         }))
         .sort((a, b) => a.order - b.order), // Сортировка по порядку
@@ -121,7 +129,11 @@ export function PollForm({ type, name }: PollFormProps) {
     }
 
     try {
-      await createQuestionnaire.mutateAsync(payload)
+      if (isUpdating) {
+        await updateQuestionnaire.mutateAsync(payload)
+      } else {
+        await createQuestionnaire.mutateAsync(payload)
+      }
 
       router.push('/tests')
     } catch {}

@@ -17,21 +17,22 @@ import { useGetQuestionnaire } from '@/api/hooks/therapistQuestionnaires/useGetQ
 import { useEffect } from 'react'
 import { IQuestionnaireRequest } from '@/types/questionnaire'
 import { Input } from '@/components/ui/input'
+import { useUpdateQuestionnaire } from '@/api/hooks/therapistQuestionnaires/useUpdateQuestionnaire'
 
 type TestFormProps = {
   type: string // Тип (test или survey)
   name: string // Название теста/опроса
 }
 
-export function TestForm({ type, name }: TestFormProps) {
+export function TestForm({ name }: TestFormProps) {
   const searchParams = useSearchParams()
   const id = searchParams.get('id')
 
   const router = useRouter()
 
   const { data: questionnaire } = useGetQuestionnaire(id)
-
   const createQuestionnaire = useCreateQuestionnaire()
+  const updateQuestionnaire = useUpdateQuestionnaire()
 
   const form = useForm<TestSchemaType>({
     resolver: zodResolver(TestSchema),
@@ -101,17 +102,22 @@ export function TestForm({ type, name }: TestFormProps) {
   }
 
   const onSubmit = handleSubmit(async (data) => {
+    const isUpdating = Boolean(id && questionnaire)
+
     const payload: IQuestionnaireRequest = {
-      id: id && questionnaire ? Number(id) : undefined,
+      ...(isUpdating && { id: Number(id) }),
       title: data.title,
       description: data.description,
       dateCreated: new Date().toISOString().split('T')[0],
       questions: data.questions
         .map((q, index) => ({
-          id: id && questionnaire ? Number(data.questions[index].id) : undefined,
+          ...(isUpdating && { id: Number(data.questions[index].id) }),
           text: q.text,
           order: index + 1,
-          answerOptions: q.answerOptions.map((o) => ({ text: o.text, correct: o.correct })),
+          answerOptions: q.answerOptions.map((o) => ({
+            text: o.text,
+            correct: o.correct,
+          })),
           type: 'Один из списка' as const,
         }))
         .sort((a, b) => a.order - b.order),
@@ -119,7 +125,11 @@ export function TestForm({ type, name }: TestFormProps) {
     }
 
     try {
-      await createQuestionnaire.mutateAsync(payload)
+      if (isUpdating) {
+        await updateQuestionnaire.mutateAsync(payload) // Обновление
+      } else {
+        await createQuestionnaire.mutateAsync(payload) // Создание
+      }
 
       router.push('/tests')
     } catch {}
