@@ -116,10 +116,10 @@ export function PollForm({ type, name }: PollFormProps) {
       questions: data.questions
         .map((question, index) => ({
           ...question,
-          answerOptions: question.answerOptions.map((o) => ({
+          answerOptions: question.answerOptions.map((o, i) => ({
             ...o,
             correct: true,
-            id: undefined,
+            ...(isUpdating && { id: question.answerOptions[i].id }),
           })),
           ...(isUpdating && { id: Number(data.questions[index].id) }),
           order: index + 1, // Убедиться, что порядок обновлен

@@ -7,7 +7,6 @@ import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable'
 import { SortableItem } from './SortableItem'
 import { Grip, Plus } from 'lucide-react'
 import { Button } from '@/components/ui/buttons/Button'
-import { useState } from 'react'
 import { QuestionItemProps } from '@/helpers/types/testPoll'
 import Image from 'next/image'
 import variantTrash from '@/public/icon/variantTrash.svg'
@@ -16,8 +15,6 @@ export function QuestionItem({ index, removeQuestion, dragHandleProps }: Questio
   const { control, watch, setValue } = useFormContext()
 
   const sensors = useSensors(useSensor(PointerSensor))
-
-  const [optionCounter, setOptionCounter] = useState(1)
 
   const {
     fields: optionFields,
@@ -41,8 +38,7 @@ export function QuestionItem({ index, removeQuestion, dragHandleProps }: Questio
   }
 
   const handleAddOption = () => {
-    appendOption({ id: optionCounter, text: '', correct: false })
-    setOptionCounter(optionCounter + 1)
+    appendOption({ id: 0, text: '', correct: false })
   }
 
   return (

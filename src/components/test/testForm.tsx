@@ -114,9 +114,10 @@ export function TestForm({ name }: TestFormProps) {
           ...(isUpdating && { id: Number(data.questions[index].id) }),
           text: q.text,
           order: index + 1,
-          answerOptions: q.answerOptions.map((o) => ({
+          answerOptions: q.answerOptions.map((o, i) => ({
             text: o.text,
             correct: o.correct,
+            ...(isUpdating && { id: q.answerOptions[i].id }),
           })),
           type: 'Один из списка' as const,
         }))

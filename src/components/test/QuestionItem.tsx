@@ -25,7 +25,7 @@ export function QuestionItem({ index, removeQuestion, dragHandleProps }: Questio
 
   // Добавление нового варианта ответа
   const addAnswerOption = () => {
-    const newOption = { id: Date.now(), text: '', correct: false } // По умолчанию неправильный
+    const newOption = { id: 0, text: '', correct: false } // По умолчанию неправильный
     setValue(`questions.${index}.answerOptions`, [...answerOptions, newOption])
   }
 
