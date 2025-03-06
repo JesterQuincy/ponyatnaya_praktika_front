@@ -59,6 +59,11 @@ export const AddClientModal: FC<IAddClientModalProps> = ({ isOpen, onClose }) =>
     onClose()
   }
 
+  const handleChangeType = (value: string) => {
+    reset()
+    setClientType(value)
+  }
+
   const { mutate } = useMutation({
     mutationKey: ['addUser'],
     mutationFn: (data: UserMeeting) => {
@@ -165,7 +170,9 @@ export const AddClientModal: FC<IAddClientModalProps> = ({ isOpen, onClose }) =>
                   className="mr-[5px]"
                   value="adult"
                   checked={clientType === 'adult'}
-                  onChange={(e) => setClientType(e.target.value)}
+                  onChange={(e) => {
+                    handleChangeType(e.target.value)
+                  }}
                 />
                 Взрослый
               </div>
@@ -175,7 +182,9 @@ export const AddClientModal: FC<IAddClientModalProps> = ({ isOpen, onClose }) =>
                   className="mr-[5px]"
                   value="child"
                   checked={clientType === 'child'}
-                  onChange={(e) => setClientType(e.target.value)}
+                  onChange={(e) => {
+                    handleChangeType(e.target.value)
+                  }}
                 />
                 Ребёнок
               </div>
@@ -185,7 +194,9 @@ export const AddClientModal: FC<IAddClientModalProps> = ({ isOpen, onClose }) =>
                   className="mr-[5px]"
                   value="couple"
                   checked={clientType === 'couple'}
-                  onChange={(e) => setClientType(e.target.value)}
+                  onChange={(e) => {
+                    handleChangeType(e.target.value)
+                  }}
                 />
                 Пара
               </div>
