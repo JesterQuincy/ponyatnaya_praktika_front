@@ -25,6 +25,7 @@ interface IMeeting {
 export default function CalendarBody() {
   const [events, setEvents] = useState<any[]>([])
   const [viewType, setViewType] = useState('')
+  const [currentYear, setCurrentYear] = useState(new Date().getFullYear())
   const router = useRouter()
 
   const generateEvents = (serverData: { clientsData: any[] }) => {
@@ -44,8 +45,6 @@ export default function CalendarBody() {
 
   const fetchData = async () => {
     try {
-      const currentYear = new Date().getFullYear()
-
       const serverData = await calendarService.getCalendarData(currentYear)
 
       const generatedEvents = generateEvents(serverData.data)
@@ -58,7 +57,7 @@ export default function CalendarBody() {
 
   useEffect(() => {
     fetchData()
-  }, [])
+  }, [currentYear])
 
   const handleEventClick = (eventInfo: EventClickArg) => {
     router.push(`/meet?id=${eventInfo.event.extendedProps.id}`)
@@ -68,6 +67,13 @@ export default function CalendarBody() {
     <div className={styles.MainContainer}>
       <div>
         <FullCalendar
+          datesSet={(dateInfo) => {
+            const newYear = dateInfo.view.currentStart.getFullYear()
+
+            if (newYear !== currentYear) {
+              setCurrentYear(newYear)
+            }
+          }}
           plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
           headerToolbar={{
             left: 'title',
