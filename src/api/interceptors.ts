@@ -3,8 +3,7 @@ import { getTokens, removeTokenStorage } from '@/services/auth-token.service'
 import { errorCatch } from '@/api/error'
 import { authService } from '@/services/auth.service'
 
-// export const BASE_HOST = 'http://localhost:3330'
-export const BASE_HOST = 'http://xn----7sbba3blbsaikfnxh3rd.xn--p1ai'
+export const BASE_HOST = process.env.NEXT_PUBLIC_BASE_HOST
 
 const options: CreateAxiosDefaults = {
   baseURL: process.env.NEXT_PUBLIC_API_URL,
