@@ -49,6 +49,17 @@ export default function AccountPublic({ form, UserId }: AccountProps & { UserId:
   const clickRef = () => {
     if (inputRef.current) inputRef.current.click()
   }
+
+  const openPdfinWindow = (data: Base64URLString) => {
+    // Для PDF надо создать blob URL чтобы открыть в новой вкладке
+    const pdfData = data.split(',')[1]
+    const binaryData = atob(pdfData)
+    const blob = new Blob([new Uint8Array([...binaryData].map((char) => char.charCodeAt(0)))], {
+      type: 'application/pdf',
+    })
+    const pdfUrl = URL.createObjectURL(blob)
+    window.open(pdfUrl, '_blank')
+  }
   return (
     <>
       <InputAccount form={form} name="specialization" label="Специализация" textarea={true} />
@@ -65,16 +76,32 @@ export default function AccountPublic({ form, UserId }: AccountProps & { UserId:
           {(userDiplomas || []).map((el, id) => {
             return (
               <div className="flex flex-col" key={id}>
-                <Image
-                  width={100}
-                  height={150}
-                  className="h-min-[150px] cursor-pointer"
-                  src={el.photoDiploma}
-                  alt=""
-                  onClick={() => {
-                    setSelectedImage(el.photoDiploma)
-                  }}
-                />
+                {el.photoDiploma.startsWith('data:image/') ? (
+                  <Image
+                    width={100}
+                    height={150}
+                    className="h-min-[150px] cursor-pointer"
+                    src={el.photoDiploma}
+                    alt=""
+                    onClick={() => {
+                      setSelectedImage(el.photoDiploma)
+                    }}
+                  />
+                ) : (
+                  <div className="relative w-'100px' h-100 overflow-hidden">
+                    <iframe
+                      src={el.photoDiploma}
+                      width="100"
+                      height="150"
+                      title="PDF Preview"
+                      className="pointer-events-none border-none overflow-hidden"
+                    />
+                    <div
+                      onClick={() => openPdfinWindow(el.photoDiploma)}
+                      className="absolute top-0 left-0 min-w-full min-h-full cursor-pointer z-10 overflow-hidden"
+                    />
+                  </div>
+                )}
                 <Button
                   onClick={() => deleteDiplom(id)}
                   className="w-[30px] h-8 flex p-0 rounded-none mt-2"
@@ -94,7 +121,7 @@ export default function AccountPublic({ form, UserId }: AccountProps & { UserId:
             ref={inputRef}
             className="hidden"
             type="file"
-            accept=".png, .jpg, .webp"
+            accept=".png, .jpg, .webp, .pdf"
             onChange={(e) => {
               if (e.target.files && e.target.files.length > 0) setDiplomas(e.target.files)
             }}
