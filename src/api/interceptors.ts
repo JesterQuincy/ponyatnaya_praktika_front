@@ -4,10 +4,9 @@ import { errorCatch } from '@/api/error'
 import { authService } from '@/services/auth.service'
 
 // export const BASE_HOST = 'http://localhost:3330'
-export const BASE_HOST = 'http://xn----7sbba3blbsaikfnxh3rd.xn--p1ai:3000'
+export const BASE_HOST = 'http://xn----7sbba3blbsaikfnxh3rd.xn--p1ai'
 
 const options: CreateAxiosDefaults = {
-  // baseURL: 'http://195.151.1.151:3330/',
   baseURL: process.env.NEXT_PUBLIC_API_URL,
   headers: {
     'Content-Type': 'application/json',
