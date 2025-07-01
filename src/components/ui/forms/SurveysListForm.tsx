@@ -86,7 +86,7 @@ export function SurveysListForm({ user }: ICardFormProps) {
       </div>
       <div className="w-[30%]">
         <div className="bg-[#F1F1F1] rounded-[4px] py-[29px] px-[11px]">
-          <h2 className="text-center text-lg font-semibold mb-4">Панель фильтрации</h2>
+          <h2 className="text-center text-lg font-semibold mb-4">Панель сортировки</h2>
           <div className="flex flex-col gap-4">
             {/* Тип */}
             <div className="flex items-center gap-2">
@@ -137,7 +137,7 @@ export function SurveysListForm({ user }: ICardFormProps) {
                 onClick={() => {
                   setSort({ type: '', date: '' })
                 }}>
-                Сбросить фильтр
+                Сбросить сортировку
               </Button>
             </div>
           </div>
