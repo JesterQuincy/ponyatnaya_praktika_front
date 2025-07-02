@@ -8,11 +8,13 @@ export const clientService = {
     offset: number = 0,
     customerName: string,
   ): Promise<{ data: IGetClientsBySearch[] }> {
-    return await axiosWithAuth.get(`/api/v1/General/searchPersons/${offset}/${limit}`, {
-      params: {
-        customerName,
-      },
-    })
+    return await axiosWithAuth
+      .get(`/api/v1/General/searchPersons/${offset}/${limit}`, {
+        params: {
+          customerName,
+        },
+      })
+      .then((res) => res.data)
   },
 
   async getClientById(id: number): Promise<any> {
