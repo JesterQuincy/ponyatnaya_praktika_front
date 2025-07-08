@@ -2,9 +2,9 @@
 
 import styles from '@/styles/calendarbody.module.css'
 import FullCalendar from '@fullcalendar/react'
-import dayGridPlugin from '@fullcalendar/daygrid'
 import timeGridPlugin from '@fullcalendar/timegrid'
 import interactionPlugin from '@fullcalendar/interaction'
+import multiMonthPlugin from '@fullcalendar/multimonth'
 import { calendarService } from '@/services/calendar.service'
 import moment from 'moment'
 import 'moment/locale/ru'
@@ -12,7 +12,7 @@ import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { EventClickArg } from '@fullcalendar/core'
 
-moment.locale('kz')
+moment.locale('ru')
 
 interface IMeeting {
   startTime: moment.MomentInput
@@ -74,19 +74,19 @@ export default function CalendarBody() {
               setCurrentYear(newYear)
             }
           }}
-          plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
+          plugins={[timeGridPlugin, interactionPlugin, multiMonthPlugin]}
           headerToolbar={{
-            left: 'title',
-            center: 'timeGridDay,timeGridWeek,dayGridYear',
-            right: 'prev,today,next',
+            start: 'prev,today,next',
+            right: 'timeGridDay,timeGridWeek,multiMonthYear',
+            center: 'title',
           }}
-          initialView="dayGridYear"
-          initialDate={new Date()}
+          initialView="multiMonthYear"
+          initialDate={new Date(currentYear, 0, 1)}
           fixedWeekCount={true}
           slotMinTime="00:00:00"
           slotMaxTime="24:00:00"
           slotDuration="00:30:00"
-          locale="kz"
+          locale="ru"
           titleFormat={{ year: 'numeric', month: 'long' }}
           buttonText={{
             today: 'Сегодня',
@@ -94,6 +94,7 @@ export default function CalendarBody() {
             month: 'Месяц',
             week: 'Неделя',
             year: 'Месяц',
+            multiMonthYear: 'Год',
           }}
           slotLabelFormat={{
             hour: '2-digit',
@@ -163,6 +164,19 @@ export default function CalendarBody() {
           eventClassNames="w-full h-full hover:cursor-pointer"
           eventClick={(event) => {
             handleEventClick(event)
+          }}
+          views={{
+            multiMonthYear: {
+              type: 'multiMonth',
+              duration: { months: 12 },
+              multiMonthMaxColumns: 1,
+              multiMonthMinWidth: 300,
+              showNonCurrentDates: true,
+              firstDay: 1,
+              fixedWeekCount: false,
+              dayHeaders: true,
+              dayHeaderFormat: { weekday: 'short' },
+            },
           }}
         />
       </div>
