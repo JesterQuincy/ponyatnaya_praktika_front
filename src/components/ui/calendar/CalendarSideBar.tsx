@@ -4,7 +4,6 @@ import React, { PropsWithChildren, useEffect, useState } from 'react'
 import Image from 'next/image'
 import PersonPhoto from '@/public/person-default.png'
 import ExitLogo from '@/public/Out.png'
-import LetterLogo from '@/public/img/letterLogo.svg'
 import { calendarService } from '@/services/calendar.service'
 import { authService } from '@/services/auth.service'
 import { Button } from '@/components/ui/button'
@@ -12,6 +11,7 @@ import { usePathname, useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { ClientIcon, CalendarIcon, TestsIcon } from '@/components/ui/calendar/icons'
 import Logo from '@/public/Logo.png'
+import { NotificationIcon } from '@/components/ui/calendar/icons/NotificationIcon'
 
 const iconColor = {
   0: '#B0B0B0',
@@ -22,7 +22,7 @@ const iconColor = {
 
 export default function SideBar({ children }: PropsWithChildren) {
   const [showAll, setShowAll] = useState(false)
-  const [meetings, setMeetings] = useState([])
+  const [meetings, setMeetings] = useState<{ applicationFormStatus: number }[]>([])
   const [userData, setUserData] = useState(null)
 
   const router = useRouter()
@@ -173,8 +173,7 @@ export default function SideBar({ children }: PropsWithChildren) {
                 }
               </div>
               <div>
-                {/* @ts-ignore*/}
-                <LetterLogo width={13} color={iconColor[meeting.applicationFormStatus as keyof typeof iconColor]} />
+                <NotificationIcon color={iconColor[meeting.applicationFormStatus as keyof typeof iconColor]} />
               </div>
               <div className="text-[12px] font-montserrat text-black font-normal">
                 {
