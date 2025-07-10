@@ -2,7 +2,6 @@
 
 import React, { PropsWithChildren, useEffect, useState } from 'react'
 import Image from 'next/image'
-import Logo from '@/public/LogoSVG.svg'
 import PersonPhoto from '@/public/person-default.png'
 import ExitLogo from '@/public/Out.png'
 import LetterLogo from '@/public/img/letterLogo.svg'
@@ -12,6 +11,14 @@ import { Button } from '@/components/ui/button'
 import { usePathname, useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { ClientIcon, CalendarIcon, TestsIcon } from '@/components/ui/calendar/icons'
+import Logo from '@/public/Logo.png'
+
+const iconColor = {
+  0: '#B0B0B0',
+  1: '#4A90E2',
+  2: '#BACF69',
+  3: '#ED5849',
+}
 
 export default function SideBar({ children }: PropsWithChildren) {
   const [showAll, setShowAll] = useState(false)
@@ -32,7 +39,6 @@ export default function SideBar({ children }: PropsWithChildren) {
         const response = await calendarService.getNotifications()
 
         const serverData = response.data.notificationResponseList
-
         const transformedMeetings = serverData.map((item: any) => ({
           date: new Date(item.dateFirstRequest).toLocaleDateString('ru-RU', {
             day: '2-digit',
@@ -42,6 +48,7 @@ export default function SideBar({ children }: PropsWithChildren) {
           name: item.customerFullName,
           id: item.customerId,
           clientType: item.clientType,
+          applicationFormStatus: item.applicationFormStatus,
         }))
 
         setMeetings(transformedMeetings)
@@ -74,7 +81,7 @@ export default function SideBar({ children }: PropsWithChildren) {
   const userImage = userData?.userPicture || PersonPhoto
 
   const displayedMeetings = showAll ? meetings : meetings.slice(0, 6)
-
+  console.log(displayedMeetings, 'displayedMeetings')
   const handleExitOut = () => {
     authService.logout().then()
 
@@ -91,19 +98,29 @@ export default function SideBar({ children }: PropsWithChildren) {
 
   return (
     <div className="flex flex-col max-w-[300px] rounded-xl items-center bg-white shadow-lg p-4 sticky top-sidebar h-sidebar">
-      <Image src={Logo} alt="Logo company" width={400} onClick={returnToCalendar} className="hover:cursor-pointer" />
+      <Image
+        src={Logo}
+        alt="Logo company"
+        width={400}
+        height={54}
+        onClick={returnToCalendar}
+        className="hover:cursor-pointer"
+      />
       <hr className="my-4 h-0.5 w-full border-gray" />
       <div className="flex flex-col items-center">
         <div className="rounded-full overflow-hidden">
           <Image src={userImage} alt="Person Foto" width={100} height={100} />
         </div>
         <div className="text-xl font-semibold mb-1">Привет, {userName}!</div>
-        <div className="text-sm text-gray-600 flex items-center">
+        <div className="text-sm text-gray-600 flex flex-col items-center">
           {userMail}
-          <Image src={ExitLogo} alt="Выйти" className="ml-2 cursor-pointer" onClick={handleExitOut} />
+          <div className="flex items-center mt-4 text-sm text-orange cursor-pointer" onClick={handleExitOut}>
+            Выйти
+            <Image src={ExitLogo} alt="Выйти" className="ml-2" />
+          </div>
         </div>
       </div>
-      <nav className="mt-[50px] flex flex-col space-y-2 w-full">
+      <nav className="mt-[30px] flex flex-col space-y-2 w-full">
         <Link href="/account">
           <Button
             variant="link"
@@ -149,13 +166,16 @@ export default function SideBar({ children }: PropsWithChildren) {
               onClick={() => handleEventClick(meeting)}
               style={{ zIndex: index }}
               className={`flex relative gap-[6px] whitespace-nowrap overflow-hidden text-ellipsis shadow-[0px_-5px_11px_0px_#0000002E] items-center rounded-t-[8px] flex-row py-[8px] pl-[8px] hover:cursor-pointer `}>
-              <div className="text-[9px] rounded-[8px] text-white bg-[#6E6E6E] px-[3px]">
+              <div className="text-[9px] rounded-[8px] text-white bg-[#6E6E6E] px-[3px] w-[56px]">
                 {
                   //@ts-ignore
                   meeting.date
                 }
               </div>
-              <Image src={LetterLogo} alt="Calendar" />
+              <div>
+                {/* @ts-ignore*/}
+                <LetterLogo width={13} color={iconColor[meeting.applicationFormStatus as keyof typeof iconColor]} />
+              </div>
               <div className="text-[12px] font-montserrat text-black font-normal">
                 {
                   //@ts-ignore
