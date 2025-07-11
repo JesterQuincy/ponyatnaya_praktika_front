@@ -84,7 +84,7 @@ export function Login() {
           </div>
         </form>
         <div className="flex justify-center mt-4 items-center">
-          <FeedLogo />
+          <Image src={FeedLogo} alt="Logo company" width={18} height={18} />
           <Link href="/contact-developers" className="ml-2 text-blackMedium underline">
             Связь с разработчиками
           </Link>
