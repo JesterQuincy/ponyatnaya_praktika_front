@@ -1,8 +1,13 @@
 .MainContainer {
     width: 100%;
-    height: fit-content;
+    height: var(--main-content);
     border-radius: 6px;
     background: white;
+
+}
+
+.MainContainer > div {
+    height: 100%;
 }
 
 .calendarTitle {

@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button'
 import { Form, FormControl, FormField, FormItem, FormMessage } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { registrationSchema } from '@/models/registrationSchema'
-import Logo from '@/public/img/authLogo.svg'
+import Logo from '@/public/img/authLogo.png'
 import FeedLogo from '@/public/img/feedBack.svg'
 import AuthLogo from '@/public/icon/auth.svg'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -155,8 +155,8 @@ export function Registration() {
             Уже зарегистрирован
           </Link>
         </div>
-        <div className="flex justify-center mt-4">
-          <Image src={FeedLogo} width={13} height={13} alt="Feedback Logo" />
+        <div className="flex justify-center mt-4 items-center">
+          <Image src={FeedLogo} alt="Logo company" width={18} height={18} />
           <Link href="/contact-developers" className="ml-2 text-blackMedium underline">
             Связь с разработчиками
           </Link>

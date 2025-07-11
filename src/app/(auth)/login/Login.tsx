@@ -8,7 +8,7 @@ import { useRouter } from 'next/navigation'
 import { useMutation } from '@tanstack/react-query'
 import { authService } from '@/services/auth.service'
 import { toast } from 'react-toastify'
-import Logo from '@/public/img/authLogo.svg'
+import Logo from '@/public/img/authLogo.png'
 import FeedLogo from '@/public/img/feedBack.svg'
 import Image from 'next/image'
 import { Checkbox } from '@/components/ui/checkbox'
@@ -83,8 +83,8 @@ export function Login() {
             </Link>
           </div>
         </form>
-        <div className="flex justify-center mt-4">
-          <Image src={FeedLogo} width={13} height={13} alt="svg" />
+        <div className="flex justify-center mt-4 items-center">
+          <Image src={FeedLogo} alt="Logo company" width={18} height={18} />
           <Link href="/contact-developers" className="ml-2 text-blackMedium underline">
             Связь с разработчиками
           </Link>

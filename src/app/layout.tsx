@@ -24,7 +24,7 @@ const ebGaramond = EB_Garamond({
 })
 
 export const metadata: Metadata = {
-  title: 'Ponytail_practical',
+  title: 'Понятная практика',
   description: 'Best Project Ever',
 }
 
