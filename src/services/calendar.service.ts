@@ -1,15 +1,9 @@
-import { axiosClassic, axiosWithAuth } from '@/api/interceptors'
+import { axiosWithAuth } from '@/api/interceptors'
 import { UserMeeting } from '@/helpers/types/calendar'
 
 export const calendarService = {
   async createMeeting(data: UserMeeting): Promise<any> {
     return await axiosWithAuth.post('/api/meet', data)
-  },
-  async getMeetingById(id: number): Promise<any> {
-    return await axiosClassic.get(`meet/get/${id}`)
-  },
-  async deleteMeeting(id: number): Promise<any> {
-    await axiosClassic.delete(`meet/${id}`)
   },
   async createAdultUser(data: UserMeeting): Promise<any> {
     return await axiosWithAuth.post('api/customer', data)
