@@ -10,6 +10,8 @@ export const useDeleteMeeting = () => {
     mutationFn: (id: number) => meetingService.deleteMeeting(id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [EInvalidationTags.MEET_ID] })
+      queryClient.invalidateQueries({ queryKey: [EInvalidationTags.CALENDAR] })
+      queryClient.refetchQueries({ queryKey: [EInvalidationTags.CALENDAR] })
     },
   })
 }

@@ -4,6 +4,7 @@ export enum EInvalidationTags {
   CLIENT = 'client',
   CHILD = 'child',
   COUPLE = 'couple',
+  MEET = 'meet',
   MEET_ID = 'meet_id',
   METHOD = 'method',
   MEET_METHOD = 'meet_method',
@@ -11,4 +12,5 @@ export enum EInvalidationTags {
   ACCOUNT_INFO = 'account_info',
   QUESTIONNAIRES = 'questionnaires',
   QUESTIONNAIRES_CLIENT = 'questionnaires_client',
+  CALENDAR = 'calendar',
 }

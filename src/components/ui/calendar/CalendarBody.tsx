@@ -5,67 +5,53 @@ import FullCalendar from '@fullcalendar/react'
 import timeGridPlugin from '@fullcalendar/timegrid'
 import interactionPlugin from '@fullcalendar/interaction'
 import multiMonthPlugin from '@fullcalendar/multimonth'
-import { calendarService } from '@/services/calendar.service'
 import moment from 'moment'
 import 'moment/locale/ru'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { EventClickArg } from '@fullcalendar/core'
+import { useGetCalendarData } from '@/api/hooks/calendar/useGetCalendarData'
 
 moment.locale('ru')
 
-interface IMeeting {
-  startTime: moment.MomentInput
-  endTime: any
-  formatMeet: any
-  id: number
-  title: string
-}
-
 export default function CalendarBody() {
-  const [events, setEvents] = useState<any[]>([])
   const [viewType, setViewType] = useState('')
   const [currentYear, setCurrentYear] = useState(new Date().getFullYear())
   const router = useRouter()
 
-  const generateEvents = (serverData: { clientsData: any[] }) => {
-    return serverData.clientsData.flatMap((client) =>
-      client.meetings.map((meeting: IMeeting) => ({
-        title: `${client.fullName || meeting.title}`,
-        start: meeting.startTime,
-        end: meeting.endTime,
-        allDay: false,
-        extendedProps: {
-          formatMeet: meeting.formatMeet,
-          id: meeting.id,
-        },
-      })),
-    )
-  }
-
-  const fetchData = async () => {
-    try {
-      const serverData = await calendarService.getCalendarData(currentYear)
-
-      const generatedEvents = generateEvents(serverData.data)
-
-      setEvents([...generatedEvents])
-    } catch (error) {
-      console.error('Ошибка при загрузке данных:', error)
-    }
-  }
-
-  useEffect(() => {
-    fetchData()
-  }, [currentYear])
+  const { data: events } = useGetCalendarData(currentYear)
 
   const handleEventClick = (eventInfo: EventClickArg) => {
     router.push(`/meet?id=${eventInfo.event.extendedProps.id}`)
   }
 
+  const calendarWrapperRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      const todayCell = calendarWrapperRef.current?.querySelector(
+        '[data-date="' + moment().format('YYYY-MM-DD') + '"]',
+      ) as HTMLElement | null
+
+      if (todayCell) {
+        todayCell.scrollIntoView({ behavior: 'smooth', block: 'center' })
+      }
+    }, 500)
+
+    return () => clearTimeout(timeout)
+  }, [])
+
   return (
-    <div className={styles.MainContainer}>
+    <div className={styles.MainContainer} ref={calendarWrapperRef}>
       <FullCalendar
+        initialView="multiMonthYear"
+        initialDate={new Date(currentYear, 0, 1)}
+        // TODO: Добавить контекстное меню
+        // eventDidMount={(eventInfo) => {
+        //   eventInfo.el.addEventListener('contextmenu', (e) => {
+        //     e.preventDefault()
+        //   })
+        // }}
         datesSet={(dateInfo) => {
           const newYear = dateInfo.view.currentStart.getFullYear()
 
@@ -79,8 +65,6 @@ export default function CalendarBody() {
           right: 'timeGridDay,timeGridWeek,multiMonthYear',
           center: 'title',
         }}
-        initialView="multiMonthYear"
-        initialDate={new Date(currentYear, 0, 1)}
         fixedWeekCount={true}
         slotMinTime="00:00:00"
         slotMaxTime="24:00:00"
@@ -123,12 +107,6 @@ export default function CalendarBody() {
         }}
         viewDidMount={(info) => setViewType(info.view.type)}
         events={events}
-        // TODO: Добавить контекстное меню
-        // eventDidMount={(eventInfo) => {
-        //   eventInfo.el.addEventListener('contextmenu', (e) => {
-        //     e.preventDefault()
-        //   })
-        // }}
         eventContent={(eventInfo) => {
           const { formatMeet } = eventInfo.event.extendedProps
           let bgColor = 'bg-[#52525233]'

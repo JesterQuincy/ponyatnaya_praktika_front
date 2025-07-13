@@ -14,6 +14,8 @@ export const useUpdateMeeting = () => {
     onSuccess: () => {
       toast.success('Вы успешно обновили встречу')
       queryClient.invalidateQueries({ queryKey: [EInvalidationTags.MEET_ID] })
+      queryClient.invalidateQueries({ queryKey: [EInvalidationTags.CALENDAR] })
+      queryClient.refetchQueries({ queryKey: [EInvalidationTags.CALENDAR] })
     },
     onError: () => {
       toast.error('Ошибка при обновлении встречи')
