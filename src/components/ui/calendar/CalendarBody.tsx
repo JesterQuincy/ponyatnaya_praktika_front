@@ -31,7 +31,7 @@ export default function CalendarBody() {
   const generateEvents = (serverData: { clientsData: any[] }) => {
     return serverData.clientsData.flatMap((client) =>
       client.meetings.map((meeting: IMeeting) => ({
-        title: `${client.fullName || meeting.title} - ${moment(meeting.startTime).format('HH:mm')}`,
+        title: `${client.fullName || meeting.title}`,
         start: meeting.startTime,
         end: meeting.endTime,
         allDay: false,
@@ -123,6 +123,7 @@ export default function CalendarBody() {
         }}
         viewDidMount={(info) => setViewType(info.view.type)}
         events={events}
+        // TODO: Добавить контекстное меню
         // eventDidMount={(eventInfo) => {
         //   eventInfo.el.addEventListener('contextmenu', (e) => {
         //     e.preventDefault()
@@ -147,9 +148,6 @@ export default function CalendarBody() {
             return (
               <div className={`w-full h-full p-2 flex flex-col gap-[10px] ${bgColor}`}>
                 <div className="flex justifty-start items-center gap-[5px] w-full">
-                  <span className="text-xs text-gray-600 text-black">
-                    {moment(eventInfo.event.start).format('HH:mm')}
-                  </span>
                   <span className={`px-2 text-xs font-medium rounded ${badgeColor} text-white`}>{badgeText}</span>
                 </div>
                 <div className="mt-1 text-sm font-semibold text-black truncate">{eventInfo.event.title}</div>
