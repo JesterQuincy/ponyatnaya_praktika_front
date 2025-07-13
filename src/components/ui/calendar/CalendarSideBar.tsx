@@ -12,6 +12,8 @@ import Link from 'next/link'
 import { ClientIcon, CalendarIcon, TestsIcon } from '@/components/ui/calendar/icons'
 import Logo from '@/public/Logo.png'
 import { NotificationIcon } from '@/components/ui/calendar/icons/NotificationIcon'
+import { useGetUserInfo } from '@/api/hooks/account/useGetUserInfo'
+import { Skeleton } from '@/components/ui/skeleton'
 
 const iconColor = {
   0: '#B0B0B0',
@@ -23,9 +25,10 @@ const iconColor = {
 export default function SideBar({ children }: PropsWithChildren) {
   const [showAll, setShowAll] = useState(false)
   const [meetings, setMeetings] = useState<{ applicationFormStatus: number }[]>([])
-  const [userData, setUserData] = useState(null)
 
   const router = useRouter()
+
+  const { data: userData } = useGetUserInfo()
 
   const handleEventClick = (meeting: any) => {
     router.push(`/card/${meeting.id}?clientType=${meeting.clientType}`)
@@ -56,32 +59,20 @@ export default function SideBar({ children }: PropsWithChildren) {
         console.error('Ошибка при загрузке уведомлений:', error)
       }
     }
-    const fetchUserInfo = async () => {
-      try {
-        const response: any = await calendarService.getUserInfo()
-        setUserData(response.data)
-      } catch (error) {
-        console.error('Ошибка при загрузке данных пользователя:', error)
-      }
-    }
 
     fetchNotifications()
-    fetchUserInfo()
   }, [])
 
   const returnToCalendar = () => {
     router.push('/calendar')
   }
 
-  // @ts-ignore
-  const userName = userData?.userName || 'не удалось загрузить'
-  // @ts-ignore
-  const userMail = userData?.userMail || 'не удалось загрузить'
-  // @ts-ignore
+  const userName = userData?.userName || <Skeleton className="w-[100px] h-5" />
+  const userMail = userData?.userMail || <Skeleton className="w-[100px] h-5" />
   const userImage = userData?.userPicture || PersonPhoto
 
   const displayedMeetings = showAll ? meetings : meetings.slice(0, 6)
-  console.log(displayedMeetings, 'displayedMeetings')
+
   const handleExitOut = () => {
     authService.logout().then()
 
@@ -108,10 +99,10 @@ export default function SideBar({ children }: PropsWithChildren) {
       />
       <hr className="my-4 h-0.5 w-full border-gray" />
       <div className="flex flex-col items-center">
-        <div className="rounded-full overflow-hidden">
+        <div className="rounded-full overflow-hidden w-[100px] h-[100px]">
           <Image src={userImage} alt="Person Foto" width={100} height={100} />
         </div>
-        <div className="text-xl font-semibold mb-1">Привет, {userName}!</div>
+        <div className="text-xl font-semibold  flex items-center">Привет, {userName}!</div>
         <div className="text-sm text-gray-600 flex flex-col items-center">
           {userMail}
           <div className="flex items-center mt-4 text-sm text-orange cursor-pointer" onClick={handleExitOut}>
