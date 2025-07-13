@@ -8,7 +8,7 @@ export enum EInvalidationTags {
   METHOD = 'method',
   MEET_METHOD = 'meet_method',
   ACCOUNT = 'account',
-  QUESTIONNAIRE_LINK = 'questionnaire_link',
+  ACCOUNT_INFO = 'account_info',
   QUESTIONNAIRES = 'questionnaires',
   QUESTIONNAIRES_CLIENT = 'questionnaires_client',
 }

@@ -8,11 +8,11 @@ export function useUpdateAccount() {
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationKey: [EInvalidationTags.ACCOUNT],
+    mutationKey: [EInvalidationTags.ACCOUNT_INFO],
     mutationFn: (data: IAccount) => accountService.updateAccount(data),
     onSuccess: () => {
       toast.success('Успешно обновленно')
-      queryClient.invalidateQueries({ queryKey: [EInvalidationTags.ACCOUNT] })
+      queryClient.invalidateQueries({ queryKey: [EInvalidationTags.ACCOUNT_INFO] })
     },
     onError: () => {
       toast.error('Ошибка при обновлении')

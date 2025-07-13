@@ -72,7 +72,6 @@ export function SelectQuestion({ form, name, label, options }: QuestionProps & {
       control={form.control}
       name={name}
       render={({ field }) => {
-        console.log(field.value, 'value')
         return (
           <FormItem>
             <FormControl>
