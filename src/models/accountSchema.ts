@@ -6,9 +6,9 @@ const diplomSchema = z.object({
 })
 
 export const accountSchema = z.object({
-  firstName: z.string(),
+  firstName: z.string().refine((val) => !!val.trim(), 'Имя обязательно'),
   secondName: z.string().optional().nullable(),
-  lastName: z.string(),
+  lastName: z.string().refine((val) => !!val.trim(), 'Фамилия обязательна'),
   city: z.string().optional().nullable(),
   phoneNumber: z.string().optional().nullable(),
   mail: z.string().email('Некорректный адрес электронной почты').optional().nullable(),

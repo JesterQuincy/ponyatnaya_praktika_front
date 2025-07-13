@@ -123,6 +123,11 @@ export default function CalendarBody() {
         }}
         viewDidMount={(info) => setViewType(info.view.type)}
         events={events}
+        // eventDidMount={(eventInfo) => {
+        //   eventInfo.el.addEventListener('contextmenu', (e) => {
+        //     e.preventDefault()
+        //   })
+        // }}
         eventContent={(eventInfo) => {
           const { formatMeet } = eventInfo.event.extendedProps
           let bgColor = 'bg-[#52525233]'

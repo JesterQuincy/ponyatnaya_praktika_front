@@ -21,9 +21,7 @@ export const calendarService = {
   async getNotifications(): Promise<any> {
     return await axiosWithAuth.get(`api/v1/General/leftMenu/notification`)
   },
-  async getUserInfo(): Promise<any> {
-    return await axiosWithAuth.get(`/api/v1/General/leftMenu/userInfo`)
-  },
+
   async getCalendarData(year: number): Promise<any> {
     return await axiosWithAuth.get(`/api/v1/General/calendarData/get/${year}`)
   },
