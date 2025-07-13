@@ -2,12 +2,12 @@ import React, { useState } from 'react'
 import Modal from 'react-modal'
 import styles from '@/styles/AddMeetModal.module.css'
 import { useForm, SubmitHandler } from 'react-hook-form'
-import { useMutation } from '@tanstack/react-query'
 import { calendarService } from '@/services/calendar.service'
 import { toast } from 'react-toastify'
 import { UserMeeting } from '@/helpers/types/calendar'
 import Select from 'react-select'
 import { customSelectStyles } from '@/constants/customStyles'
+import { useCreateMeeting } from '@/api/hooks/meet/useCreateMeeting'
 
 interface MeetForm {
   id: string
@@ -56,18 +56,7 @@ const AddMeetModal = ({ isOpen, onClose }) => {
   const watchType = watch('type')
   const watchFormat = watch('formatMeet')
 
-  const { mutate } = useMutation({
-    mutationKey: ['createMeeting'],
-    mutationFn: (data: UserMeeting) => calendarService.createMeeting(data),
-    onSuccess: () => {
-      toast.success('Встреча успешно назначена!')
-      reset()
-      onClose()
-    },
-    onError: () => {
-      toast.error('Ошибка при назначении встречи')
-    },
-  })
+  const { mutateAsync: createMeeting } = useCreateMeeting()
 
   const fetchClients = async (inputValue: string) => {
     setIsLoading(true)
@@ -105,8 +94,8 @@ const AddMeetModal = ({ isOpen, onClose }) => {
     return `${hours}:${formattedMinutes}`
   }
 
-  const onSubmit: SubmitHandler<MeetForm> = (data) => {
-    const { id, clientName, dateMeet, time, duration, formatMeet, paymentType, meetingName } = data
+  const onSubmit: SubmitHandler<MeetForm> = async (data) => {
+    const { id, dateMeet, time, duration, formatMeet, paymentType, meetingName } = data
 
     const formattedTime = formatTime(time)
     const [hours, minutes] = formattedTime.split(':').map(Number)
@@ -123,10 +112,7 @@ const AddMeetModal = ({ isOpen, onClose }) => {
 
     if (watchType === 'client') {
       payload = {
-        customer: {
-          id: id || 0,
-          fullName: clientName || '',
-        },
+        customerId: Number(id),
         nameMeet: meetingName,
         dateMeet,
         startMeet: formattedTime,
@@ -147,7 +133,27 @@ const AddMeetModal = ({ isOpen, onClose }) => {
       return
     }
 
-    mutate(payload)
+    const toastId = toast.loading('Назначение встречи...')
+
+    try {
+      await createMeeting(payload)
+
+      toast.update(toastId, {
+        render: 'Встреча успешно назначена!',
+        type: 'success',
+        isLoading: false,
+        autoClose: 3000,
+      })
+      reset()
+      onClose()
+    } catch {
+      toast.update(toastId, {
+        render: 'Ошибка при назначении встречи',
+        type: 'error',
+        isLoading: false,
+        autoClose: 5000,
+      })
+    }
   }
 
   return (

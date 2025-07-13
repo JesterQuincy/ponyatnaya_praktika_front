@@ -1,6 +1,7 @@
 import { stringOrDate } from 'react-big-calendar'
 
 export interface UserMeeting {
+  customerId?: number
   id?: number
   customer?: object
   firstName?: string

@@ -2,6 +2,7 @@ import { axiosWithAuth } from '@/api/interceptors'
 import { IMeetingDetails } from '@/types/meet/getMeetById'
 import { DeepPartial } from '@/types/common'
 import { IGetCustomerInfoByMeet } from '@/types/meet/getCustomerInfoByMeet'
+import { UserMeeting } from '@/helpers/types/calendar'
 
 export const meetingService = {
   async getMeetingById(id: number | string) {
@@ -18,5 +19,9 @@ export const meetingService = {
 
   async deleteMeeting(id: number) {
     await axiosWithAuth.delete(`api/meet/delete/${id}`)
+  },
+
+  async createMeeting(data: UserMeeting) {
+    return await axiosWithAuth.post('/api/meet', data)
   },
 }
