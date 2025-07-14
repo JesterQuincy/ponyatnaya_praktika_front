@@ -26,3 +26,16 @@ interface IClientDataNonWorkingDays {
   title: string
   date: string
 }
+
+export interface ICalendarNotifications {
+  count: number
+  notificationResponseList: ICalendarNotificationResponseList[]
+}
+
+interface ICalendarNotificationResponseList {
+  customerId: number
+  dateFirstRequest: string //'2025-07-14'
+  customerFullName: string
+  clientType: string
+  applicationFormStatus: number
+}

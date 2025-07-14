@@ -1,10 +1,9 @@
 'use client'
 
-import React, { PropsWithChildren, useEffect, useState } from 'react'
+import { useMemo, useState } from 'react'
 import Image from 'next/image'
 import PersonPhoto from '@/public/person-default.png'
 import ExitLogo from '@/public/Out.png'
-import { calendarService } from '@/services/calendar.service'
 import { authService } from '@/services/auth.service'
 import { Button } from '@/components/ui/button'
 import { usePathname, useRouter } from 'next/navigation'
@@ -14,6 +13,7 @@ import Logo from '@/public/Logo.png'
 import { NotificationIcon } from '@/components/ui/calendar/icons/NotificationIcon'
 import { useGetUserInfo } from '@/api/hooks/account/useGetUserInfo'
 import { Skeleton } from '@/components/ui/skeleton'
+import { useGetNotifications } from '@/api/hooks/calendar/useGetNotifications'
 
 const iconColor = {
   0: '#B0B0B0',
@@ -22,46 +22,21 @@ const iconColor = {
   3: '#ED5849',
 }
 
-export default function SideBar({ children }: PropsWithChildren) {
-  const [showAll, setShowAll] = useState(false)
-  const [meetings, setMeetings] = useState<{ applicationFormStatus: number }[]>([])
-
+export default function SideBar() {
   const router = useRouter()
 
+  const [showAll, setShowAll] = useState(false)
+
   const { data: userData } = useGetUserInfo()
+  const { data: meetings, isLoading, isFetching, isPending } = useGetNotifications()
+
+  const isLoadingMeetings = isLoading || isFetching || isPending
 
   const handleEventClick = (meeting: any) => {
     router.push(`/card/${meeting.id}?clientType=${meeting.clientType}`)
   }
 
   const currentPath = usePathname()
-
-  useEffect(() => {
-    const fetchNotifications = async () => {
-      try {
-        const response = await calendarService.getNotifications()
-
-        const serverData = response.data.notificationResponseList
-        const transformedMeetings = serverData.map((item: any) => ({
-          date: new Date(item.dateFirstRequest).toLocaleDateString('ru-RU', {
-            day: '2-digit',
-            month: '2-digit',
-            year: 'numeric',
-          }),
-          name: item.customerFullName,
-          id: item.customerId,
-          clientType: item.clientType,
-          applicationFormStatus: item.applicationFormStatus,
-        }))
-
-        setMeetings(transformedMeetings)
-      } catch (error) {
-        console.error('Ошибка при загрузке уведомлений:', error)
-      }
-    }
-
-    fetchNotifications()
-  }, [])
 
   const returnToCalendar = () => {
     router.push('/calendar')
@@ -71,7 +46,15 @@ export default function SideBar({ children }: PropsWithChildren) {
   const userMail = userData?.userMail || <Skeleton className="w-[100px] h-5" />
   const userImage = userData?.userPicture || PersonPhoto
 
-  const displayedMeetings = showAll ? meetings : meetings.slice(0, 6)
+  const displayedMeetings = useMemo(() => {
+    const meetingsToShow = meetings || []
+
+    if (showAll) {
+      return meetingsToShow
+    }
+
+    return meetingsToShow.slice(0, 6)
+  }, [meetings, showAll])
 
   const handleExitOut = () => {
     authService.logout().then()
@@ -145,41 +128,36 @@ export default function SideBar({ children }: PropsWithChildren) {
           </Button>
         </Link>
       </nav>
-      <div className="mt-6 w-full bg-gray-100 overflow-y-auto">
-        <div className="text-sm mb-4">
-          У вас <span className="text-orange-500 font-semibold">{meetings.length}</span> новых заявок:
-        </div>
-        <div className="relative">
-          {displayedMeetings.map((meeting, index) => (
-            <div
-              key={index}
-              //@ts-ignore
-              onClick={() => handleEventClick(meeting)}
-              style={{ zIndex: index }}
-              className={`flex relative gap-[6px] whitespace-nowrap overflow-hidden text-ellipsis shadow-[0px_-5px_11px_0px_#0000002E] items-center rounded-t-[8px] flex-row py-[8px] pl-[8px] hover:cursor-pointer `}>
-              <div className="text-[9px] rounded-[8px] text-white bg-[#6E6E6E] px-[3px] w-[56px]">
-                {
-                  //@ts-ignore
-                  meeting.date
-                }
-              </div>
-              <div>
-                <NotificationIcon color={iconColor[meeting.applicationFormStatus as keyof typeof iconColor]} />
-              </div>
-              <div className="text-[12px] font-montserrat text-black font-normal">
-                {
-                  //@ts-ignore
-                  meeting.name
-                }
-              </div>
+      <div className="mt-6 w-full bg-gray-100 overflow-y-auto h-[inherit]">
+        {isLoadingMeetings && !meetings?.length && <Skeleton className="w-full h-full rounded-xl" />}
+        {!!meetings?.length && (
+          <>
+            <div className="text-sm mb-4">
+              У вас <span className="text-orange font-semibold">{meetings?.length}</span> новых заявок:
             </div>
-          ))}
-        </div>
-
-        {meetings.length > 6 && (
-          <button onClick={() => setShowAll(!showAll)} className="text-orange-500 mt-4 underline">
-            {showAll ? 'Скрыть' : 'Все'}
-          </button>
+            <div className="relative">
+              {displayedMeetings.map((meeting, index) => (
+                <div
+                  key={index}
+                  onClick={() => handleEventClick(meeting)}
+                  style={{ zIndex: index }}
+                  className={`flex relative gap-[6px] whitespace-nowrap overflow-hidden text-ellipsis shadow-[0px_-5px_11px_0px_#0000002E] items-center rounded-t-[8px] flex-row py-[8px] pl-[8px] hover:cursor-pointer `}>
+                  <div className="text-[9px] rounded-[8px] text-white bg-[#6E6E6E] px-[3px] w-[56px]">
+                    {meeting.date}
+                  </div>
+                  <div>
+                    <NotificationIcon color={iconColor[meeting.applicationFormStatus as keyof typeof iconColor]} />
+                  </div>
+                  <div className="text-[12px] font-montserrat text-black font-normal">{meeting.name}</div>
+                </div>
+              ))}
+            </div>
+            {meetings?.length > 6 && (
+              <button onClick={() => setShowAll(!showAll)} className="text-orange-500 mt-4 underline">
+                {showAll ? 'Скрыть' : 'Все'}
+              </button>
+            )}
+          </>
         )}
       </div>
     </div>

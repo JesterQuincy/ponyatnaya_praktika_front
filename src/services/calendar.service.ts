@@ -1,6 +1,6 @@
 import { axiosWithAuth } from '@/api/interceptors'
 import { UserMeeting } from '@/helpers/types/calendar'
-import { ICalendarData } from '@/types/calendar'
+import { ICalendarData, ICalendarNotifications } from '@/types/calendar'
 
 export const calendarService = {
   async createAdultUser(data: UserMeeting): Promise<any> {
@@ -13,8 +13,8 @@ export const calendarService = {
     return await axiosWithAuth.post('/api/pair', data)
   },
 
-  async getNotifications(): Promise<any> {
-    return await axiosWithAuth.get(`api/v1/General/leftMenu/notification`)
+  async getNotifications() {
+    return await axiosWithAuth.get<ICalendarNotifications>(`api/v1/General/leftMenu/notification`)
   },
 
   async getCalendarData(year: number) {
