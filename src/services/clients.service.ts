@@ -1,17 +1,20 @@
 import { axiosWithAuth } from '@/api/interceptors'
 import { DeepPartial } from '@/types/common'
-import { IClient, IGetClientsBySearch } from '@/types/clients'
+import { IClient, IGetClientBySearchRequest, TGetClientsBySearchResponse } from '@/types/clients'
 
 export const clientService = {
-  async getClientByName(
-    limit: number = 100,
-    offset: number = 0,
-    customerName: string,
-  ): Promise<{ data: IGetClientsBySearch[] }> {
+  async getClients({ params, queryBody }: IGetClientBySearchRequest) {
+    const { limit, offset } = params
+
     return await axiosWithAuth
-      .get(`/api/v1/General/searchPersons/${offset}/${limit}`, {
+      .get<TGetClientsBySearchResponse>(`/api/v1/General/searchPersons/${offset}/${limit}`, {
         params: {
-          customerName,
+          customerName: queryBody?.customerName,
+          orderDate: queryBody?.orderDate,
+          orderMeetCount: queryBody?.orderMeetCount,
+          clientType: queryBody?.clientType,
+          clientStatus: queryBody?.clientStatus,
+          meetingFormat: queryBody?.meetingFormat,
         },
       })
       .then((res) => res.data)

@@ -12,6 +12,7 @@ interface IPaginationProps {
 export const Pagination: FC<IPaginationProps> = ({ currentPage, totalPages, onPageChange, maxVisiblePages = 5 }) => {
   const handlePageChange = (page: number) => {
     if (page < 1 || page > totalPages || page === currentPage) return
+
     onPageChange(page)
   }
 

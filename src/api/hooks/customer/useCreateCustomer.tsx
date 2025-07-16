@@ -20,6 +20,7 @@ export const useCreateCustomer = (clientType: 'adult' | 'child' | 'couple') => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [EInvalidationTags.NOTIFICATIONS] })
+      queryClient.invalidateQueries({ queryKey: [EInvalidationTags.CLIENTS] })
     },
   })
 }
