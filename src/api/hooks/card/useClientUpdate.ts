@@ -9,7 +9,7 @@ export function useClientUpdate() {
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationKey: [EInvalidationTags.CLIENT],
+    mutationKey: [EInvalidationTags.CLIENT, 'update'],
     mutationFn: (data: DeepPartial<IClient>) => clientService.updateUser(data),
     onSuccess: () => {
       toast.success('Вы успешно обновили клиента')

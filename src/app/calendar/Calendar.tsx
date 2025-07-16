@@ -36,7 +36,7 @@ export function Calendar({ children }: CalendarProps) {
       <SideBar />
       <div className={styles.CentralContainer}>
         <Header onOpenModal={handleOpenModal} onOpenModalMeet={handleOpenModalMeet} />
-        <div className={styles.Content}>{children}</div>
+        {children}
       </div>
       <AddClientModal isOpen={isModalOpen} onClose={handleCloseModal} />
       <AddMeetModal isOpen={isOpenModalMeet} onClose={handleCloseModalMeet} />

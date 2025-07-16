@@ -14,4 +14,5 @@ export enum EInvalidationTags {
   QUESTIONNAIRES_CLIENT = 'questionnaires_client',
   CALENDAR = 'calendar',
   NOTIFICATIONS = 'notifications',
+  CLIENTS = 'clients',
 }

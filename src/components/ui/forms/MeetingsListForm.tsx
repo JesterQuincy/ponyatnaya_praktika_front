@@ -139,7 +139,7 @@ export function MeetingsListForm({ user }: ICardFormProps) {
           </div>
         ))}
         <div className="absolute  bottom-[30px] left-[50%] right-[50%]">
-          <Pagination currentPage={currentPage} totalPages={totalPages} paginate={paginate} />
+          <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={paginate} />
         </div>
       </div>
       <div className="bg-[#F1F1F1] w-[40%] rounded-[4px] py-[25px] px-[11px]">
