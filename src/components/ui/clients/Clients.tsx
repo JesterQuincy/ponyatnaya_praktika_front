@@ -19,6 +19,10 @@ import { clientService } from '@/services/clients.service'
 import { Pagination } from '@/components/ui/Pagination'
 import { IGetClientsBySearch } from '@/types/clients'
 import { toast } from 'react-toastify'
+import { Button } from '../buttons/Button'
+import TripleDots from '@/public/icon/tripleDots.svg'
+import { DropdownItemProps, DropdownMenu } from '../forms/DropDownMenu'
+import { useDeleteCustomer } from '@/api/hooks/customer/useDeleteCustomer'
 
 export const DropdownIndicator = (props: any) => {
   return (
@@ -38,6 +42,8 @@ function Clients() {
   const [clients, setClients] = useState<IGetClientsBySearch[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const clientsPerPage = 8
+  const [activeDropdown, setActiveDropdown] = useState<number | null>(null)
+  const deleteCustomer = useDeleteCustomer()
 
   const router = useRouter()
 
@@ -59,6 +65,14 @@ function Clients() {
       toast.error('Ошибка при загрузке клиентов')
     } finally {
       setIsLoading(false)
+    }
+  }
+
+  const handleDropdownToggle = (id: number) => {
+    if (activeDropdown === id) {
+      setActiveDropdown(null)
+    } else {
+      setActiveDropdown(id)
     }
   }
 
@@ -144,6 +158,8 @@ function Clients() {
     Взрослый: HumanIcon,
     Ребенок: ChildrenIcon,
   }
+
+  const dropDownItems: DropdownItemProps[] = [{ onClick: (id) => deleteCustomer.mutate(id), label: 'Удалить' }]
 
   const paginate = (pageNumber: number) => setCurrentPage(pageNumber)
 
@@ -252,7 +268,7 @@ function Clients() {
       </div>
       <div>
         {currentClients.map((client) => (
-          <div key={client.customerId} className="border-t border-[#6A6A6A] py-[10px]">
+          <div key={client.customerId} className="border-t border-[#6A6A6A] py-[10px] relative">
             <div className="flex justify-between items-start">
               <div>
                 <h2
@@ -298,6 +314,20 @@ function Clients() {
                     {client.mail}
                   </div>
                 </div>
+              </div>
+              <Button
+                onClick={() => handleDropdownToggle(client.customerId)}
+                className="absolute bg-[#E4E4E4] right-[20px] text-[#7E7E7E] text-[20px] flex items-center p-[10px] rounded-[6px]">
+                <Image src={TripleDots} alt="TripleDots" />
+              </Button>
+              <div>
+                {activeDropdown === client.customerId && (
+                  <DropdownMenu
+                    onClose={() => setActiveDropdown(null)}
+                    items={dropDownItems}
+                    customerId={client.customerId}
+                  />
+                )}
               </div>
             </div>
           </div>

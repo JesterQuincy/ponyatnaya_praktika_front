@@ -23,6 +23,9 @@ export const calendarService = {
   async getUserById(id: number): Promise<any> {
     return await axiosWithAuth.get(`customer/get/${id}`)
   },
+  async deleteUserById(id: number): Promise<any> {
+    return await axiosWithAuth.delete(`api/customer/delete/${id}`)
+  },
 
   async getNotifications(): Promise<any> {
     return await axiosWithAuth.get(`api/v1/General/leftMenu/notification`)

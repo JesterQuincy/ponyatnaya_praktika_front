@@ -134,7 +134,11 @@ export function MeetingsListForm({ user }: ICardFormProps) {
               className="absolute bg-[#E4E4E4] right-[20px] text-[#7E7E7E] text-[20px] flex items-center p-[10px] rounded-[6px]">
               <Image src={TripleDots} alt="TripleDots" />
             </Button>
-            <div>{activeDropdown === meet.id && <DropdownMenu onClose={() => setActiveDropdown(null)} />}</div>
+            <div>
+              {activeDropdown === meet.id && (
+                <DropdownMenu onClose={() => setActiveDropdown(null)} customerId={0} items={[]} />
+              )}
+            </div>
           </div>
         ))}
         <div className="absolute  bottom-[30px] left-[50%] right-[50%]">
