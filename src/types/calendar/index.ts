@@ -39,3 +39,9 @@ interface ICalendarNotificationResponseList {
   clientType: string
   applicationFormStatus: number
 }
+
+export interface INonWorkingDay {
+  title: string
+  dateStart: string
+  dateEnd: string
+}
