@@ -14,7 +14,7 @@ interface Option {
 }
 
 // @ts-ignore
-export default function Header({ onOpenModal, onOpenModalMeet }) {
+export default function Header({ onOpenModal, onOpenModalMeet, onOpenNonWorkingDayModal }) {
   const [selectedOption, setSelectedOption] = useState<Option | null>(null)
   const [options, setOptions] = useState<Option[]>([])
   const [isLoading, setIsLoading] = useState(false)
@@ -72,7 +72,9 @@ export default function Header({ onOpenModal, onOpenModalMeet }) {
         <button className={styles.newEvent} onClick={onOpenModalMeet}>
           Назначить встречу
         </button>
-        <button className={styles.addDayOff}>Нерабочие дни</button>
+        <button className={styles.addDayOff} onClick={onOpenNonWorkingDayModal}>
+          Нерабочие дни
+        </button>
       </div>
     </div>
   )
