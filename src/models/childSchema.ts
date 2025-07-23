@@ -2,11 +2,11 @@ import { z } from 'zod'
 
 export const childSchema = z.object({
   // #region Основное
-  lastName: z.string().min(1, 'Фамилия ребенка обязательна'),
+  lastName: z.string().optional(),
   firstName: z.string().min(1, 'Имя ребенка обязательно'),
-  secondName: z.string().min(1, 'Отчество ребенка обязательно'),
+  secondName: z.string().optional(),
   phoneNumber: z.string().min(1, 'Телефон ребенка обязателен'),
-  mail: z.string().email('Некорректный email'),
+  mail: z.string().email('Некорректный email').or(z.literal('')).optional(),
   gender: z.string().min(1, 'Пол ребенка обязателен'),
   clientStatus: z.string().min(1, 'Статус ребенка обязателен'),
   // TODO
@@ -17,11 +17,11 @@ export const childSchema = z.object({
   childExplanationForSeeingPsychologist: z.string().optional(),
   childDesiredChanges: z.string().optional(),
   firstParent: z.object({
-    lastName: z.string().min(1, 'Фамилия первого родителя обязательна'),
+    lastName: z.string().optional(),
     firstName: z.string().min(1, 'Имя первого родителя обязательно'),
-    secondName: z.string().min(1, 'Отчество первого родителя обязательно'),
+    secondName: z.string().optional(),
     phoneNumber: z.string().min(1, 'Телефон первого родителя обязателен'),
-    mail: z.string().email('Некорректный email первого родителя').min(1, 'Email первого родителя обязателен'),
+    mail: z.string().email('Некорректный email первого родителя').or(z.literal('')).optional(),
     gender: z.string().min(1, 'Пол первого родителя обязателен'),
   }),
   secondParent: z.object({
@@ -29,7 +29,7 @@ export const childSchema = z.object({
     firstName: z.string().optional(),
     secondName: z.string().optional(),
     phoneNumber: z.string().optional(),
-    mail: z.string().email('Некорректный email второго родителя').optional(),
+    mail: z.string().email('Некорректный email второго родителя').or(z.literal('')).optional(),
     gender: z.string().optional(),
   }),
   payerFullName: z.string().optional(),

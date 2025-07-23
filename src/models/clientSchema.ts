@@ -2,11 +2,11 @@ import { z } from 'zod'
 
 export const clientSchema = z.object({
   // #region Основное
-  lastName: z.string().min(1, 'Фамилия обязательна'),
+  lastName: z.string().optional(),
   firstName: z.string().min(1, 'Имя обязательно'),
-  secondName: z.string().min(1, 'Отчество обязательно'),
+  secondName: z.string().optional(),
   phoneNumber: z.string().min(1, 'Телефон обязателен'),
-  mail: z.string().email('Некорректный email').min(1, 'Email обязателен'),
+  mail: z.string().email('Некорректный email').or(z.literal('')).optional(),
   gender: z.string().min(1, 'Пол обязателен'),
   clientStatus: z.string().min(1, 'Статус обязателен'),
   dateFirstRequest: z.string().optional(),

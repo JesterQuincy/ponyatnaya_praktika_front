@@ -4,22 +4,22 @@ export const coupleSchema = z.object({
   // #region Валидация для первого клиента
   lastName: z.string().min(1, 'Фамилия обязательна'),
   firstName: z.string().min(1, 'Имя обязательно'),
-  secondName: z.string().min(1, 'Отчество обязательно'),
+  secondName: z.string().optional(),
   phoneNumber: z.string().min(1, 'Телефон ребенка обязателен'),
-  mail: z.string().email('Некорректный email'),
+  mail: z.string().email('Некорректный email').or(z.literal('')).optional(),
   gender: z.string().min(1, 'Пол обязателен'),
   clientFirstRequestTherapyReason: z.string().optional(),
   clientFirstRequestTherapyDesiredOutcome: z.string().optional(),
-  clientStatus: z.string().min(1, 'Статус обязателен'),
+  clientStatus: z.string().optional(),
   // #endregion
 
   // #region Валидация для второго клиента
   secondPerson: z.object({
-    lastName: z.string().min(1, 'Фамилия второго клиента обязательна'),
+    lastName: z.string().optional(),
     firstName: z.string().min(1, 'Имя второго клиента обязательно'),
-    secondName: z.string().min(1, 'Отчество второго клиента обязательно'),
+    secondName: z.string().optional(),
     phoneNumber: z.string().min(1, 'Телефон ребенка обязателен'),
-    mail: z.string().email('Некорректный email'),
+    mail: z.string().email('Некорректный email').or(z.literal('')).optional(),
     gender: z.string().min(1, 'Пол обязателен'),
   }),
   secondClientRequestTherapyReason: z.string().optional(),
@@ -40,7 +40,7 @@ export const coupleSchema = z.object({
   residenceAddress: z.string().optional(),
   priorityCommunicationChannel: z.string().optional(),
   peerRecommendation: z.string().optional(),
-  familyStatus: z.string().min(1, 'Семейное положение обязательно'),
+  familyStatus: z.string().optional(),
   takingMedic: z.string().optional(),
   prevExperience: z.string().optional(),
   specialTermsContact: z.string().optional(),
@@ -49,7 +49,7 @@ export const coupleSchema = z.object({
   supervisionMaterial: z.string().optional(),
   fullNameCotherapy: z.string().optional(),
   phoneNumberCotherapy: z.string().optional(),
-  mailCotherapy: z.string().email('Некорректный email').optional(),
+  mailCotherapy: z.string().email('Некорректный email').or(z.literal('')).optional(),
   financialTermsCotherapists: z.string().optional(),
   notes: z.string().optional(),
   // #endregion
