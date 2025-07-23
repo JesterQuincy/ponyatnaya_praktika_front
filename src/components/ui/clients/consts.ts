@@ -8,7 +8,7 @@ export const EMPTY_OPTS_KEY = 'EMPTY'
 
 export const INITIAL_STATE: IClientsState = {
   pagination: {
-    currentPage: 0,
+    currentPage: 1,
     pageSize: 10,
   },
   filters: {

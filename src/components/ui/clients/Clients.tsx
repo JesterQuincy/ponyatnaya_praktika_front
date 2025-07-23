@@ -50,7 +50,7 @@ export const Clients = () => {
 
       {!!clients?.data.length && (
         <Pagination
-          currentPage={pagination.currentPage + 1}
+          currentPage={pagination.currentPage}
           totalPages={clients?.pagination.totalPages || 0}
           onPageChange={handlePageChange}
         />

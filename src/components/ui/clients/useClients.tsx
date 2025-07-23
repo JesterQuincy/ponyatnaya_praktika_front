@@ -51,7 +51,7 @@ export const useClients = () => {
       ...prevState,
       pagination: {
         ...prevState.pagination,
-        currentPage: page - 1,
+        currentPage: page,
       },
     }))
   }, [])
