@@ -8,6 +8,7 @@ import { UserProvider } from './context/userContext'
 import { MeetProvider } from './context/meetContext'
 import { ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
+import SecurityWrapper from '@/components/security-wrapper'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -35,6 +36,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <SecurityWrapper />
       <body className={`${inter.className} ${montserrat.variable} ${ebGaramond.variable} antialiased`}>
         <Providers>
           <Theme>
