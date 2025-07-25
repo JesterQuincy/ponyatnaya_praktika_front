@@ -27,9 +27,25 @@ export type DeepPartial<T> = {
   [P in keyof T]?: T[P] extends object ? DeepPartial<T[P]> : T[P]
 }
 
-export interface IMutateResponse {
-  data: number
-  error: string
+export type TPromiseNumber = Promise<{ data: number }>
+
+export type TResponseTypeBuilder<T> = {
+  data: T[]
+  pagination: {
+    page: number
+    pageSize: number
+    total: number
+    totalPages: number
+  }
 }
 
-export type TPromiseNumber = Promise<{ data: number }>
+export type TRequestTypeBuilder<T> = {
+  params: {
+    /** Количество элементов на странице */
+    limit: number
+    /** Номер страницы */
+    offset: number
+  }
+  /** Тело запроса (возможно search-параметры) */
+  queryBody?: T
+}

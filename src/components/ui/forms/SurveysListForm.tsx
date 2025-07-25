@@ -80,7 +80,7 @@ export function SurveysListForm({ user }: ICardFormProps) {
         ))}
         {data?.data && (
           <div className="mt-[10px]">
-            <Pagination currentPage={currentPage} totalPages={totalPages} paginate={paginate} />
+            <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={paginate} />
           </div>
         )}
       </div>
