@@ -1,11 +1,11 @@
 import { z } from 'zod'
 
 export const questionnaireAdultSchema = z.object({
-  lastName: z.string().min(1, 'Фамилия обязательна'),
+  lastName: z.string().optional(),
   firstName: z.string().min(1, 'Имя обязательно'),
-  secondName: z.string().min(1, 'Отчество обязательно'),
+  secondName: z.string().optional(),
   phoneNumber: z.string().min(1, 'Номер телефона обязателен'),
-  mail: z.string().email('Введите корректный адрес электронной почты'),
+  mail: z.string().email('Введите корректный адрес электронной почты').or(z.literal('')).optional(),
   gender: z.string().min(1, 'Пол обязателен'),
   contactMethod: z.string().optional(),
   onlinePlatform: z.string().optional(),

@@ -1,11 +1,11 @@
 import { z } from 'zod'
 
 export const questionnaireChildSchema = z.object({
-  lastName: z.string().min(1, 'Фамилия обязательна'),
+  lastName: z.string().optional(),
   firstName: z.string().min(1, 'Имя обязательно'),
-  secondName: z.string().min(1, 'Отчество обязательно'),
+  secondName: z.string().optional(),
   phoneNumber: z.string().min(1, 'Номер телефона обязателен'),
-  mail: z.string().email('Введите корректный адрес электронной почты'),
+  mail: z.string().email('Введите корректный адрес электронной почты').or(z.literal('')).optional(),
   gender: z.string().min(1, 'Пол обязателен'),
   clientTherapyRequest: z.string().optional(),
   adultRequestForTherapyReason: z.string().optional(),
@@ -13,11 +13,11 @@ export const questionnaireChildSchema = z.object({
   childExplanationForSeeingPsychologist: z.string().optional(),
   childDesiredChanges: z.string().optional(),
   firstParent: z.object({
-    lastName: z.string().min(1, 'Фамилия первого родителя обязательна'),
+    lastName: z.string().optional(),
     firstName: z.string().min(1, 'Имя первого родителя обязательно'),
-    secondName: z.string().min(1, 'Отчество первого родителя обязательно'),
+    secondName: z.string().optional(),
     phoneNumber: z.string().min(1, 'Телефон первого родителя обязателен'),
-    mail: z.string().email('Некорректный email первого родителя').min(1, 'Email первого родителя обязателен'),
+    mail: z.string().email('Некорректный email первого родителя').or(z.literal('')).optional(),
     gender: z.string().min(1, 'Пол первого родителя обязателен'),
   }),
   secondParent: z.object({
@@ -25,7 +25,7 @@ export const questionnaireChildSchema = z.object({
     firstName: z.string().optional(),
     secondName: z.string().optional(),
     phoneNumber: z.string().optional(),
-    mail: z.string().email('Некорректный email второго родителя').optional(),
+    mail: z.string().email('Некорректный email второго родителя').or(z.literal('')).optional(),
     gender: z.string().optional(),
   }),
   payerFullName: z.string().optional(),
