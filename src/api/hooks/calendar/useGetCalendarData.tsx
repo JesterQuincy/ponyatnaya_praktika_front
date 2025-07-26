@@ -9,9 +9,21 @@ export const useGetCalendarData = (year: number) => {
     queryFn: () => calendarService.getCalendarData(year).then((res) => res.data),
     enabled: !!year,
     select: (data) => {
-      return data.clientsData.flatMap((client) =>
+      const nonWorkingDays = data.nonWorkingDays.map((day) => ({
+        title: day.title,
+        start: day.date,
+        end: day.date,
+        allDay: true,
+        display: 'background',
+        color: '#e0e0e0',
+        editable: false,
+        interaction: false,
+        className: 'pointer-none',
+      }))
+
+      const formattedMeetings = data.clientsData.flatMap((client) =>
         client.meetings.map((meeting) => ({
-          title: `${client.fullName || meeting.title}`,
+          title: client.fullName || meeting.title,
           start: meeting.startTime,
           end: meeting.endTime,
           allDay: false,
@@ -21,6 +33,8 @@ export const useGetCalendarData = (year: number) => {
           },
         })),
       )
+
+      return [...formattedMeetings, ...nonWorkingDays]
     },
     refetchOnMount: true,
     refetchOnWindowFocus: true,
