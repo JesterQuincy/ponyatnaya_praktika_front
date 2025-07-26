@@ -22,6 +22,9 @@ export default function CalendarBody() {
   const { data: events } = useGetCalendarData(currentYear)
 
   const handleEventClick = (eventInfo: EventClickArg) => {
+    if (eventInfo.event.display === 'background') {
+      return
+    }
     router.push(`/meet?id=${eventInfo.event.extendedProps.id}`)
   }
 
@@ -46,12 +49,12 @@ export default function CalendarBody() {
       <FullCalendar
         initialView="multiMonthYear"
         initialDate={new Date(currentYear, 0, 1)}
-        // TODO: Добавить контекстное меню
-        // eventDidMount={(eventInfo) => {
-        //   eventInfo.el.addEventListener('contextmenu', (e) => {
-        //     e.preventDefault()
-        //   })
-        // }}
+        eventDidMount={(eventInfo) => {
+          if (eventInfo.event.display === 'background') {
+            eventInfo.el.style.cursor = 'default'
+            eventInfo.el.style.pointerEvents = 'none'
+          }
+        }}
         datesSet={(dateInfo) => {
           const newYear = dateInfo.view.currentStart.getFullYear()
 
@@ -133,12 +136,14 @@ export default function CalendarBody() {
             )
           }
 
-          return (
+          return !(eventInfo.event.display === 'background') ? (
             <div
               className={`${bgColor} text-[#272727] px-2 py-1 w-full h-full max-w-full truncate flex justify-between items-center`}>
               <span className="text-sm font-normal truncate">{eventInfo.event.title}</span>
               <span className="text-xs text-[#6A6A6A] ml-2">{moment(eventInfo.event.start).format('HH:mm')}</span>
             </div>
+          ) : (
+            <span className="text-sm font-normal">{eventInfo.event.title}</span>
           )
         }}
         eventClassNames="w-full h-full hover:cursor-pointer"
