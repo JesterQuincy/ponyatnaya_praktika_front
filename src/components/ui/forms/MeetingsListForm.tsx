@@ -18,6 +18,12 @@ import { useGetTypePhoto } from '@/api/hooks/photoMethods/useGetTypePhoto'
 import { toast } from 'react-toastify'
 import { IMethod, IPhotoProjectiveMethod } from '@/types/methods/meetMethods'
 import { useGetUserMeets } from '@/api/hooks/meet/useGetUserMeets'
+import { Button as SaveButton } from '@/components/ui/button'
+import { useUpdateMainHypotheses } from '@/api/hooks/meet/useUpdateMainHypotheses'
+import { Form, FormControl, FormField, FormItem, FormMessage } from '@/components/ui/form'
+import { useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { mainHypothesesShema } from '@/models/mainHypothesesShema'
 
 interface IMethodState {
   methodId: number
@@ -28,6 +34,10 @@ interface ICardFormProps {
   user: any
 }
 
+interface IMainHypotheses {
+  data: string
+}
+
 export function MeetingsListForm({ user }: ICardFormProps) {
   const router = useRouter()
   const params = useParams()
@@ -36,6 +46,8 @@ export function MeetingsListForm({ user }: ICardFormProps) {
     const { id } = params
     return typeof id === 'string' ? id : undefined
   }, [params])
+
+  console.log(user)
 
   const { setMeet } = useMeet()
 
@@ -48,8 +60,14 @@ export function MeetingsListForm({ user }: ICardFormProps) {
   const { data: projMethods, isLoading: isProjMethodsLoading } = useGetProjMethodsByCustomerId(id ?? '')
   const { mutateAsync: typePhotos } = useGetTypePhoto()
   const { data: meetsData, isFetching } = useGetUserMeets(user.id, currentPage, 15)
+  const { mutateAsync: updateHypotheses, isPending } = useUpdateMainHypotheses()
 
-  console.log(meetsData?.data)
+  const form = useForm<IMainHypotheses>({
+    resolver: zodResolver(mainHypothesesShema),
+    defaultValues: {
+      data: '',
+    },
+  })
 
   const handleClick = (meet: any): void => {
     setMeet(meet)
@@ -77,6 +95,26 @@ export function MeetingsListForm({ user }: ICardFormProps) {
       setLoadingMethodId(null)
     }
   }
+
+  const onSubmit = form.handleSubmit(async (data) => {
+    const toastId = toast.loading('Добавление выходных...')
+    try {
+      await updateHypotheses({ customerId: user.id, data: data.data })
+      toast.update(toastId, {
+        render: 'Успешно',
+        type: 'success',
+        isLoading: false,
+        autoClose: 3000,
+      })
+    } catch {
+      toast.update(toastId, {
+        render: 'Ошибка',
+        type: 'error',
+        isLoading: false,
+        autoClose: 5000,
+      })
+    }
+  })
 
   const visibleMetodics = showAll ? projMethods?.data : projMethods?.data?.slice(0, 5)
 
@@ -161,12 +199,33 @@ export function MeetingsListForm({ user }: ICardFormProps) {
             )}
           </div>
         )}
-        <div className="mt-[27px]">
-          <span className="font-bold text-[20px]">Основные терапевтические гипотезы</span>
-          <div className="mt-[5px]">
-            <textarea className="border border-[#D9D9D9] rounded-[6px] w-[90%] min-h-[110px]" />
+        <Form {...form}>
+          <div className="mt-[27px]">
+            <span className="font-bold text-[20px]">Основные терапевтические гипотезы</span>
+            <form onSubmit={onSubmit}>
+              <FormField
+                control={form.control}
+                name="data"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormControl>
+                      <textarea
+                        {...field}
+                        content={user.mainHypotheses}
+                        className="border border-[#D9D9D9] rounded-[6px] w-[90%] min-h-[110px]"
+                      />
+                    </FormControl>
+                    <FormMessage className="text-red-500" />
+                  </FormItem>
+                )}
+              />
+              <div className="mt-[5px]"></div>
+              <SaveButton disabled={isPending} type="submit" variant="grey" className="self-end">
+                Сохранить
+              </SaveButton>
+            </form>
           </div>
-        </div>
+        </Form>
       </div>
       {method && (
         <ViewMethodicModal
