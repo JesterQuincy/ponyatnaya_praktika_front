@@ -8,6 +8,10 @@ import { UserProvider } from './context/userContext'
 import { MeetProvider } from './context/meetContext'
 import { ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
+import dayjs from 'dayjs'
+import customParseFormat from 'dayjs/plugin/customParseFormat'
+
+dayjs.extend(customParseFormat)
 
 const inter = Inter({ subsets: ['latin'] })
 

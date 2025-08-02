@@ -1,6 +1,6 @@
 'use client'
 
-import React, { Dispatch, FC, SetStateAction, useCallback, useState } from 'react'
+import React, { Dispatch, FC, SetStateAction, useCallback, useMemo, useState } from 'react'
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTrigger } from '@/components/ui/dialog'
 import { Button } from '@/components/ui/button'
 import { Copy } from 'lucide-react'
@@ -48,12 +48,14 @@ export const CopyLinkModal: FC<ICreateMaterialModalProps> = ({ modalOpen, setMod
     }
   }
 
-  const customersOptions: Array<{ value: number; label: string }> = customers?.map(
-    (client: { customerId: number; fullName: string }) => ({
-      value: client.customerId,
-      label: client.fullName,
-    }),
-  )
+  const customersOptions = useMemo(() => {
+    return (
+      customers?.map((client) => ({
+        value: client.customerId,
+        label: client.fullName,
+      })) || []
+    )
+  }, [customers])
 
   const customersValue = useCallback(
     (value: string) => {

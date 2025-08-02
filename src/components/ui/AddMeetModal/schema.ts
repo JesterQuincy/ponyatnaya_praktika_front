@@ -11,7 +11,7 @@ const norm = (v: unknown) =>
 
 // 1) База — как и была
 const baseSchema = z.object({
-  type: z.nativeEnum(EModalType), // 'client' | 'other'
+  type: z.enum(EModalType), // 'client' | 'other'
 
   customerId: z.preprocess(
     (v) => {
@@ -23,17 +23,17 @@ const baseSchema = z.object({
     z.union([
       z
         .number({
-          invalid_type_error: 'Клиент обязателен', // если пришло не число
+          error: 'Клиент обязателен', // если пришло не число
         })
         .positive('Клиент обязателен'),
       z.undefined(), // <-- явно разрешаем undefined
     ]),
   ),
-  paymentType: z.nativeEnum(EPaymentType).optional(),
+  paymentType: z.enum(EPaymentType).optional(),
   nameMeet: z.string().optional(),
 
   dateMeet: z
-    .string({ required_error: 'Дата встречи обязательна' })
+    .string({ error: 'Дата встречи обязательна' })
     .trim()
     .min(1, 'Дата встречи обязательна')
     .refine(
@@ -44,7 +44,7 @@ const baseSchema = z.object({
       },
       { message: 'Дата встречи не может быть раньше текущей' },
     ),
-  time: z.string({ required_error: 'Время встречи обязательно' }).trim().min(1, 'Время встречи обязательно'),
+  time: z.string({ error: 'Время встречи обязательно' }).trim().min(1, 'Время встречи обязательно'),
   duration: z.preprocess(
     (v) => {
       if (v === '' || v === null || v === undefined) return undefined
@@ -53,19 +53,20 @@ const baseSchema = z.object({
     },
     z
       .number({
-        required_error: 'Длительность встречи обязательна',
-        invalid_type_error: 'Длительность должна быть числом',
+        error: (issue) =>
+          issue.input === undefined ? 'Длительность встречи обязательна' : 'Длительность должна быть числом',
       })
       .int('Длительность должна быть целым числом')
       .positive('Длительность должна быть больше 0'),
   ),
-  formatMeet: z.nativeEnum(EMeetingFormat, { errorMap: () => ({ message: 'Формат встречи обязателен' }) }),
-  place: z.string({ required_error: 'Место встречи обязательно' }).trim().min(1, 'Место встречи обязательно'),
+  formatMeet: z.enum(EMeetingFormat, { error: () => ({ message: 'Формат встречи обязателен' }) }),
+  place: z.string({ error: 'Место встречи обязательно' }).trim().min(1, 'Место встречи обязательно'),
   // в ваших данных repeat бывает русской строкой
-  repeat: z.nativeEnum(ECreateMeetingRepeat).default(ECreateMeetingRepeat.NONE),
+  repeat: z.enum(ECreateMeetingRepeat).default(ECreateMeetingRepeat.NONE),
 
-  finishRepetition: z.nativeEnum(EFinishRepetition).optional(), // 'on_date' | 'on_count'
-  onDate: z.preprocess((v) => (v === '' ? undefined : v), z.string().optional()),
+  finishRepetition: z.enum(EFinishRepetition).optional(), // 'on_date' | 'on_count'
+  // onDate: z.preprocess((v) => (v === '' ? undefined : v), z.string().optional()),
+  onDate: z.string().optional(),
   onCount: z.string().optional(),
 })
 
