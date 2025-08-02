@@ -3,7 +3,7 @@ import { calendarService } from '@/services/calendar.service'
 
 export function useGetCustomerByName(name: string) {
   return useQuery({
-    queryKey: [name],
+    queryKey: ['searchPerson', name],
     queryFn: () => calendarService.getUsersByName(name).then((res) => res.data),
     enabled: !!name,
   })

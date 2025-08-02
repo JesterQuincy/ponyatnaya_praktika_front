@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { UserMeeting } from '@/helpers/types/calendar'
+import { ICreateMeeting } from '@/helpers/types/calendar'
 import { EInvalidationTags } from '@/api/hooks/constants'
 import { meetingService } from '@/services/meet.sevice'
 
@@ -8,7 +8,7 @@ export const useCreateMeeting = () => {
 
   return useMutation({
     mutationKey: [EInvalidationTags.MEET],
-    mutationFn: (data: UserMeeting) => meetingService.createMeeting(data),
+    mutationFn: (data: ICreateMeeting) => meetingService.createMeeting(data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [EInvalidationTags.CALENDAR] })
       queryClient.invalidateQueries({ queryKey: [EInvalidationTags.MEET] })

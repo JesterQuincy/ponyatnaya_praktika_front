@@ -1,4 +1,6 @@
 import { stringOrDate } from 'react-big-calendar'
+import { EMeetingFormat } from '@/types/clients'
+import { EPaymentType } from '@/components/ui/AddMeetModal/types'
 
 export interface UserMeeting {
   customerId?: number
@@ -42,4 +44,27 @@ export interface UserMeeting {
   supervisionThemAndProblem?: string
   clientType?: string
   startMeet?: string
+}
+
+export interface ICreateMeeting {
+  nameMeet?: string
+  customerId?: number
+  dateMeet: string
+  startMeet: string
+  endMeet: string
+  formatMeet: EMeetingFormat
+  place: string
+  paymentType?: EPaymentType
+  repeat?: ECreateMeetingRepeat
+  /** На дату */
+  onDate?: string // yyyy-mm-dd
+  /** Через */
+  onCount?: number
+}
+
+export enum ECreateMeetingRepeat {
+  NONE = 'Не повторять',
+  MONTHLY = 'Ежемесячно',
+  WEEKLY = 'Еженедельно',
+  DAILY = 'Ежедневно',
 }

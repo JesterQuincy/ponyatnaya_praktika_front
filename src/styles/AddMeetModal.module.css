@@ -63,7 +63,6 @@
 }
 
 .dateTime input {
-    width: calc(50% - 10px);
     height: 40px;
     padding: 10px;
     border: 1px solid #ccc;

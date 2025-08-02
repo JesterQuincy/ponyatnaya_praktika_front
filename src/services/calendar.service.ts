@@ -1,6 +1,6 @@
 import { axiosWithAuth } from '@/api/interceptors'
 import { UserMeeting } from '@/helpers/types/calendar'
-import { ICalendarData, ICalendarNotifications } from '@/types/calendar'
+import { ICalendarData, ICalendarNotifications, ISearchUser } from '@/types/calendar'
 
 export const calendarService = {
   async createAdultUser(data: UserMeeting): Promise<any> {
@@ -21,7 +21,7 @@ export const calendarService = {
     return await axiosWithAuth.get<ICalendarData>(`/api/v1/General/calendarData/get/${year}`)
   },
 
-  async getUsersByName(name: string): Promise<any> {
-    return await axiosWithAuth.get(`/api/v1/Header/searchPersons/${name}`)
+  async getUsersByName(name: string) {
+    return await axiosWithAuth.get<ISearchUser[]>(`/api/v1/Header/searchPersons/${name}`)
   },
 }

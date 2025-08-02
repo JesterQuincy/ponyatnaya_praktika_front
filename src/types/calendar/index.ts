@@ -39,3 +39,9 @@ interface ICalendarNotificationResponseList {
   clientType: string
   applicationFormStatus: number
 }
+
+export interface ISearchUser {
+  customerId: number
+  fullName: string
+  clientType: string
+}
