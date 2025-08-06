@@ -125,7 +125,6 @@ export function MeetingsListForm({ user }: ICardFormProps) {
                   }>
                   {meet.formatMeet}
                 </span>
-                <span className="text-[#7E7E7E] text-[13px]">Основные темы:</span>
               </div>
               <span className="text-[13px]">{meet.clientSessionRequest}</span>
             </div>
@@ -134,11 +133,13 @@ export function MeetingsListForm({ user }: ICardFormProps) {
               className="absolute bg-[#E4E4E4] right-[20px] text-[#7E7E7E] text-[20px] flex items-center p-[10px] rounded-[6px]">
               <Image src={TripleDots} alt="TripleDots" />
             </Button>
-            <div>{activeDropdown === meet.id && <DropdownMenu onClose={() => setActiveDropdown(null)} />}</div>
+            <div>
+              {activeDropdown === meet.id && <DropdownMenu id={meet.id} onClose={() => setActiveDropdown(null)} />}
+            </div>
           </div>
         ))}
         <div className="absolute  bottom-[30px] left-[50%] right-[50%]">
-          <Pagination currentPage={currentPage} totalPages={totalPages} paginate={paginate} />
+          <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={paginate} />
         </div>
       </div>
       <div className="bg-[#F1F1F1] w-[40%] rounded-[4px] py-[25px] px-[11px]">

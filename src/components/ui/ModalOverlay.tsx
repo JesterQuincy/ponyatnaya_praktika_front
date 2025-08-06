@@ -2,13 +2,11 @@ import React, { useState, useEffect, FC } from 'react'
 import Modal from 'react-modal'
 import styles from '@/styles/AddClientModal.module.css'
 import { useForm, SubmitHandler } from 'react-hook-form'
-import { useMutation } from '@tanstack/react-query'
-import { calendarService } from '@/services/calendar.service'
-import { toast } from 'react-toastify'
-import { UserMeeting } from '@/helpers/types/calendar'
 import { Input } from '@/components/ui/input'
 import Select from 'react-select'
 import { DropdownIndicator } from '@/components/ui/clients/Clients'
+import { useCreateCustomer } from '@/api/hooks/customer/useCreateCustomer'
+import { toast } from 'react-toastify'
 
 interface ClientForm {
   clientType: string
@@ -47,7 +45,7 @@ interface IAddClientModalProps {
 }
 
 export const AddClientModal: FC<IAddClientModalProps> = ({ isOpen, onClose }) => {
-  const [clientType, setClientType] = useState('adult')
+  const [clientType, setClientType] = useState<'adult' | 'child' | 'couple'>('adult')
   const { register, handleSubmit, reset, setValue } = useForm<ClientForm>()
 
   useEffect(() => {
@@ -61,34 +59,16 @@ export const AddClientModal: FC<IAddClientModalProps> = ({ isOpen, onClose }) =>
 
   const handleChangeType = (value: string) => {
     reset()
-    setClientType(value)
+    setClientType(value as 'adult' | 'child' | 'couple')
   }
 
-  const { mutate } = useMutation({
-    mutationKey: ['addUser'],
-    mutationFn: (data: UserMeeting) => {
-      if (clientType === 'adult') {
-        return calendarService.createAdultUser(data)
-      } else if (clientType === 'child') {
-        return calendarService.createChildUser(data)
-      } else if (clientType === 'couple') {
-        return calendarService.createCoupleUser(data)
-      }
-      throw new Error('Неизвестный тип клиента')
-    },
-    onSuccess: () => {
-      toast.success('Клиент успешно добавлен!')
-      reset()
-      onClose()
-    },
-    onError: () => {
-      toast.error('Ошибка при добавлении клиента')
-    },
-  })
+  const { mutateAsync } = useCreateCustomer(clientType)
 
-  const onSubmit: SubmitHandler<ClientForm> = (data) => {
+  const onSubmit: SubmitHandler<ClientForm> = async (data) => {
+    let payload
+
     if (clientType === 'child') {
-      mutate({
+      payload = {
         lastName: data.lastName,
         secondName: data.secondName,
         firstName: data.firstName,
@@ -110,11 +90,9 @@ export const AddClientModal: FC<IAddClientModalProps> = ({ isOpen, onClose }) =>
           meetingFormat: data.parentCommunicationFormat,
           mail: data.parentEmail,
         },
-      })
-    }
-
-    if (clientType === 'couple') {
-      mutate({
+      }
+    } else if (clientType === 'couple') {
+      payload = {
         lastName: data.lastName,
         secondName: data.secondName,
         firstName: data.firstName,
@@ -123,7 +101,6 @@ export const AddClientModal: FC<IAddClientModalProps> = ({ isOpen, onClose }) =>
         mail: data.mail,
         gender: data.gender,
         meetingFormat: data.communicationFormat,
-        // @ts-ignore
         secondPerson: {
           lastName: data.client2LastName,
           secondName: data.client2SecondName,
@@ -134,11 +111,32 @@ export const AddClientModal: FC<IAddClientModalProps> = ({ isOpen, onClose }) =>
           meetingFormat: data.client2CommunicationFormat,
           mail: data.client2Email,
         },
-      })
+      }
+    } else {
+      payload = { ...data }
     }
 
-    if (clientType === 'adult') {
-      mutate({ ...data })
+    const toastId = toast.loading('Добавление клиента...')
+
+    try {
+      await mutateAsync(payload)
+
+      toast.update(toastId, {
+        render: 'Клиент успешно добавлен',
+        type: 'success',
+        isLoading: false,
+        autoClose: 3000,
+      })
+
+      reset()
+      onClose()
+    } catch {
+      toast.update(toastId, {
+        render: 'Ошибка при добавлении клиента',
+        type: 'error',
+        isLoading: false,
+        autoClose: 5000,
+      })
     }
   }
 

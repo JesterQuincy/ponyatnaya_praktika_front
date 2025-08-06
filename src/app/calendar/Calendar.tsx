@@ -3,7 +3,7 @@
 import styles from '@/styles/calendar.module.css'
 import Header from '@/components/ui/calendar/CalendarHeader'
 import { AddClientModal } from '@/components/ui/ModalOverlay'
-import AddMeetModal from '@/components/ui/AddMeetModal'
+import { AddMeetModal } from '@/components/ui/AddMeetModal'
 import { useState, ReactNode } from 'react'
 import SideBar from '@/components/ui/calendar/CalendarSideBar'
 
@@ -36,7 +36,7 @@ export function Calendar({ children }: CalendarProps) {
       <SideBar />
       <div className={styles.CentralContainer}>
         <Header onOpenModal={handleOpenModal} onOpenModalMeet={handleOpenModalMeet} />
-        <div className={styles.Content}>{children}</div>
+        {children}
       </div>
       <AddClientModal isOpen={isModalOpen} onClose={handleCloseModal} />
       <AddMeetModal isOpen={isOpenModalMeet} onClose={handleCloseModalMeet} />

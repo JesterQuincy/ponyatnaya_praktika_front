@@ -16,6 +16,8 @@ interface AccountProps {
 }
 
 export function InputAccount({ form, name, label, type, textarea = false }: AccountProps & { textarea?: boolean }) {
+  if (name === 'userDiplomasList') return null
+
   return (
     <FormField
       control={form.control}
@@ -29,7 +31,7 @@ export function InputAccount({ form, name, label, type, textarea = false }: Acco
                 <Textarea
                   {...field}
                   placeholder={label}
-                  value={field.value !== null && field.value !== undefined ? String(field.value) : ''}
+                  value={field.value || undefined}
                   className="bg-white rounded-[6px] border-gray"
                 />
               ) : (
@@ -37,7 +39,7 @@ export function InputAccount({ form, name, label, type, textarea = false }: Acco
                   {...field}
                   type={type}
                   placeholder={label}
-                  value={field.value !== null && field.value !== undefined ? String(field.value) : ''}
+                  value={field.value || undefined}
                   className="bg-white rounded-[6px]"
                 />
               )}

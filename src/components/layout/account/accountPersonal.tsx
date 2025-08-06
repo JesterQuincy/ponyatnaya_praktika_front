@@ -26,9 +26,6 @@ export default function AccountPersonal({ form }: AccountProps) {
       toast.error('Не удалось загрузить изображение')
     }
   }
-  const clickRef = () => {
-    if (inputRef.current) inputRef.current.click()
-  }
 
   return (
     <>
@@ -59,7 +56,9 @@ export default function AccountPersonal({ form }: AccountProps) {
           type="file"
           accept=".png, .jpg, .webp"
           onChange={(e) => {
-            if (e.target.files && e.target.files.length > 0) photoTo64(e.target.files[0])
+            if (e.target.files && e.target.files.length > 0) {
+              photoTo64(e.target.files[0])
+            }
           }}
         />
       </Label>
