@@ -38,7 +38,11 @@ export const clientService = {
   },
 
   async updateMainHypotheses(customerId: number, data: string): Promise<void> {
-    return await axiosWithAuth.patch(`/api/customer/mainHypotheses/${customerId}?mainHypotheses=${data}`)
+    return await axiosWithAuth.patch(`/api/customer/mainHypotheses/${customerId}`, null, {
+      params: {
+        mainHypotheses: data,
+      },
+    })
   },
 
   async updateUser(data: DeepPartial<IClient>): Promise<void> {

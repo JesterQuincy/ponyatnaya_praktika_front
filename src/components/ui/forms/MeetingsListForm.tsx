@@ -65,7 +65,7 @@ export function MeetingsListForm({ user }: ICardFormProps) {
   const form = useForm<IMainHypotheses>({
     resolver: zodResolver(mainHypothesesShema),
     defaultValues: {
-      data: '',
+      data: user.mainHypotheses,
     },
   })
 
@@ -211,8 +211,7 @@ export function MeetingsListForm({ user }: ICardFormProps) {
                     <FormControl>
                       <textarea
                         {...field}
-                        content={user.mainHypotheses}
-                        className="border border-[#D9D9D9] rounded-[6px] w-[90%] min-h-[110px]"
+                        className="border border-[#D9D9D9] rounded-[6px] w-[90%] min-h-[110px] p-2  "
                       />
                     </FormControl>
                     <FormMessage className="text-red-500" />
