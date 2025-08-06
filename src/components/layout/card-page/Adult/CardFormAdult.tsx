@@ -100,7 +100,7 @@ export function CardFormAdult({ user }: ICardFormProps) {
   })
 
   const {
-    formState: { isSubmitting, isValid, isValidating, dirtyFields },
+    formState: { isSubmitting, dirtyFields },
     handleSubmit,
   } = form
 
@@ -112,7 +112,7 @@ export function CardFormAdult({ user }: ICardFormProps) {
     } catch {}
   }
 
-  const isSubmitLoading = isPending || isSubmitting || !isValid || isValidating || isEmpty(dirtyFields)
+  const isSubmitLoading = isPending || isSubmitting || isEmpty(dirtyFields)
 
   return (
     <>
