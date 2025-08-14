@@ -18,6 +18,7 @@ import { useGetTypePhoto } from '@/api/hooks/photoMethods/useGetTypePhoto'
 import { toast } from 'react-toastify'
 import { IMethod, IPhotoProjectiveMethod } from '@/types/methods/meetMethods'
 import { useGetUserMeets } from '@/api/hooks/meet/useGetUserMeets'
+import { ChangeMeetModal } from '../ChangeMeetModal/ChangeMeetModal'
 
 interface IMethodState {
   methodId: number
@@ -40,6 +41,7 @@ export function MeetingsListForm({ user }: ICardFormProps) {
   const { setMeet } = useMeet()
 
   const [currentPage, setCurrentPage] = useState(1)
+  const [editModal, setEditModal] = useState(false)
   const [activeDropdown, setActiveDropdown] = useState<number | null>(null)
   const [showAll, setShowAll] = useState(false)
   const [method, setMethod] = useState<IMethodState | null>(null)
@@ -80,6 +82,14 @@ export function MeetingsListForm({ user }: ICardFormProps) {
 
   const visibleMetodics = showAll ? projMethods?.data : projMethods?.data?.slice(0, 5)
 
+  const onOpenEditModal = () => {
+    setEditModal(true)
+  }
+
+  const onCloseEditModal = () => {
+    setEditModal(false)
+  }
+
   return (
     <div className="flex gap-[15px]">
       <div className="bg-[#F1F1F1] w-[60%] px-[16px] py-[25px] rounded-tr-[4px] rounded-br-[4px] rounded-bl-[4px] flex flex-col gap-[25px] relative">
@@ -118,7 +128,10 @@ export function MeetingsListForm({ user }: ICardFormProps) {
                 <Image src={TripleDots} alt="TripleDots" />
               </Button>
               <div>
-                {activeDropdown === meet.id && <DropdownMenu id={meet.id} onClose={() => setActiveDropdown(null)} />}
+                {activeDropdown === meet.id && (
+                  <DropdownMenu id={meet.id} onEdit={onOpenEditModal} onClose={() => setActiveDropdown(null)} />
+                )}
+                {editModal && <ChangeMeetModal isOpen={editModal} meetId={meet.id} onClose={onCloseEditModal} />}
               </div>
             </div>
           ))

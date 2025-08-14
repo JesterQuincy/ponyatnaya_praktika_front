@@ -1,51 +1,56 @@
 import React, { FC } from 'react'
 import Modal from 'react-modal'
 import styles from '@/styles/AddMeetModal.module.css'
-import { SubmitHandler, Controller } from 'react-hook-form'
+import { SubmitHandler, Controller, DeepPartial } from 'react-hook-form'
 import { toast } from 'react-toastify'
 import { EMeetingFormat } from '@/types/clients'
 import { ErrorField } from '@/components/ErrorField'
 import { cn } from '@/lib/utils'
-import {
-  ControlledInput,
-  ControlledSelect,
-  DEFAULT_VALUES,
-  prepareMeetingPayload,
-  TAddMeetSchema,
-  EModalType,
-  EPaymentType,
-} from '@/components/ui/AddMeetModal'
+import { EModalType, EPaymentType } from '@/components/ui/AddMeetModal'
 import { useChangeMeetForm } from './useChangeMeetForm'
 import { useUpdateMeeting } from '@/api/hooks/meet/useUpdateMeeting'
 import { DateTimeFields } from '../DateTimeFields'
+import { ControlledSelect } from '../ControlledSelect/ControlledSelect'
+import { ControlledInput } from '../ControlledSelect/ControlledInput'
+import z from 'zod'
+import { baseSchema } from './schema'
+import { IMeetingDetails } from '@/types/meet/getMeetById'
+import moment from 'moment'
 
 interface IAddMeetModalProps {
   isOpen: boolean
   onClose: () => void
+  meetId: number
 }
 
-export const ChangeMeetModal: FC<IAddMeetModalProps> = ({ isOpen, onClose }) => {
-  const { watch, control, errors, type, reset, handleSubmit, numberFields } = useChangeMeetForm('2')
+export const ChangeMeetModal: FC<IAddMeetModalProps> = ({ isOpen, onClose, meetId }) => {
+  const { watch, control, type, errors, reset, handleSubmit, numberFields } = useChangeMeetForm(meetId)
 
   const { mutateAsync: changeMeeting } = useUpdateMeeting()
 
   const formatMeet = watch('formatMeet')
 
-  const onSubmit: SubmitHandler<TAddMeetSchema> = async (data) => {
-    const payload = prepareMeetingPayload(data, type)
-
-    if (!payload) {
-      toast.error('Некорректные дата/время/длительность')
-      return
-    }
-
+  const onSubmit: SubmitHandler<z.infer<typeof baseSchema>> = async (data) => {
     const toastId = toast.loading('Обновление встречи...')
 
+    const start = moment(data.time, 'HH:mm')
+    const end = start.add(Number(data.duration), 'minutes').format('HH:mm')
+
+    const res: DeepPartial<IMeetingDetails> = {
+      id: meetId,
+      startMeet: data.time,
+      endMeet: String(end),
+      formatMeet: data.formatMeet,
+      paymentType: data.paymentType,
+      place: data.place,
+      dateMeet: data.dateMeet,
+    }
+
     try {
-      await changeMeeting(payload)
+      await changeMeeting(res)
 
       toast.update(toastId, {
-        render: 'Вы успешно назначили встречу',
+        render: 'Вы успешно обновили встречу',
         type: 'success',
         isLoading: false,
         autoClose: 3000,
@@ -54,7 +59,7 @@ export const ChangeMeetModal: FC<IAddMeetModalProps> = ({ isOpen, onClose }) => 
       handleClose()
     } catch (error) {
       toast.update(toastId, {
-        render: 'Ошибка при назначении встречи',
+        render: 'Ошибка при обновлении встречи',
         type: 'error',
         isLoading: false,
         autoClose: 5000,
@@ -64,7 +69,6 @@ export const ChangeMeetModal: FC<IAddMeetModalProps> = ({ isOpen, onClose }) => 
 
   const handleClose = () => {
     onClose()
-    reset(DEFAULT_VALUES)
   }
 
   return (
@@ -116,7 +120,7 @@ export const ChangeMeetModal: FC<IAddMeetModalProps> = ({ isOpen, onClose }) => 
           )}
 
           <>
-            <ErrorField message={errors.onCount?.message || errors.onDate?.message} />
+            <ErrorField message={errors.dateMeet?.message || errors.time?.message} />
           </>
 
           <div className="flex mt-[20px] justify-end gap-[10px] border-t border-[#CACACA] pt-[10px] font-montserrat font-semibold">

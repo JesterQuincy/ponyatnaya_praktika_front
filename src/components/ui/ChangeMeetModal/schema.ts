@@ -1,7 +1,7 @@
-import z from 'zod'
 import { EPaymentType } from '../AddMeetModal/types'
 import dayjs from 'dayjs'
 import { EMeetingFormat } from '@/types/clients'
+import z from 'zod'
 
 export const baseSchema = z.object({
   paymentType: z.enum(EPaymentType).optional(),
@@ -30,7 +30,7 @@ export const baseSchema = z.object({
         })
         return z.NEVER
       }
-      return num
+      return String(num)
     }),
   formatMeet: z.enum(EMeetingFormat, { error: () => ({ message: 'Формат встречи обязателен' }) }),
   place: z.string({ error: 'Место встречи обязательно' }).trim().min(1, 'Место встречи обязательно'),

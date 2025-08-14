@@ -12,13 +12,9 @@ export const useUpdateMeeting = () => {
     mutationKey: [EInvalidationTags.MEET_ID],
     mutationFn: (data: DeepPartial<IMeetingDetails>) => meetingService.updateMeeting(data),
     onSuccess: () => {
-      toast.success('Вы успешно обновили встречу')
       queryClient.invalidateQueries({ queryKey: [EInvalidationTags.MEET_ID] })
       queryClient.invalidateQueries({ queryKey: [EInvalidationTags.CALENDAR] })
       queryClient.refetchQueries({ queryKey: [EInvalidationTags.CALENDAR] })
-    },
-    onError: () => {
-      toast.error('Ошибка при обновлении встречи')
     },
   })
 }
