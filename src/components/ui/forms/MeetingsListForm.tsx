@@ -41,6 +41,7 @@ export function MeetingsListForm({ user }: ICardFormProps) {
   const { setMeet } = useMeet()
 
   const [currentPage, setCurrentPage] = useState(1)
+  const [selectedMeetId, setSelectedMeetId] = useState<number>(0)
   const [editModal, setEditModal] = useState(false)
   const [activeDropdown, setActiveDropdown] = useState<number | null>(null)
   const [showAll, setShowAll] = useState(false)
@@ -50,8 +51,6 @@ export function MeetingsListForm({ user }: ICardFormProps) {
   const { data: projMethods, isLoading: isProjMethodsLoading } = useGetProjMethodsByCustomerId(id ?? '')
   const { mutateAsync: typePhotos } = useGetTypePhoto()
   const { data: meetsData, isFetching } = useGetUserMeets(user.id, currentPage, 15)
-
-  console.log(meetsData?.data)
 
   const handleClick = (meet: any): void => {
     setMeet(meet)
@@ -82,7 +81,8 @@ export function MeetingsListForm({ user }: ICardFormProps) {
 
   const visibleMetodics = showAll ? projMethods?.data : projMethods?.data?.slice(0, 5)
 
-  const onOpenEditModal = () => {
+  const onOpenEditModal = (id: number) => {
+    setSelectedMeetId(id)
     setEditModal(true)
   }
 
@@ -129,9 +129,12 @@ export function MeetingsListForm({ user }: ICardFormProps) {
               </Button>
               <div>
                 {activeDropdown === meet.id && (
-                  <DropdownMenu id={meet.id} onEdit={onOpenEditModal} onClose={() => setActiveDropdown(null)} />
+                  <DropdownMenu
+                    id={meet.id}
+                    onEdit={() => onOpenEditModal(meet.id)}
+                    onClose={() => setActiveDropdown(null)}
+                  />
                 )}
-                {editModal && <ChangeMeetModal isOpen={editModal} meetId={meet.id} onClose={onCloseEditModal} />}
               </div>
             </div>
           ))
@@ -189,6 +192,7 @@ export function MeetingsListForm({ user }: ICardFormProps) {
           allPhotos={method.photos}
         />
       )}
+      {editModal && <ChangeMeetModal isOpen={editModal} meetId={selectedMeetId} onClose={onCloseEditModal} />}
     </div>
   )
 }
