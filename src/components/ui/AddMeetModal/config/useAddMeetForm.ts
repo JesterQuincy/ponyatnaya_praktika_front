@@ -1,4 +1,4 @@
-import { useForm } from 'react-hook-form'
+import { Resolver, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { schema, TAddMeetSchema } from '../schema'
 import { ECreateMeetingRepeat } from '@/helpers/types/calendar'
@@ -6,7 +6,7 @@ import { EFinishRepetition, DEFAULT_VALUES } from '@/components/ui/AddMeetModal'
 
 export const useAddMeetForm = () => {
   const form = useForm<TAddMeetSchema>({
-    resolver: zodResolver(schema),
+    resolver: zodResolver(schema) as Resolver<TAddMeetSchema>,
     defaultValues: DEFAULT_VALUES,
   })
 
