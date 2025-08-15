@@ -22,6 +22,7 @@ const baseSchema = z.object({
     },
     z.union([z.number().positive(), z.undefined()]).optional(),
   ),
+
   paymentType: z.enum(EPaymentType).optional(),
   nameMeet: z.string().optional(),
   dateMeet: z.string().optional(),
