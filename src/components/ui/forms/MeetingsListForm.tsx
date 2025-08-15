@@ -9,7 +9,7 @@ import TripleDots from '@/public/icon/tripleDots.svg'
 
 import { Button } from '../buttons/Button'
 import { Pagination } from '../Pagination'
-import { DropdownMenu } from './DropDownMenu'
+import { DropdownItemProps, DropdownMenu } from './DropDownMenu'
 
 import { useGetProjMethodsByCustomerId } from '@/api/hooks/methods/useGetProjMethodsByCustomerId'
 import { Spinner } from '@/components/Spinner'
@@ -25,6 +25,7 @@ import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { mainHypothesesShema } from '@/models/mainHypothesesShema'
 import { ChangeMeetModal } from '../ChangeMeetModal/ChangeMeetModal'
+import { useDeleteMeeting } from '@/api/hooks/meet/useDeleteMeeting'
 
 interface IMethodState {
   methodId: number
@@ -60,6 +61,7 @@ export function MeetingsListForm({ user }: ICardFormProps) {
 
   const { data: projMethods, isLoading: isProjMethodsLoading } = useGetProjMethodsByCustomerId(id ?? '')
   const { mutateAsync: typePhotos } = useGetTypePhoto()
+  const { mutateAsync: deleteMeeting } = useDeleteMeeting()
   const { data: meetsData, isFetching } = useGetUserMeets(user.id, currentPage, 15)
   const { mutateAsync: updateHypotheses, isPending } = useUpdateMainHypotheses()
 
@@ -170,8 +172,18 @@ export function MeetingsListForm({ user }: ICardFormProps) {
               <div>
                 {activeDropdown === meet.id && (
                   <DropdownMenu
-                    id={meet.id}
-                    onEdit={() => onOpenEditModal(meet.id)}
+                    items={[
+                      {
+                        label: 'Редактировать',
+                        key: 'change',
+                        onClick: () => onOpenEditModal(meet.id),
+                      },
+                      {
+                        label: 'Удалить',
+                        key: 'delete',
+                        onClick: () => deleteMeeting(meet.id),
+                      },
+                    ]}
                     onClose={() => setActiveDropdown(null)}
                   />
                 )}
