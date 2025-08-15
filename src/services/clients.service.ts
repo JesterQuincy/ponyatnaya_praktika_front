@@ -37,6 +37,14 @@ export const clientService = {
     return await axiosWithAuth.get<IMeetResponse>(`/api/v1/General/searchMeet/${customerId}/${offset}/${limit}`)
   },
 
+  async updateMainHypotheses(customerId: number, data: string): Promise<void> {
+    return await axiosWithAuth.patch(`/api/customer/mainHypotheses/${customerId}`, null, {
+      params: {
+        mainHypotheses: data,
+      },
+    })
+  },
+
   async updateUser(data: DeepPartial<IClient>): Promise<void> {
     return await axiosWithAuth.put('/api/customer', data)
   },
