@@ -48,6 +48,7 @@ export const useChangeMeetForm = (meetId: number) => {
   const numberFields = (value: string) => value.replace(/\D/g, '')
 
   return {
+    clientType: data?.customer.clientType,
     isLoading,
     watch,
     type,

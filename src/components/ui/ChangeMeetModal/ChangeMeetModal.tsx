@@ -23,7 +23,7 @@ interface IAddMeetModalProps {
 }
 
 export const ChangeMeetModal: FC<IAddMeetModalProps> = ({ isOpen, onClose, meetId }) => {
-  const { watch, control, type, errors, handleSubmit, numberFields } = useChangeMeetForm(meetId)
+  const { watch, clientType, control, type, errors, handleSubmit, numberFields } = useChangeMeetForm(meetId)
 
   const { mutateAsync: changeMeeting } = useUpdateMeeting()
 
@@ -104,7 +104,7 @@ export const ChangeMeetModal: FC<IAddMeetModalProps> = ({ isOpen, onClose, meetI
             placeholder={`Введите ${formatMeet === EMeetingFormat.OFFLINE ? 'адрес' : 'ссылку'}`}
           />
 
-          {type === EModalType.CLIENT && (
+          {clientType !== 'Технический' && (
             <ControlledSelect
               name="paymentType"
               control={control}
