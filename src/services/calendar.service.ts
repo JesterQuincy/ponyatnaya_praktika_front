@@ -25,6 +25,10 @@ export const calendarService = {
     return await axiosWithAuth.get<ICalendarData>(`/api/v1/General/calendarData/get/${year}`)
   },
 
+  async deleteUserById(id: number): Promise<any> {
+    return await axiosWithAuth.delete(`api/customer/delete/${id}`)
+  },
+
   async getUsersByName(name: string) {
     return await axiosWithAuth.get<ISearchUser[]>(`/api/v1/Header/searchPersons/${name}`)
   },
