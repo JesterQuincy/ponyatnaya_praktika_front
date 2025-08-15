@@ -153,7 +153,7 @@ export default function SideBar() {
                     <NotificationIcon color={iconColor[2]} /> Анкета заполнена
                   </span>
                   <span className="flex  items-center gap-2">
-                    <NotificationIcon color={iconColor[3]} /> Истек срок
+                    <NotificationIcon color={iconColor[3]} /> Истек срок анкеты
                   </span>
                 </HoverCardContent>
               </HoverCard>
