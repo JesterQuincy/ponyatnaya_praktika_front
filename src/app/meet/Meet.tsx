@@ -11,9 +11,7 @@ import { Suspense } from 'react'
 export function Meet() {
   const id = useSearchParams().get('id')
 
-  const { data, isPending } = useGetMeeting(id ?? '')
-
-  const meet = data?.data
+  const { data: meet, isPending } = useGetMeeting(Number(id))
 
   return (
     <div className={styles.card}>

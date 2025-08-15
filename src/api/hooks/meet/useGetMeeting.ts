@@ -3,10 +3,10 @@ import { meetingService } from '@/services/meet.sevice'
 import { toast } from 'react-toastify'
 import { EInvalidationTags } from '@/api/hooks/constants'
 
-export const useGetMeeting = (id: string) => {
+export const useGetMeeting = (id: number) => {
   const query = useQuery({
     queryKey: [EInvalidationTags.MEET_ID],
-    queryFn: () => meetingService.getMeetingById(id),
+    queryFn: () => meetingService.getMeetingById(id).then((res) => res.data),
     enabled: !!id,
   })
 

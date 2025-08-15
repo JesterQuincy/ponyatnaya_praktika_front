@@ -83,7 +83,7 @@ export function MeetHeader({ headerData }: IMeetFormProps) {
               <span>{headerData.nextDayMeet ? getDate(headerData.nextDayMeet) : emptyRowField}</span>
             </div>
             <div className="text-sm">
-              <span className="text-[#7E7E7E]">Время: </span>
+              <span className="text-[#7E7E7E]">Время следующей встречи: </span>
               <span>
                 {getTime(headerData.nextStartMeet)}-{getTime(headerData.nextEndMeet)}
               </span>

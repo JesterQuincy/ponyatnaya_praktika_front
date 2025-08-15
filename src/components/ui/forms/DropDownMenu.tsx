@@ -3,11 +3,12 @@ import { useDeleteMeeting } from '@/api/hooks/meet/useDeleteMeeting'
 import { toast } from 'react-toastify'
 
 interface DropdownMenuProps {
+  onEdit: () => void
   onClose: () => void
   id: number
 }
 
-export function DropdownMenu({ onClose, id }: DropdownMenuProps) {
+export function DropdownMenu({ onClose, id, onEdit }: DropdownMenuProps) {
   const { mutateAsync: deleteMeeting } = useDeleteMeeting()
 
   const menuRef = useRef<HTMLDivElement>(null)
@@ -57,6 +58,9 @@ export function DropdownMenu({ onClose, id }: DropdownMenuProps) {
   return (
     <div ref={menuRef} className="absolute right-[20px] top-[40px] bg-white shadow-lg rounded-lg z-10 w-[150px] py-2">
       <ul className="flex flex-col gap-1">
+        <li className="px-4 py-2 hover:bg-[#D9D9D9] cursor-pointer text-sm" onClick={onEdit}>
+          Редактировать
+        </li>
         <li className="px-4 py-2 hover:bg-[#D9D9D9] cursor-pointer text-sm" onClick={handleDelete}>
           Удалить
         </li>

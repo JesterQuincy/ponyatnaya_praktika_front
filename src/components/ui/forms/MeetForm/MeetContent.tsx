@@ -2,6 +2,7 @@
 
 import Image from 'next/image'
 import ImageIcon from '@/public/icon/imageWhite.svg'
+import EditIcon from '@/public/icon/Edit.svg'
 import { Button } from '../../buttons/Button'
 import { Button as SaveButton } from '@/components/ui/button'
 import { meetData } from '../mocks/meetsList'
@@ -21,6 +22,7 @@ import { Pencil, Trash2 } from 'lucide-react'
 import { TModalType } from '@/components/ui/forms/MeetForm/MeetForm'
 import { toast } from 'react-toastify'
 import CopyIcon from '@/public/icon/copy.svg'
+import { ChangeMeetModal } from '../../ChangeMeetModal/ChangeMeetModal'
 
 interface IMeetFormProps {
   content: IMeetingDetails
@@ -29,6 +31,7 @@ interface IMeetFormProps {
 
 export function MeetContent({ content, modalOpen }: IMeetFormProps) {
   const [showAll, setShowAll] = useState(false)
+  const [changeModalState, setChangeModalState] = useState(false)
 
   const {
     data: methods,
@@ -86,6 +89,13 @@ export function MeetContent({ content, modalOpen }: IMeetFormProps) {
     }
   }
 
+  const onOpen = () => {
+    setChangeModalState(true)
+  }
+  const onClose = () => {
+    setChangeModalState(false)
+  }
+
   return (
     <Form {...form}>
       <FormPrompt hasUnsavedChanges={!isEmpty(form.formState.dirtyFields)} />
@@ -118,7 +128,17 @@ export function MeetContent({ content, modalOpen }: IMeetFormProps) {
             />
           ))}
         </div>
-        <div className="bg-[#F1F1F1] w-[40%] rounded-[4px] py-[29px] px-[11px] h-fit">
+        <div className="bg-[#F1F1F1] w-[40%] rounded-[4px] py-[20px] px-[11px] h-fit flex flex-col gap-3">
+          <div>
+            <Button
+              className="bg-[#5A5A5A] text-white px-[10px] py-[5px] rounded-[6px] flex items-center"
+              type={'button'}
+              onClick={onOpen}>
+              <Image src={EditIcon} alt="CorrectFile" className="mr-2" />
+              <span>Изменить параметры</span>
+            </Button>
+            {changeModalState && <ChangeMeetModal meetId={content.id} isOpen={changeModalState} onClose={onClose} />}
+          </div>
           <div>
             <span className="font-bold text-[20px]">Место встречи</span>
             <div

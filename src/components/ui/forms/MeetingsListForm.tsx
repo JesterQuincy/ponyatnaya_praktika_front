@@ -24,6 +24,7 @@ import { Form, FormControl, FormField, FormItem, FormMessage } from '@/component
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { mainHypothesesShema } from '@/models/mainHypothesesShema'
+import { ChangeMeetModal } from '../ChangeMeetModal/ChangeMeetModal'
 
 interface IMethodState {
   methodId: number
@@ -47,11 +48,11 @@ export function MeetingsListForm({ user }: ICardFormProps) {
     return typeof id === 'string' ? id : undefined
   }, [params])
 
-  console.log(user)
-
   const { setMeet } = useMeet()
 
   const [currentPage, setCurrentPage] = useState(1)
+  const [selectedMeetId, setSelectedMeetId] = useState<number>(0)
+  const [editModal, setEditModal] = useState(false)
   const [activeDropdown, setActiveDropdown] = useState<number | null>(null)
   const [showAll, setShowAll] = useState(false)
   const [method, setMethod] = useState<IMethodState | null>(null)
@@ -120,6 +121,15 @@ export function MeetingsListForm({ user }: ICardFormProps) {
 
   const visibleMetodics = showAll ? projMethods?.data : projMethods?.data?.slice(0, 5)
 
+  const onOpenEditModal = (id: number) => {
+    setSelectedMeetId(id)
+    setEditModal(true)
+  }
+
+  const onCloseEditModal = () => {
+    setEditModal(false)
+  }
+
   return (
     <div className="flex gap-[15px]">
       <div className="bg-[#F1F1F1] w-[60%] px-[16px] py-[25px] rounded-tr-[4px] rounded-br-[4px] rounded-bl-[4px] flex flex-col gap-[25px] relative">
@@ -158,7 +168,13 @@ export function MeetingsListForm({ user }: ICardFormProps) {
                 <Image src={TripleDots} alt="TripleDots" />
               </Button>
               <div>
-                {activeDropdown === meet.id && <DropdownMenu id={meet.id} onClose={() => setActiveDropdown(null)} />}
+                {activeDropdown === meet.id && (
+                  <DropdownMenu
+                    id={meet.id}
+                    onEdit={() => onOpenEditModal(meet.id)}
+                    onClose={() => setActiveDropdown(null)}
+                  />
+                )}
               </div>
             </div>
           ))
@@ -236,6 +252,7 @@ export function MeetingsListForm({ user }: ICardFormProps) {
           allPhotos={method.photos}
         />
       )}
+      {editModal && <ChangeMeetModal isOpen={editModal} meetId={selectedMeetId} onClose={onCloseEditModal} />}
     </div>
   )
 }
