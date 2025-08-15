@@ -4,6 +4,7 @@ export interface IMeetingDetails {
   nameMeet: string
   dateMeet: string // или `Date`
   startMeet: string
+  place: string
   // startMeet: ITime
   endMeet: string
   // endMeet: ITime

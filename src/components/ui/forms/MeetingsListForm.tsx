@@ -11,13 +11,13 @@ import { Button } from '../buttons/Button'
 import { Pagination } from '../Pagination'
 import { DropdownMenu } from './DropDownMenu'
 
-import { clientService } from '@/services/clients.service'
 import { useGetProjMethodsByCustomerId } from '@/api/hooks/methods/useGetProjMethodsByCustomerId'
 import { Spinner } from '@/components/Spinner'
 import { ViewMethodicModal } from '@/components/ui/forms/MeetForm/modals/components'
 import { useGetTypePhoto } from '@/api/hooks/photoMethods/useGetTypePhoto'
 import { toast } from 'react-toastify'
 import { IMethod, IPhotoProjectiveMethod } from '@/types/methods/meetMethods'
+import { useGetUserMeets } from '@/api/hooks/meet/useGetUserMeets'
 
 interface IMethodState {
   methodId: number
@@ -41,34 +41,15 @@ export function MeetingsListForm({ user }: ICardFormProps) {
 
   const [currentPage, setCurrentPage] = useState(1)
   const [activeDropdown, setActiveDropdown] = useState<number | null>(null)
-  const [meetsList, setMeetsList] = useState<any[]>([]) // Состояние для хранения встреч
   const [showAll, setShowAll] = useState(false)
   const [method, setMethod] = useState<IMethodState | null>(null)
   const [loadingMethodId, setLoadingMethodId] = useState<number | null>(null) // Состояние для отслеживания загружающегося метода
 
   const { data: projMethods, isLoading: isProjMethodsLoading } = useGetProjMethodsByCustomerId(id ?? '')
   const { mutateAsync: typePhotos } = useGetTypePhoto()
+  const { data: meetsData, isFetching } = useGetUserMeets(user.id, currentPage, 15)
 
-  const itemsPerPage = 7
-  const indexOfLastItem = currentPage * itemsPerPage
-  const indexOfFirstItem = indexOfLastItem - itemsPerPage
-
-  useEffect(() => {
-    clientService
-      .getUserMeets(0, 150, user.id)
-      .then((response) => {
-        setMeetsList(response.data)
-      })
-      .catch((error) => {
-        console.error('Ошибка при получении встреч:', error)
-      })
-  }, [user?.id])
-
-  const currentMeets = meetsList.slice(indexOfFirstItem, indexOfLastItem)
-
-  const totalPages = Math.ceil(meetsList.length / itemsPerPage)
-
-  const paginate = (pageNumber: number) => setCurrentPage(pageNumber)
+  console.log(meetsData?.data)
 
   const handleClick = (meet: any): void => {
     setMeet(meet)
@@ -102,45 +83,51 @@ export function MeetingsListForm({ user }: ICardFormProps) {
   return (
     <div className="flex gap-[15px]">
       <div className="bg-[#F1F1F1] w-[60%] px-[16px] py-[25px] rounded-tr-[4px] rounded-br-[4px] rounded-bl-[4px] flex flex-col gap-[25px] relative">
-        {currentMeets.map((meet) => (
-          <div key={meet.id} className="bg-white rounded-[6px] flex gap-[10px] px-[10px] py-[11px] relative">
-            <div className="flex flex-col gap-[4px]">
-              <span
-                onClick={(): void => handleClick(meet)}
-                className="text-[#EA660C] text-[22px] underline underline-offset-[2.5px] cursor-pointer">
-                {meet.nameMeet}
-              </span>
-              <span className="text-[12px] flex gap-[5px]">
-                <span className="text-[#7E7E7E]">Дата:</span>
-                <span className="font-semibold">{meet.dateMeet}</span>
-              </span>
-            </div>
-            <div className="flex flex-col gap-[5px]">
-              <div className="flex gap-[5px] items-center">
+        {isFetching ? (
+          <Spinner />
+        ) : (
+          meetsData?.data.data.map((meet) => (
+            <div key={meet.id} className="bg-white rounded-[6px] flex gap-[10px] px-[10px] py-[11px] relative">
+              <div className="flex flex-col gap-[4px]">
                 <span
-                  className={
-                    meet.status === 'Онлайн'
-                      ? 'bg-[#CFEFFD] max-w-fit rounded-[4px] text-[13px] px-[11px] py-[5px]'
-                      : 'bg-[#FDDCC6] max-w-fit rounded-[4px] text-[13px] px-[11px] py-[5px]'
-                  }>
-                  {meet.formatMeet}
+                  onClick={(): void => handleClick(meet)}
+                  className="text-[#EA660C] text-[22px] underline underline-offset-[2.5px] cursor-pointer">
+                  {meet.nameMeet}
+                </span>
+                <span className="text-[12px] flex gap-[5px]">
+                  <span className="text-[#7E7E7E]">Дата:</span>
+                  <span className="font-semibold">{meet.dateMeet}</span>
                 </span>
               </div>
-              <span className="text-[13px]">{meet.clientSessionRequest}</span>
+              <div className="flex flex-col gap-[5px]">
+                <div className="flex gap-[5px] items-center">
+                  <span
+                    className={
+                      meet.formatMeet === 'Онлайн'
+                        ? 'bg-[#CFEFFD] max-w-fit rounded-[4px] text-[13px] px-[11px] py-[5px]'
+                        : 'bg-[#FDDCC6] max-w-fit rounded-[4px] text-[13px] px-[11px] py-[5px]'
+                    }>
+                    {meet.formatMeet}
+                  </span>
+                </div>
+                <span className="text-[13px]">{meet.clientSessionRequest}</span>
+              </div>
+              <Button
+                onClick={() => handleDropdownToggle(meet.id)}
+                className="absolute bg-[#E4E4E4] right-[20px] text-[#7E7E7E] text-[20px] flex items-center p-[10px] rounded-[6px]">
+                <Image src={TripleDots} alt="TripleDots" />
+              </Button>
+              <div>
+                {activeDropdown === meet.id && <DropdownMenu id={meet.id} onClose={() => setActiveDropdown(null)} />}
+              </div>
             </div>
-            <Button
-              onClick={() => handleDropdownToggle(meet.id)}
-              className="absolute bg-[#E4E4E4] right-[20px] text-[#7E7E7E] text-[20px] flex items-center p-[10px] rounded-[6px]">
-              <Image src={TripleDots} alt="TripleDots" />
-            </Button>
-            <div>
-              {activeDropdown === meet.id && <DropdownMenu id={meet.id} onClose={() => setActiveDropdown(null)} />}
-            </div>
-          </div>
-        ))}
-        <div className="absolute  bottom-[30px] left-[50%] right-[50%]">
-          <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={paginate} />
-        </div>
+          ))
+        )}
+        <Pagination
+          currentPage={currentPage}
+          totalPages={meetsData?.data.pagination.totalPages || 0}
+          onPageChange={setCurrentPage}
+        />
       </div>
       <div className="bg-[#F1F1F1] w-[40%] rounded-[4px] py-[25px] px-[11px]">
         {isProjMethodsLoading && <Spinner />}
