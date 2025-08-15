@@ -19,3 +19,9 @@ export interface IAccount {
   userImage?: string | null
   userDiplomasList?: UserDiploma[]
 }
+
+export interface IUserInfo {
+  userPicture: string
+  userName: string
+  userMail: string
+}

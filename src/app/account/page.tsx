@@ -21,6 +21,8 @@ export default function AccountPage() {
     resolver: zodResolver(accountSchema),
     defaultValues: {
       userDiplomasList: [],
+      firstName: '',
+      lastName: '',
     },
   })
 

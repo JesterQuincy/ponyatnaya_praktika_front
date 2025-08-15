@@ -73,4 +73,25 @@ export interface IMethod {
   user: User
 }
 
+interface Meet {
+  id: number
+  nameMeet: string
+  dateMeet: string // ISO date format: YYYY-MM-DD
+  formatMeet: string
+  clientSessionRequest: string
+}
+
+interface Pagination {
+  total: number
+  page: number
+  pageSize: number
+  totalPages: number
+}
+
+export interface IMeetResponse {
+  data: Meet[]
+  mainHypotheses: string
+  pagination: Pagination
+}
+
 export type IMethodsList = IMethod[]
