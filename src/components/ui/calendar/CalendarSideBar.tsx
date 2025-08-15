@@ -3,6 +3,7 @@
 import { useMemo, useState } from 'react'
 import Image from 'next/image'
 import PersonPhoto from '@/public/person-default.png'
+import exclamationIcon from '@/public/icon/exclamation.svg'
 import ExitLogo from '@/public/Out.png'
 import { authService } from '@/services/auth.service'
 import { Button } from '@/components/ui/button'
@@ -14,6 +15,7 @@ import { NotificationIcon } from '@/components/ui/calendar/icons/NotificationIco
 import { useGetUserInfo } from '@/api/hooks/account/useGetUserInfo'
 import { Skeleton } from '@/components/ui/skeleton'
 import { useGetNotifications } from '@/api/hooks/calendar/useGetNotifications'
+import { HoverCard, HoverCardContent, HoverCardTrigger } from '@radix-ui/react-hover-card'
 
 const iconColor = {
   0: '#B0B0B0',
@@ -132,8 +134,29 @@ export default function SideBar() {
         {isLoadingMeetings && !meetings?.length && <Skeleton className="w-full h-full rounded-xl" />}
         {!!meetings?.length && (
           <>
-            <div className="text-sm mb-4">
-              У вас <span className="text-orange font-semibold">{meetings?.length}</span> новых заявок:
+            <div className="text-sm mb-4 flex gap-2">
+              У вас <span className="text-orange font-semibold">{meetings?.length}</span> новых заявок
+              <HoverCard openDelay={200} closeDelay={200}>
+                <HoverCardTrigger asChild>
+                  <Image className="rotate-180" src={exclamationIcon} alt="exclamation mark" width={16} height={16} />
+                </HoverCardTrigger>
+                <HoverCardContent
+                  side="top"
+                  className="flex flex-col gap-1 bg-white dark:bg-gray-800 p-3 rounded-lg shadow-lg">
+                  <span className="flex  items-center gap-2">
+                    <NotificationIcon color={iconColor[0]} /> Анкета не создана
+                  </span>
+                  <span className="flex  items-center gap-2">
+                    <NotificationIcon color={iconColor[1]} /> Анкета создана
+                  </span>
+                  <span className="flex  items-center gap-2">
+                    <NotificationIcon color={iconColor[2]} /> Анкета заполнена
+                  </span>
+                  <span className="flex  items-center gap-2">
+                    <NotificationIcon color={iconColor[3]} /> Истек срок
+                  </span>
+                </HoverCardContent>
+              </HoverCard>
             </div>
             <div className="relative">
               {displayedMeetings.map((meeting, index) => (
