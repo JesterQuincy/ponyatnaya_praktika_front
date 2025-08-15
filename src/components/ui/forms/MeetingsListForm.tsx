@@ -104,14 +104,14 @@ export function MeetingsListForm({ user }: ICardFormProps) {
       await updateHypotheses({ customerId: user.id, data: data.data })
 
       toast.update(toastId, {
-        render: 'Успешно',
+        render: 'Вы успешно обновили гипотезы',
         type: 'success',
         isLoading: false,
         autoClose: 3000,
       })
     } catch {
       toast.update(toastId, {
-        render: 'Ошибка',
+        render: 'Произошла ошибка при обновлении гипотез',
         type: 'error',
         isLoading: false,
         autoClose: 5000,
