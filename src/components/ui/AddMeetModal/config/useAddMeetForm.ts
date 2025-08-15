@@ -8,6 +8,8 @@ export const useAddMeetForm = () => {
   const form = useForm<TAddMeetSchema>({
     resolver: zodResolver(schema) as Resolver<TAddMeetSchema>,
     defaultValues: DEFAULT_VALUES,
+    mode: 'all',
+    criteriaMode: 'all',
   })
 
   const {
