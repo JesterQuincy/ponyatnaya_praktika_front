@@ -9,6 +9,7 @@ import z from 'zod'
 import { createNonWorkingDaySchema } from './schema'
 import { Form, FormControl, FormField, FormItem, FormMessage } from '@/components/ui/form'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { ErrorField } from '@/components/ErrorField'
 
 interface IAddClientModalProps {
   isOpen: boolean
@@ -22,6 +23,7 @@ export const NonWorkingDayModal: FC<IAddClientModalProps> = ({ isOpen, onClose }
       title: '',
     },
   })
+
   const { mutateAsync, isPending } = useCreateNonWorkingday()
 
   const handleCloseModal = () => {
@@ -50,7 +52,11 @@ export const NonWorkingDayModal: FC<IAddClientModalProps> = ({ isOpen, onClose }
       })
     }
   })
-  console.log(form.formState.errors)
+
+  const {
+    formState: { errors },
+  } = form
+
   return (
     <Modal
       isOpen={isOpen}
@@ -72,37 +78,38 @@ export const NonWorkingDayModal: FC<IAddClientModalProps> = ({ isOpen, onClose }
               </FormItem>
             )}
           />
-          <div className={`flex gap-6`}>
-            <div className="flex flex-col max-w-[132px]">
-              <label>С</label>
-              <FormField
-                control={form.control}
-                name="dateStart"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormControl>
-                      <Input {...field} type="date" className="p-2 max-w-[132px]" />
-                    </FormControl>
-                    <FormMessage className="text-red-500" />
-                  </FormItem>
-                )}
-              />
+          <div className={'flex flex-col'}>
+            <div className={`flex gap-6`}>
+              <div className="flex flex-col max-w-[132px]">
+                <label>С</label>
+                <FormField
+                  control={form.control}
+                  name="dateStart"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormControl>
+                        <Input {...field} type="date" className="p-2 max-w-[132px]" />
+                      </FormControl>
+                    </FormItem>
+                  )}
+                />
+              </div>
+              <div className="flex flex-col max-w-[132px]">
+                <label>До</label>
+                <FormField
+                  control={form.control}
+                  name="dateEnd"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormControl>
+                        <Input {...field} type="date" className="p-2 max-w-[132px]" />
+                      </FormControl>
+                    </FormItem>
+                  )}
+                />
+              </div>
             </div>
-            <div className="flex flex-col max-w-[132px]">
-              <label>До</label>
-              <FormField
-                control={form.control}
-                name="dateEnd"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormControl>
-                      <Input {...field} type="date" className="p-2 max-w-[132px]" />
-                    </FormControl>
-                    <FormMessage className="text-red-500" />
-                  </FormItem>
-                )}
-              />
-            </div>
+            <ErrorField message={errors.dateEnd?.message || errors.dateStart?.message} />
           </div>
           <div className="flex mt-[20px] justify-end gap-[10px] border-t border-[#CACACA] pt-[10px] font-montserrat font-semibold">
             <button

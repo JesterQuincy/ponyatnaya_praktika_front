@@ -4,10 +4,10 @@ export const createNonWorkingDaySchema = z
   .object({
     title: z.string().refine((val) => !!val.trim(), 'Название обязательно'),
     dateStart: z
-      .string({ required_error: 'Дата не может быть пустой' })
+      .string({ error: 'Дата не может быть пустой' })
       .refine((val) => !isNaN(new Date(val).getTime()), 'Некорректная дата'),
     dateEnd: z
-      .string({ required_error: 'Дата не может быть пустой' })
+      .string({ error: 'Дата не может быть пустой' })
       .refine((val) => !isNaN(new Date(val).getTime()), 'Некорректная дата'),
   })
   .refine(
