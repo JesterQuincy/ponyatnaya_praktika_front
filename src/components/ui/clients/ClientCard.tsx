@@ -1,10 +1,14 @@
-import { FC } from 'react'
+import { FC, useState } from 'react'
 import Image from 'next/image'
 import { IGetClientsBySearchResponseBody } from '@/types/clients'
 import HumanIcon from '@/public/icon/humanIcon.svg'
 import PhoneIcon from '@/public/icon/telephoneIcon.svg'
 import MailIcon from '@/public/icon/mailIcon.svg'
 import { ICON_MAP } from '@/components/ui/clients/consts'
+import { Button } from '../buttons/Button'
+import TripleDots from '@/public/icon/tripleDots.svg'
+import { DropdownMenu } from '../forms/DropDownMenu'
+import { useDeleteCustomer } from '@/api/hooks/customer/useDeleteCustomer'
 
 interface IClientCardProps {
   client: IGetClientsBySearchResponseBody
@@ -12,7 +16,17 @@ interface IClientCardProps {
 }
 
 export const ClientCard: FC<IClientCardProps> = ({ client, onClientClick }) => {
+  const [activeDropdown, setActiveDropdown] = useState<number | null>(null)
   const statusColor = client.clientStatus === 'Онлайн' ? 'bg-[#CFEFFD]' : 'bg-[#FDDCC6]'
+  const { mutate: deleteCustomer } = useDeleteCustomer()
+
+  const handleDropdownToggle = (id: number) => {
+    if (activeDropdown === id) {
+      setActiveDropdown(null)
+    } else {
+      setActiveDropdown(id)
+    }
+  }
 
   return (
     <div className="border-t border-[#6A6A6A] py-[10px]">
@@ -47,7 +61,7 @@ export const ClientCard: FC<IClientCardProps> = ({ client, onClientClick }) => {
             </div>
           </div>
 
-          <div className="flex flex-col">
+          <div className="flex flex-col relative">
             <div className="flex flex-row items-center text-[11px] px-[12px] py-[3px] rounded-[30px] gap-[4px]">
               <Image src={PhoneIcon} alt="Телефон" width={12} height={12} />
               {client.phone}
@@ -56,6 +70,25 @@ export const ClientCard: FC<IClientCardProps> = ({ client, onClientClick }) => {
               <Image src={MailIcon} alt="Почта" width={12} height={12} />
               {client.mail}
             </div>
+          </div>
+          <div className="relative right-4">
+            <Button
+              onClick={() => handleDropdownToggle(client.customerId)}
+              className=" w-7 bg-[#E4E4E4] text-[#7E7E7E] text-[20px] flex items-center p-[10px] rounded-[6px]">
+              <Image src={TripleDots} alt="TripleDots" />
+            </Button>
+            {activeDropdown === client.customerId && (
+              <DropdownMenu
+                onClose={() => setActiveDropdown(null)}
+                items={[
+                  {
+                    label: 'Удалить',
+                    key: 'delete',
+                    onClick: () => deleteCustomer(client.customerId),
+                  },
+                ]}
+              />
+            )}
           </div>
         </div>
       </div>

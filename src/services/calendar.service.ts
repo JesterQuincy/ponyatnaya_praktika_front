@@ -1,6 +1,6 @@
 import { axiosWithAuth } from '@/api/interceptors'
 import { UserMeeting } from '@/helpers/types/calendar'
-import { ICalendarData, ICalendarNotifications, ISearchUser } from '@/types/calendar'
+import { ICalendarData, ICalendarNotifications, INonWorkingDay, ISearchUser } from '@/types/calendar'
 
 export const calendarService = {
   async createAdultUser(data: UserMeeting): Promise<any> {
@@ -13,12 +13,20 @@ export const calendarService = {
     return await axiosWithAuth.post('/api/pair', data)
   },
 
+  async createNonWorkingDay(data: INonWorkingDay) {
+    return await axiosWithAuth.post(`/api/nonWorkingDay`, data)
+  },
+
   async getNotifications() {
     return await axiosWithAuth.get<ICalendarNotifications>(`api/v1/General/leftMenu/notification`)
   },
 
   async getCalendarData(year: number) {
     return await axiosWithAuth.get<ICalendarData>(`/api/v1/General/calendarData/get/${year}`)
+  },
+
+  async deleteUserById(id: number): Promise<any> {
+    return await axiosWithAuth.delete(`api/customer/delete/${id}`)
   },
 
   async getUsersByName(name: string) {

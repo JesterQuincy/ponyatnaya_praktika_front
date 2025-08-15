@@ -1,6 +1,7 @@
 import { axiosWithAuth } from '@/api/interceptors'
 import { DeepPartial } from '@/types/common'
 import { IClient, IGetClientBySearchRequest, TGetClientsBySearchResponse } from '@/types/clients'
+import { IMeetResponse } from '@/types/methods/meetMethods'
 
 export const clientService = {
   async getClients({ params, queryBody }: IGetClientBySearchRequest) {
@@ -32,8 +33,16 @@ export const clientService = {
     return await axiosWithAuth.get(`/api/pair/get/${id}`)
   },
 
-  async getUserMeets(limit: number, offset: number, customerId: number): Promise<any> {
-    return await axiosWithAuth.get(`/api/v1/General/searchMeet/${customerId}/${offset}/${limit}`)
+  async getUserMeets(customerId: number, offset: number, limit: number) {
+    return await axiosWithAuth.get<IMeetResponse>(`/api/v1/General/searchMeet/${customerId}/${offset}/${limit}`)
+  },
+
+  async updateMainHypotheses(customerId: number, data: string): Promise<void> {
+    return await axiosWithAuth.patch(`/api/customer/mainHypotheses/${customerId}`, null, {
+      params: {
+        mainHypotheses: data,
+      },
+    })
   },
 
   async updateUser(data: DeepPartial<IClient>): Promise<void> {

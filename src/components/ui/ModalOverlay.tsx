@@ -208,7 +208,6 @@ export const AddClientModal: FC<IAddClientModalProps> = ({ isOpen, onClose }) =>
                     className="h-[31px] rounded-xl"
                     type="text"
                     placeholder="Введите фамилию клиента"
-                    required
                     {...register('lastName')}
                   />
                 </div>
@@ -228,7 +227,6 @@ export const AddClientModal: FC<IAddClientModalProps> = ({ isOpen, onClose }) =>
                     className="h-[31px] rounded-xl"
                     type="text"
                     placeholder="Введите отчество клиента"
-                    required
                     {...register('secondName')}
                   />
                 </div>
@@ -238,7 +236,6 @@ export const AddClientModal: FC<IAddClientModalProps> = ({ isOpen, onClose }) =>
                     <input
                       className="flex h-[36px] w-full rounded-xl border border-gray bg-background px-3 py-2 text-sm"
                       type="date"
-                      required
                       {...register('birth')}
                     />
                   </div>
@@ -297,7 +294,7 @@ export const AddClientModal: FC<IAddClientModalProps> = ({ isOpen, onClose }) =>
                 </div>
                 <div>
                   <label className="font-montserrat text-xs font-medium">Электронная почта</label>
-                  <Input type="email" placeholder="Введите адрес электронной почты" required {...register('mail')} />
+                  <Input type="email" placeholder="Введите адрес электронной почты" {...register('mail')} />
                 </div>
               </div>
             )}
@@ -311,7 +308,6 @@ export const AddClientModal: FC<IAddClientModalProps> = ({ isOpen, onClose }) =>
                       className="h-[31px] rounded-xl"
                       type="text"
                       placeholder="Введите фамилию клиента"
-                      required
                       {...register('lastName')}
                     />
                   </div>
@@ -331,7 +327,6 @@ export const AddClientModal: FC<IAddClientModalProps> = ({ isOpen, onClose }) =>
                       className="h-[31px] rounded-xl"
                       type="text"
                       placeholder="Введите отчество клиента"
-                      required
                       {...register('secondName')}
                     />
                   </div>
@@ -342,7 +337,6 @@ export const AddClientModal: FC<IAddClientModalProps> = ({ isOpen, onClose }) =>
                       <input
                         className="flex h-[36px] w-full rounded-xl border border-gray bg-background px-3 py-2 text-sm"
                         type="date"
-                        required
                         {...register('birth')}
                       />
                     </div>
@@ -404,7 +398,6 @@ export const AddClientModal: FC<IAddClientModalProps> = ({ isOpen, onClose }) =>
                     <Input
                       type="email"
                       placeholder="Введите адрес электронной почты"
-                      required
                       {
                         //@ts-ignore
                         ...register('mail')
@@ -420,7 +413,6 @@ export const AddClientModal: FC<IAddClientModalProps> = ({ isOpen, onClose }) =>
                         className="h-[31px] rounded-xl"
                         type="text"
                         placeholder="Введите фамилию клиента"
-                        required
                         {...register('parentLastName')}
                       />
                     </div>
@@ -440,7 +432,6 @@ export const AddClientModal: FC<IAddClientModalProps> = ({ isOpen, onClose }) =>
                         className="h-[31px] rounded-xl"
                         type="text"
                         placeholder="Введите отчество клиента"
-                        required
                         {...register('parentSecondName')}
                       />
                     </div>
@@ -472,12 +463,7 @@ export const AddClientModal: FC<IAddClientModalProps> = ({ isOpen, onClose }) =>
                     </div>
                     <div className="space-y-[5px]">
                       <label className="font-montserrat text-xs font-medium">Электронная почта</label>
-                      <Input
-                        type="email"
-                        placeholder="Введите адрес электронной почты"
-                        required
-                        {...register('parentEmail')}
-                      />
+                      <Input type="email" placeholder="Введите адрес электронной почты" {...register('parentEmail')} />
                     </div>
                   </div>
                 </div>
@@ -513,7 +499,6 @@ export const AddClientModal: FC<IAddClientModalProps> = ({ isOpen, onClose }) =>
                       className="h-[31px] rounded-xl"
                       type="text"
                       placeholder="Введите отчество клиента"
-                      required
                       {...register('secondName')}
                     />
                   </div>
@@ -524,7 +509,6 @@ export const AddClientModal: FC<IAddClientModalProps> = ({ isOpen, onClose }) =>
                       <input
                         className="flex h-[36px] w-full rounded-xl border border-gray bg-background px-3 py-2 text-sm"
                         type="date"
-                        required
                         {...register('birth')}
                       />
                     </div>
@@ -587,7 +571,6 @@ export const AddClientModal: FC<IAddClientModalProps> = ({ isOpen, onClose }) =>
                     <Input
                       type="email"
                       placeholder="Электронная почта клиента №1"
-                      required
                       {
                         //@ts-ignore
                         ...register('mail')
@@ -603,7 +586,6 @@ export const AddClientModal: FC<IAddClientModalProps> = ({ isOpen, onClose }) =>
                         className="h-[31px] rounded-xl"
                         type="text"
                         placeholder="Введите фамилию клиента"
-                        required
                         {...register('client2LastName')}
                       />
                     </div>
@@ -623,7 +605,6 @@ export const AddClientModal: FC<IAddClientModalProps> = ({ isOpen, onClose }) =>
                         className="h-[31px] rounded-xl"
                         type="text"
                         placeholder="Введите отчество клиента"
-                        required
                         {...register('client2SecondName')}
                       />
                     </div>
@@ -652,16 +633,11 @@ export const AddClientModal: FC<IAddClientModalProps> = ({ isOpen, onClose }) =>
                     </div>
                     <div className="space-y-[5px]">
                       <label className="font-montserrat text-xs font-medium">Телефон клиента №2</label>
-                      <Input type="tel" placeholder="Введите номер телефона" required {...register('client2Phone')} />
+                      <Input type="tel" placeholder="Введите номер телефона" {...register('client2Phone')} />
                     </div>
                     <div className="space-y-[5px]">
                       <label className="font-montserrat text-xs font-medium">Электронная почта клиента №2</label>
-                      <Input
-                        type="email"
-                        placeholder="Введите адрес электронной почты"
-                        required
-                        {...register('client2Email')}
-                      />
+                      <Input type="email" placeholder="Введите адрес электронной почты" {...register('client2Email')} />
                     </div>
                   </div>
                 </div>

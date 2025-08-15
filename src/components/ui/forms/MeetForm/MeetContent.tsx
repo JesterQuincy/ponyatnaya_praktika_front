@@ -2,6 +2,7 @@
 
 import Image from 'next/image'
 import ImageIcon from '@/public/icon/imageWhite.svg'
+import EditIcon from '@/public/icon/Edit.svg'
 import { Button } from '../../buttons/Button'
 import { Button as SaveButton } from '@/components/ui/button'
 import { meetData } from '../mocks/meetsList'
@@ -19,6 +20,9 @@ import { useGetProjMethods } from '@/api/hooks/methods/useGetProjMethods'
 import { Spinner } from '@/components/Spinner'
 import { Pencil, Trash2 } from 'lucide-react'
 import { TModalType } from '@/components/ui/forms/MeetForm/MeetForm'
+import { toast } from 'react-toastify'
+import CopyIcon from '@/public/icon/copy.svg'
+import { ChangeMeetModal } from '../../ChangeMeetModal/ChangeMeetModal'
 
 interface IMeetFormProps {
   content: IMeetingDetails
@@ -27,6 +31,7 @@ interface IMeetFormProps {
 
 export function MeetContent({ content, modalOpen }: IMeetFormProps) {
   const [showAll, setShowAll] = useState(false)
+  const [changeModalState, setChangeModalState] = useState(false)
 
   const {
     data: methods,
@@ -75,6 +80,22 @@ export function MeetContent({ content, modalOpen }: IMeetFormProps) {
 
   const isLoadingMethod = isGetProjMethodsPending || isGetProjMethodsLoading || isGetProjMethodsRefetching
 
+  const handleCopyLink = async (linkUrl: string) => {
+    try {
+      await navigator.clipboard.writeText(linkUrl)
+      toast.success('Скопированно в буфер обмена')
+    } catch (err) {
+      toast.error('Не получилось скопировать')
+    }
+  }
+
+  const onOpen = () => {
+    setChangeModalState(true)
+  }
+  const onClose = () => {
+    setChangeModalState(false)
+  }
+
   return (
     <Form {...form}>
       <FormPrompt hasUnsavedChanges={!isEmpty(form.formState.dirtyFields)} />
@@ -107,8 +128,25 @@ export function MeetContent({ content, modalOpen }: IMeetFormProps) {
             />
           ))}
         </div>
-        <div className="bg-[#F1F1F1] w-[40%] rounded-[4px] py-[29px] px-[11px] h-fit">
+        <div className="bg-[#F1F1F1] w-[40%] rounded-[4px] py-[20px] px-[11px] h-fit flex flex-col gap-3">
           <div>
+            <Button
+              className="bg-[#5A5A5A] text-white px-[10px] py-[5px] rounded-[6px] flex items-center"
+              type={'button'}
+              onClick={onOpen}>
+              <Image src={EditIcon} alt="CorrectFile" className="mr-2" />
+              <span>Изменить параметры</span>
+            </Button>
+            {changeModalState && <ChangeMeetModal meetId={content.id} isOpen={changeModalState} onClose={onClose} />}
+          </div>
+          <div>
+            <span className="font-bold text-[20px]">Место встречи</span>
+            <div
+              className="flex items-center justify-between cursor-pointer rounded-[6px] py-[6px] px-[11px] h-fit bg-white overflow-hidden mb-4 mt-2"
+              onClick={() => handleCopyLink(content.place)}>
+              <span className="whitespace-nowrap overflow-hidden mr-2">{content.place}</span>
+              <Image src={CopyIcon} alt="" className="w-5 h-5 shrink-0" />
+            </div>
             <span className="font-bold text-[20px]">Проективные методики</span>
             {isLoadingMethod && <Spinner />}
             {!isLoadingMethod && !!methods?.data?.length && (

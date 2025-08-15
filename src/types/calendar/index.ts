@@ -40,6 +40,12 @@ interface ICalendarNotificationResponseList {
   applicationFormStatus: number
 }
 
+export interface INonWorkingDay {
+  title: string
+  dateStart: string
+  dateEnd: string
+}
+
 export interface ISearchUser {
   customerId: number
   fullName: string
