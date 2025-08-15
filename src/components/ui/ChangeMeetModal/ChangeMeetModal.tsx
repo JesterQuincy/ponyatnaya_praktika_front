@@ -1,10 +1,9 @@
 import React, { FC } from 'react'
 import Modal from 'react-modal'
 import styles from '@/styles/AddMeetModal.module.css'
-import { SubmitHandler, Controller, DeepPartial } from 'react-hook-form'
+import { SubmitHandler, DeepPartial } from 'react-hook-form'
 import { toast } from 'react-toastify'
 import { EMeetingFormat } from '@/types/clients'
-import { ErrorField } from '@/components/ErrorField'
 import { cn } from '@/lib/utils'
 import { EModalType, EPaymentType } from '@/components/ui/AddMeetModal'
 import { useChangeMeetForm } from './useChangeMeetForm'
@@ -24,7 +23,7 @@ interface IAddMeetModalProps {
 }
 
 export const ChangeMeetModal: FC<IAddMeetModalProps> = ({ isOpen, onClose, meetId }) => {
-  const { watch, control, type, errors, reset, handleSubmit, numberFields } = useChangeMeetForm(meetId)
+  const { watch, control, type, errors, handleSubmit, numberFields } = useChangeMeetForm(meetId)
 
   const { mutateAsync: changeMeeting } = useUpdateMeeting()
 
@@ -56,7 +55,7 @@ export const ChangeMeetModal: FC<IAddMeetModalProps> = ({ isOpen, onClose, meetI
         autoClose: 3000,
       })
 
-      handleClose()
+      onClose()
     } catch (error) {
       toast.update(toastId, {
         render: 'Ошибка при обновлении встречи',
@@ -67,14 +66,10 @@ export const ChangeMeetModal: FC<IAddMeetModalProps> = ({ isOpen, onClose, meetI
     }
   }
 
-  const handleClose = () => {
-    onClose()
-  }
-
   return (
     <Modal
       isOpen={isOpen}
-      onRequestClose={handleClose}
+      onRequestClose={onClose}
       contentLabel="Изменить параметры"
       className={styles.modalContent}
       overlayClassName={styles.modalOverlay}>
@@ -118,10 +113,6 @@ export const ChangeMeetModal: FC<IAddMeetModalProps> = ({ isOpen, onClose, meetI
               options={Object.values(EPaymentType).map((p) => ({ value: p, label: p }))}
             />
           )}
-
-          <>
-            <ErrorField message={errors.dateMeet?.message || errors.time?.message} />
-          </>
 
           <div className="flex mt-[20px] justify-end gap-[10px] border-t border-[#CACACA] pt-[10px] font-montserrat font-semibold">
             <button className="px-[20px] py-[10px] text-[16px] text-[#525252] text" type="button" onClick={onClose}>
