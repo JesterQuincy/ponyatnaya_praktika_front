@@ -3,11 +3,15 @@ import { EModalType } from '../types'
 import dayjs from 'dayjs'
 
 export const prepareMeetingPayload = (data: TAddMeetSchema, type: EModalType) => {
+  if (!data.dateMeet || !data.time || !data.formatMeet || !data.place) return
+
   const start = dayjs(`${data.dateMeet} ${data.time}`, 'YYYY-MM-DD HH:mm', true)
 
   if (!start.isValid() || !Number.isFinite(data.duration)) {
     return
   }
+
+  if (!data.duration) return
 
   const end = start.add(data.duration, 'minute')
   const startMeet = start.format('HH:mm')
