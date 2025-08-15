@@ -200,7 +200,7 @@ export function MeetingsListForm({ user }: ICardFormProps) {
           </div>
         )}
         <Form {...form}>
-          <div className="mt-[27px]">
+          <div>
             <span className="font-bold text-[20px]">Основные терапевтические гипотезы</span>
             <form onSubmit={onSubmit}>
               <FormField
