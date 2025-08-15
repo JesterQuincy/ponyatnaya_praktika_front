@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useMemo, useState } from 'react'
+import { useMemo, useState } from 'react'
 import Image from 'next/image'
 import { useParams, useRouter } from 'next/navigation'
 
@@ -97,9 +97,11 @@ export function MeetingsListForm({ user }: ICardFormProps) {
   }
 
   const onSubmit = form.handleSubmit(async (data) => {
-    const toastId = toast.loading('Добавление выходных...')
+    const toastId = toast.loading('Обновление гипотез...')
+
     try {
       await updateHypotheses({ customerId: user.id, data: data.data })
+
       toast.update(toastId, {
         render: 'Успешно',
         type: 'success',
