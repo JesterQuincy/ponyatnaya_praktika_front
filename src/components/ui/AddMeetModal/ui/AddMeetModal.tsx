@@ -197,66 +197,69 @@ export const AddMeetModal: FC<IAddMeetModalProps> = ({ isOpen, onClose }) => {
 
           <>
             {!!repeat && repeat !== ECreateMeetingRepeat.NONE && (
-              <div className="flex gap-3">
-                <Controller
-                  control={control}
-                  name="finishRepetition"
-                  render={({ field }) => (
-                    <RadioGroup
-                      {...field}
-                      value={field.value}
-                      onValueChange={handleFinishRepetitionChange}
-                      className="flex flex-col gap-[16px] justify-center font-montserrat">
-                      {Object.values(EFinishRepetition).map((o) => (
-                        <div key={o} className="flex items-center space-x-2">
-                          <RadioGroupItem value={o} id={o} />
-                          <Label htmlFor={o}>{mappedFinishRepetition[o]}</Label>
-                        </div>
-                      ))}
-                    </RadioGroup>
-                  )}
-                />
+              <div>
+                <span className="text-[13px] font-montserrat">Закончить</span>
+                <div className="flex gap-3">
+                  <Controller
+                    control={control}
+                    name="finishRepetition"
+                    render={({ field }) => (
+                      <RadioGroup
+                        {...field}
+                        value={field.value}
+                        onValueChange={handleFinishRepetitionChange}
+                        className="flex flex-col gap-[16px] justify-center font-montserrat">
+                        {Object.values(EFinishRepetition).map((o) => (
+                          <div key={o} className="flex items-center space-x-2">
+                            <RadioGroupItem value={o} id={o} />
+                            <Label htmlFor={o}>{mappedFinishRepetition[o]}</Label>
+                          </div>
+                        ))}
+                      </RadioGroup>
+                    )}
+                  />
 
-                <div className="flex flex-col gap-2">
-                  <Controller
-                    control={control}
-                    name="onDate"
-                    render={({ field }) => (
-                      <>
-                        <div className={cn(styles.dateTime, 'flex items-center mb-0 !')}>
-                          <input
-                            type="date"
-                            className="w-[fit-content] h-[30px] !"
-                            {...field}
-                            value={field.value || ''}
-                            onChange={(e) => field.onChange(e.target.value)}
-                            disabled={finishRepetition !== EFinishRepetition.ON_DATE}
-                          />
-                        </div>
-                      </>
-                    )}
-                  />
-                  <Controller
-                    control={control}
-                    name="onCount"
-                    render={({ field }) => (
-                      <>
-                        <div className={cn(styles.dateTime, 'flex items-center mb-0 !')}>
-                          <input
-                            type="text"
-                            className="max-w-[35px] h-[30px] !"
-                            {...field}
-                            value={field.value || ''}
-                            onChange={(e) => {
-                              field.onChange(numberFields(e.target.value))
-                            }}
-                            disabled={finishRepetition !== EFinishRepetition.ON_COUNT}
-                          />
-                          <label className="text-[13px]">повторений</label>
-                        </div>
-                      </>
-                    )}
-                  />
+                  <div className="flex flex-col gap-2">
+                    <Controller
+                      control={control}
+                      name="onDate"
+                      render={({ field }) => (
+                        <>
+                          <div className={cn(styles.dateTime, 'flex items-center mb-0 !')}>
+                            <input
+                              type="date"
+                              className="w-[fit-content] h-[30px] !"
+                              {...field}
+                              value={field.value || ''}
+                              onChange={(e) => field.onChange(e.target.value)}
+                              disabled={finishRepetition !== EFinishRepetition.ON_DATE}
+                            />
+                          </div>
+                        </>
+                      )}
+                    />
+                    <Controller
+                      control={control}
+                      name="onCount"
+                      render={({ field }) => (
+                        <>
+                          <div className={cn(styles.dateTime, 'flex items-center mb-0 !')}>
+                            <input
+                              type="text"
+                              className="max-w-[35px] h-[30px] !"
+                              {...field}
+                              value={field.value || ''}
+                              onChange={(e) => {
+                                field.onChange(numberFields(e.target.value))
+                              }}
+                              disabled={finishRepetition !== EFinishRepetition.ON_COUNT}
+                            />
+                            <label className="text-[13px]">повторений</label>
+                          </div>
+                        </>
+                      )}
+                    />
+                  </div>
                 </div>
               </div>
             )}
