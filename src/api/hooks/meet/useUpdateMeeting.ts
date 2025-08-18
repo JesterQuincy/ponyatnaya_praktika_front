@@ -12,6 +12,7 @@ export const useUpdateMeeting = () => {
     mutationKey: [EInvalidationTags.MEET_ID],
     mutationFn: (data: DeepPartial<IMeetingDetails>) => meetingService.updateMeeting(data),
     onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: [EInvalidationTags.MEET] })
       queryClient.invalidateQueries({ queryKey: [EInvalidationTags.MEET_ID] })
       queryClient.invalidateQueries({ queryKey: [EInvalidationTags.CALENDAR] })
       queryClient.refetchQueries({ queryKey: [EInvalidationTags.CALENDAR] })
