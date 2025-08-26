@@ -24,4 +24,13 @@ export const meetingService = {
   async createMeeting(data: ICreateMeeting) {
     return await axiosWithAuth.post('/api/meet', data)
   },
+
+  async getUnvailableMeetingDates(startDate: string, endDate: string) {
+    return await axiosWithAuth.get('/api/meet/unavailable-dates/', {
+      params: {
+        startDate,
+        endDate,
+      },
+    })
+  },
 }

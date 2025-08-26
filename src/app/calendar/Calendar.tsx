@@ -7,6 +7,8 @@ import { AddMeetModal } from '@/components/ui/AddMeetModal'
 import { useState, ReactNode } from 'react'
 import SideBar from '@/components/ui/calendar/CalendarSideBar'
 import { NonWorkingDayModal } from '@/components/ui/NonWorkingDayModal'
+import { calendarService } from '@/services/calendar.service'
+import { meetingService } from '@/services/meet.sevice'
 
 interface CalendarProps {
   children: ReactNode
@@ -40,6 +42,15 @@ export function Calendar({ children }: CalendarProps) {
   const handleCloseNonWorkingDayModal = () => {
     setIsOpenNonWorkingDayModal(false)
   }
+
+  const response = () => {
+    const first = calendarService.getNonWorkingDaysUnavailableDates('2025-08-23', '2025-08-23')
+    const second = meetingService.getUnvailableMeetingDates('2025-08-23', '2025-08-23')
+    console.log(first, 'Запрос на нерабочие дни')
+    console.log(second, 'Запрос на даты встречи')
+  }
+
+  // response()
 
   return (
     <div className={styles.MainBody}>

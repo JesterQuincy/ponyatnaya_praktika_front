@@ -1,4 +1,4 @@
-import React, { FC } from 'react'
+import React, { FC, useState } from 'react'
 import Modal from 'react-modal'
 import styles from '@/styles/AddMeetModal.module.css'
 import { SubmitHandler, Controller } from 'react-hook-form'
@@ -26,6 +26,7 @@ import {
   EModalType,
   EPaymentType,
 } from '@/components/ui/AddMeetModal'
+import { AxiosError } from 'axios'
 
 interface IAddMeetModalProps {
   isOpen: boolean
@@ -48,6 +49,7 @@ export const AddMeetModal: FC<IAddMeetModalProps> = ({ isOpen, onClose }) => {
   } = useAddMeetForm()
 
   const { mutateAsync: createMeeting } = useCreateMeeting()
+  const [errorModal, setErrorModal] = useState<string | null>(null)
 
   const formatMeet = watch('formatMeet')
 
@@ -79,13 +81,18 @@ export const AddMeetModal: FC<IAddMeetModalProps> = ({ isOpen, onClose }) => {
       })
 
       handleClose()
-    } catch (error) {
+    } catch (err) {
+      console.log(err)
+      const error = err as AxiosError<{ message?: string }>
       toast.update(toastId, {
         render: 'Ошибка при назначении встречи',
         type: 'error',
         isLoading: false,
         autoClose: 5000,
       })
+      if (error?.response?.status === 409) {
+        setErrorModal(error.response.data?.message || 'Конфликт: встреча уже существует')
+      }
     }
   }
 
@@ -273,6 +280,22 @@ export const AddMeetModal: FC<IAddMeetModalProps> = ({ isOpen, onClose }) => {
           </div>
         </form>
       </div>
+      <Modal
+        isOpen={!!errorModal}
+        onRequestClose={() => setErrorModal(null)}
+        contentLabel="Ошибка"
+        className={styles.modalContent}
+        overlayClassName={styles.modalOverlay}>
+        <div className="font-montserrat">
+          <div className="text-red-600 font-bold text-xl mb-4">Ошибка</div>
+          <p>{errorModal}</p>
+          <div className="flex justify-end mt-6">
+            <button onClick={() => setErrorModal(null)} className="px-4 py-2 bg-[#EA660C] text-white rounded-[6px]">
+              Закрыть
+            </button>
+          </div>
+        </div>
+      </Modal>
     </Modal>
   )
 }
