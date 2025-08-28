@@ -28,7 +28,6 @@ import {
 import { AxiosError } from 'axios'
 import { DateTimeFields } from '../../DateTimeFields'
 import dayjs from 'dayjs'
-import { calendarService } from '@/services/calendar.service'
 import { meetingService } from '@/services/meet.sevice'
 
 interface IAddMeetModalProps {
