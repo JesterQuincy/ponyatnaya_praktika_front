@@ -62,8 +62,8 @@ export const NonWorkingDayModal: FC<IAddClientModalProps> = ({ isOpen, onClose }
       const error = err as AxiosError<IUnavailabeDatesError>
       toast.dismiss(toastId)
       if (error?.response?.status === 409) {
-        const errorMessage = `${error.response?.data?.nonWorkingDaysMessage}\n
-        ${error.response?.data?.otherMeetsMessage}\n
+        const errorMessage = `${error.response?.data?.nonWorkingDaysMessage}
+        ${error.response?.data?.otherMeetsMessage}
         ${error.response?.data?.meetsMessage}`
         return { isAvailable: false, errorMessage }
       } else {
@@ -209,9 +209,8 @@ export const NonWorkingDayModal: FC<IAddClientModalProps> = ({ isOpen, onClose }
         isOpen={confirmModal.isOpen}
         onRequestClose={handleConfirmCancel}
         contentLabel="Подтверждение"
-        className={styles.modalContent}
-        overlayClassName={styles.modalOverlay}
-        parentSelector={() => document.body}>
+        className={`${styles.modalContent}  w-2/4 p-2`}
+        overlayClassName={styles.modalOverlay}>
         <div className="font-montserrat">
           <div className="text-orange-600 font-bold text-xl mb-4">Время недоступно</div>
           <div className="mb-4">
