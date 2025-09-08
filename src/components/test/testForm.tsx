@@ -202,7 +202,7 @@ export function TestForm({ name }: TestFormProps) {
                       <h1 className="text-xl font-semibold">Заметка к материалу</h1>
                       <Textarea
                         {...field}
-                        className="border-gray rounded-[6px] max-h-[25vh] h-[15vh]"
+                        className="border-gray rounded-[6px] min-h-[15vh] max-h-[50vh]"
                         placeholder={`Этот опрос создан специально для клиента: 
 ${'\n'}Продолжить разбираться в истории Анны и выявить возможные триггеры ее тревоги.
 ${'\n'}Использовать методы релаксации (например, `}
