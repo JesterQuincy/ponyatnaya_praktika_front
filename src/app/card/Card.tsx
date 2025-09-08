@@ -10,7 +10,7 @@ import { MeetingsListForm } from '@/components/ui/forms/MeetingsListForm'
 import { SurveysListForm } from '@/components/ui/forms/SurveysListForm'
 import styles from '@/styles/card.module.css'
 import { clientService } from '@/services/clients.service'
-import { useSearchParams } from 'next/navigation'
+import { useSearchParams, useRouter } from 'next/navigation'
 import { IClient } from '@/types/clients'
 import { Spinner } from '@/components/Spinner'
 import { IChild } from '@/types/child'
@@ -29,7 +29,9 @@ type TUserType =
 
 export function Card({ id }: { id: string }) {
   const searchParams = useSearchParams()
+  const router = useRouter()
   const clientType = searchParams.get('clientType')
+  const tabFromUrl = searchParams.get('tab') as TTab | null
 
   const [isLoading, setIsLoading] = useState(false)
   const [clientData, setClientData] = useState<TUserType>()
@@ -38,6 +40,13 @@ export function Card({ id }: { id: string }) {
   const { data, status } = useGetMeetingCustomer(id)
 
   const isLoadingCustomerInfo = status === 'pending'
+
+  const handleTabChange = (tab: TTab) => {
+    setActiveTab(tab)
+    const params = new URLSearchParams(searchParams.toString())
+    params.set('tab', tab)
+    router.push(`${window.location.pathname}?${params.toString()}`, { scroll: false })
+  }
 
   useEffect(() => {
     const fetchData = async () => {
@@ -64,6 +73,12 @@ export function Card({ id }: { id: string }) {
 
     fetchData()
   }, [id, clientType])
+
+  useEffect(() => {
+    if (tabFromUrl && tabFromUrl !== activeTab) {
+      setActiveTab(tabFromUrl)
+    }
+  }, [tabFromUrl])
 
   return (
     <div className={styles.card}>
@@ -95,7 +110,13 @@ export function Card({ id }: { id: string }) {
               </>
             )}
           </div>
-          <Tabs changeActiveTab={setActiveTab} activeTab={activeTab} />
+          <Tabs
+            changeActiveTab={(value) => {
+              const newTab = typeof value === 'function' ? value(activeTab) : value
+              handleTabChange(newTab)
+            }}
+            activeTab={activeTab}
+          />
           {activeTab === 'card' && clientData.type === EClientType.ADULT && <CardFormAdult user={clientData.client} />}
           {activeTab === 'card' && clientData.type === EClientType.CHILD && <CardFormChild user={clientData.client} />}
           {activeTab === 'card' && clientData.type === EClientType.COUPLE && (
