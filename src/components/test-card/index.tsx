@@ -6,6 +6,7 @@ import { PopoverButton } from '@/components/popover-button'
 import { ITestCardProps } from '@/helpers/types/tests'
 import { useDeleteQuestionnaire } from '@/api/hooks/therapistQuestionnaires/useDeleteQuestionnaire'
 import { CopyLinkModal } from '@/components/test-card/CopyLinkModal'
+import dayjs from 'dayjs'
 
 export const TestCard: FC<ITestCardProps> = ({ test, title, dateCreated, id }) => {
   const type = test ? 'test' : 'survey'
@@ -36,7 +37,7 @@ export const TestCard: FC<ITestCardProps> = ({ test, title, dateCreated, id }) =
           </PopoverButton>
         </div>
         <p className="font-medium text-[#7E7E7E] text-[12px]">
-          Дата: <span className="text-black">{dateCreated}</span>
+          Дата: <span className="text-black">{dayjs(dateCreated).format('DD-MM-YYYY')}</span>
         </p>
       </CardContent>
     </Card>
