@@ -141,12 +141,12 @@ export function CardFormAdult({ user }: ICardFormProps) {
 
               <SelectAdult form={form} options={appealOptions} name={'contactMethod'} label={'Откуда обратился'} />
               <SelectAdult form={form} options={serviceOptions} name={'onlinePlatform'} label={'Площадка'} />
-              <InputAdult form={form} name={'clientTherapyRequest'} label={'Первичный запрос'} />
+              <TextareaAdult form={form} name={'clientTherapyRequest'} label={'Первичный запрос'} />
               <InputAdult form={form} name={'meetingTimeDay'} label={'Фиксированное время встречи'} />
               {isMore && (
                 <>
                   <InputAdult form={form} name={'birth'} label={'Дата рождения'} type="date" />
-                  <InputAdult form={form} name={'residenceAddress'} label={'Адрес проживания'} />
+                  <TextareaAdult form={form} name={'residenceAddress'} label={'Адрес проживания'} />
                   <SelectAdult
                     form={form}
                     options={channelOptions}
@@ -160,28 +160,28 @@ export function CardFormAdult({ user }: ICardFormProps) {
                     label={'Семейное положение'}
                   />
                   <InputAdult form={form} name={'peerRecommendation'} label={'Коллегиальные рекомендации'} />
-                  <InputAdult
+                  <TextareaAdult
                     form={form}
                     name={'takingMedic'}
                     label={
                       'Прием медицинских препаратов оказывающих влияние на сознание/эмоциональное состояние клиента'
                     }
                   />
-                  <InputAdult
+                  <TextareaAdult
                     form={form}
                     name={'prevExperience'}
                     label={'Предыдущий опыт получения психологической помощи'}
                   />
 
-                  <InputAdult form={form} name={'specialTermsContact'} label={'Особые условия контракта'} />
+                  <TextareaAdult form={form} name={'specialTermsContact'} label={'Особые условия контракта'} />
                   <SelectAdult
                     form={form}
                     options={answerOptions}
                     name={'supervisionStatusThisClient'}
                     label={'Берется ли супервизия на данного клиента'}
                   />
-                  <InputAdult form={form} name={'contactSupervisor'} label={'ФИО и контакты супервизора'} />
-                  <InputAdult
+                  <TextareaAdult form={form} name={'contactSupervisor'} label={'ФИО и контакты супервизора'} />
+                  <TextareaAdult
                     form={form}
                     name={'supervisionMaterial'}
                     label={'Материал для следующих сеансов из супервизии'}

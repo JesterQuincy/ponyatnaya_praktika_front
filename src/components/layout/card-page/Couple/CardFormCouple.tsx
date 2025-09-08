@@ -160,12 +160,12 @@ export const CardFormCouple = ({ user }: ICardFormProps) => {
               <InputCouple isPhone form={form} name={'phoneNumber'} label={'Телефон первого клиента'} />
               <InputCouple form={form} name={'mail'} label={'Почта первого клиента'} />
               <SelectCouple form={form} options={genderOptions} name={'gender'} label={'Пол первого клиента'} />
-              <InputCouple
+              <TextareaCouple
                 form={form}
                 name={'clientFirstRequestTherapyReason'}
                 label={'Причина обращения первого клиента'}
               />
-              <InputCouple
+              <TextareaCouple
                 form={form}
                 name={'clientFirstRequestTherapyDesiredOutcome'}
                 label={'Желаемый результат от прохождения терапии первого клиента'}
@@ -184,12 +184,12 @@ export const CardFormCouple = ({ user }: ICardFormProps) => {
                 name={'secondPerson.gender'}
                 label={'Пол второго клиента'}
               />
-              <InputCouple
+              <TextareaCouple
                 form={form}
                 name={'secondClientRequestTherapyReason'}
                 label={'Причина обращения второго клиента'}
               />
-              <InputCouple
+              <TextareaCouple
                 form={form}
                 name={'clientSecondRequestTherapyDesiredOutcome'}
                 label={'Желаемый результат от прохождения терапии второго клиента'}
@@ -220,41 +220,41 @@ export const CardFormCouple = ({ user }: ICardFormProps) => {
               {isMore && (
                 <>
                   <InputCouple form={form} name={'birth'} label={'Дата рождения'} type="date" />
-                  <InputCouple form={form} name={'residenceAddress'} label={'Адрес проживания'} />
+                  <TextareaCouple form={form} name={'residenceAddress'} label={'Адрес проживания'} />
                   <SelectCouple
                     form={form}
                     options={channelOptions}
                     name={'priorityCommunicationChannel'}
                     label={'Приоритетный канал коммуникации'}
                   />
-                  <InputCouple form={form} name={'peerRecommendation'} label={'Коллегиальные рекомендации'} />
+                  <TextareaCouple form={form} name={'peerRecommendation'} label={'Коллегиальные рекомендации'} />
                   <SelectCouple
                     form={form}
                     options={familyStatusOptions}
                     name={'familyStatus'}
                     label={'Семейное положение'}
                   />
-                  <InputCouple
+                  <TextareaCouple
                     form={form}
                     name={'takingMedic'}
                     label={
                       'Прием медицинских препаратов оказывающих влияние на сознание/эмоциональное состояние клиента'
                     }
                   />
-                  <InputCouple
+                  <TextareaCouple
                     form={form}
                     name={'prevExperience'}
                     label={'Предыдущий опыт получения психологической помощи'}
                   />
-                  <InputCouple form={form} name={'specialTermsContact'} label={'Особые условия контракта'} />
+                  <TextareaCouple form={form} name={'specialTermsContact'} label={'Особые условия контракта'} />
                   <SelectCouple
                     form={form}
                     options={answerOptions}
                     name={'supervisionStatusThisClient'}
                     label={'Берется ли супервизия на данного клиента'}
                   />
-                  <InputCouple form={form} name={'contactSupervisor'} label={'ФИО и контакты супервизора'} />
-                  <InputCouple
+                  <TextareaCouple form={form} name={'contactSupervisor'} label={'ФИО и контакты супервизора'} />
+                  <TextareaCouple
                     form={form}
                     name={'supervisionMaterial'}
                     label={'Материал для следующих сеансов из супервизии'}
@@ -262,7 +262,7 @@ export const CardFormCouple = ({ user }: ICardFormProps) => {
                   <InputCouple form={form} name={'fullNameCotherapy'} label={'ФИО ко-терапевта'} />
                   <InputCouple form={form} name={'phoneNumberCotherapy'} label={'Телефон ко-терапевта'} isPhone />
                   <InputCouple form={form} name={'mailCotherapy'} label={'Почта ко-терапевта'} type={'email'} />
-                  <InputCouple
+                  <TextareaCouple
                     form={form}
                     name={'financialTermsCotherapists'}
                     label={'Условия распределения гонорара между ко-терапевтами'}
