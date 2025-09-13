@@ -29,6 +29,10 @@ export const calendarService = {
     return await axiosWithAuth.delete(`api/customer/delete/${id}`)
   },
 
+  async deleteNonWorkingDay(id: number): Promise<any> {
+    return await axiosWithAuth.delete(`api/nonWorkingDay/${id}`)
+  },
+
   async getUsersByName(name: string) {
     return await axiosWithAuth.get<ISearchUser[]>(`/api/v1/Header/searchPersons/${name}`)
   },
