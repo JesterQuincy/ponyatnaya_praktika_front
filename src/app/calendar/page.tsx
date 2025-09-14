@@ -1,12 +1,12 @@
 'use client'
 
 import { Calendar } from '@/app/calendar/Calendar'
-import CalendarBody from '@/components/ui/calendar/CalendarBody'
+import { CalendarAdvanced } from '@/components/ui/calendar/CalendarAdvanced'
 
 export default function CalendarPage() {
   return (
     <Calendar>
-      <CalendarBody />
+      <CalendarAdvanced />
     </Calendar>
   )
 }
