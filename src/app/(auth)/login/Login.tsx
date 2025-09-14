@@ -20,9 +20,8 @@ export function Login() {
     mode: 'onChange',
   })
 
-  const [isLoginForm, setIsLoginForm] = useState(false)
   const { push } = useRouter()
-  const { mutate } = useMutation({
+  const { mutate, isPending } = useMutation({
     mutationKey: ['auth'],
     mutationFn: (data: AuthForm) => authService.main(data),
     onSuccess() {
@@ -73,7 +72,7 @@ export function Login() {
             variant="default"
             type="submit"
             className="w-full bg-orange text-white hover:bg-orange/80 rounded-[6px]"
-            onClick={() => setIsLoginForm(true)}>
+            disabled={isPending}>
             Войти
           </Button>
 
