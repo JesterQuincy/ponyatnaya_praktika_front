@@ -3,6 +3,7 @@ import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip
 import { cn } from '@/lib/utils'
 import { TooltipPortal } from '@radix-ui/react-tooltip'
 import { Badge } from '@/components/ui/badge'
+import styles from '@/styles/calendarbody.module.css'
 
 export const renderEventContent = (arg: EventContentArg) => {
   if (arg.event.display === 'background') {
@@ -37,7 +38,7 @@ export const renderEventContent = (arg: EventContentArg) => {
         </div>
       </TooltipTrigger>
       <TooltipPortal container={typeof document !== 'undefined' ? document.body : undefined}>
-        <TooltipContent side="top" align="start" className="max-w-[520px]">
+        <TooltipContent side="top" align="start" sideOffset={6} className={cn(styles.calendarTooltip, 'max-w-[520px]')}>
           <p className="text-sm">{tooltipText}</p>
         </TooltipContent>
       </TooltipPortal>

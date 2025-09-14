@@ -26,3 +26,10 @@
     background-color: #049ADB;
     border: 1px solid #049ADB;
 }
+
+/* calendarbody.module.css */
+.calendarTooltip {} /* можно пустым — важно, что это локальный класс */
+
+:global(body:has(.fc-popover)) .calendarTooltip {
+    display: none !important;
+}
