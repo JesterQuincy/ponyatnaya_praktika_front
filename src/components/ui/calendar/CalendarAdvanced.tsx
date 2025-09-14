@@ -14,7 +14,7 @@ import { Toolbar } from './Toolbar'
 import { renderEventContent } from './renderEventContent'
 import { TooltipProvider } from '@/components/ui/tooltip'
 
-export const CalendarTwo = () => {
+export const CalendarAdvanced = () => {
   const [currentYear, setCurrentYear] = useState(new Date().getFullYear())
   const [title, setTitle] = useState('')
 
