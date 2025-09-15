@@ -24,7 +24,6 @@ export default function CustomContextMenu({ x, y, items, onClose }: Props) {
         onClose()
       }
     }
-
     document.addEventListener('click', handleClickOutside)
     return () => document.removeEventListener('click', handleClickOutside)
   }, [onClose])
@@ -41,34 +40,32 @@ export default function CustomContextMenu({ x, y, items, onClose }: Props) {
     setPosition({ top, left })
   }, [x, y, items])
 
+  useEffect(() => {
+    const target = window
+
+    target.addEventListener('scroll', onClose, true)
+
+    return () => {
+      target.removeEventListener('scroll', onClose, true)
+    }
+  }, [onClose])
+
   return (
     <div
       ref={menuRef}
-      style={{
-        position: 'fixed',
-        top: position.top,
-        left: position.left,
-        background: 'white',
-        border: '1px solid #ccc',
-        borderRadius: 4,
-        boxShadow: '0 2px 10px rgba(0,0,0,0.2)',
-        zIndex: 9999,
-        width: 200,
-        display: 'flex',
-        flexDirection: 'column',
-        height: 'auto',
-        overflowY: 'auto',
-      }}>
+      className="absolute z-[9999] bg-white border border-gray-300 rounded-md shadow-lg 
+                 w-48 max-w-xs max-h-72 overflow-y-auto flex flex-col h-auto"
+      style={{ top: position.top, left: position.left }}>
       {items.map((item, index) => (
-        <div
+        <button
           key={index}
-          className="p-2 cursor-pointer hover:bg-gray-100"
+          className="px-3 py-2 text-left text-sm hover:bg-gray-100 cursor-pointer"
           onClick={() => {
             item.onClick()
             onClose()
           }}>
           {item.label}
-        </div>
+        </button>
       ))}
     </div>
   )

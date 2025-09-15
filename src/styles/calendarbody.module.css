@@ -5,7 +5,7 @@
     background: white;
 }
 
-.MainContainer > div:last-child {
+.MainContainer > :global(.fc-media-screen) {
     height: calc(100% - 72px);
 }
 
