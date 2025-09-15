@@ -281,8 +281,11 @@ export const AddMeetModal: FC<IAddMeetModalProps> = ({ isOpen, onClose }) => {
               onChange={handleRepetitionChange}
             />
 
-            <>
-              {!!repeat && repeat !== ECreateMeetingRepeat.NONE && (
+          <>
+            {!!repeat && repeat !== ECreateMeetingRepeat.NONE && (
+              <div>
+                <span className="text-[13px] font-montserrat">Закончить</span>
+
                 <div className="flex gap-3">
                   <Controller
                     control={control}

@@ -24,7 +24,7 @@ export function Login() {
     mutationKey: ['auth'],
     mutationFn: (data: AuthForm) => authService.main(data),
     onSuccess() {
-      toast.success('Login successful!')
+      toast.success('Вы успешно авторизовались!')
       reset()
       push('/calendar')
     },
