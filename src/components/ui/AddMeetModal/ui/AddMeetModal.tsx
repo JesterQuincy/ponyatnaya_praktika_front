@@ -281,8 +281,7 @@ export const AddMeetModal: FC<IAddMeetModalProps> = ({ isOpen, onClose }) => {
               onChange={handleRepetitionChange}
             />
 
-          <>
-            {!!repeat && repeat !== ECreateMeetingRepeat.NONE && (
+            {repeat && repeat !== ECreateMeetingRepeat.NONE && (
               <div>
                 <span className="text-[13px] font-montserrat">Закончить</span>
 
@@ -311,46 +310,41 @@ export const AddMeetModal: FC<IAddMeetModalProps> = ({ isOpen, onClose }) => {
                       control={control}
                       name="onDate"
                       render={({ field }) => (
-                        <>
-                          <div className={cn(styles.dateTime, 'flex items-center mb-0 !')}>
-                            <input
-                              type="date"
-                              className="w-[fit-content] h-[30px] !"
-                              {...field}
-                              value={field.value || ''}
-                              onChange={(e) => field.onChange(e.target.value)}
-                              disabled={finishRepetition !== EFinishRepetition.ON_DATE}
-                            />
-                          </div>
-                        </>
+                        <div className={cn(styles.dateTime, 'flex items-center mb-0')}>
+                          <input
+                            type="date"
+                            className="w-[fit-content] h-[30px]"
+                            {...field}
+                            value={field.value || ''}
+                            onChange={(e) => field.onChange(e.target.value)}
+                            disabled={finishRepetition !== EFinishRepetition.ON_DATE}
+                          />
+                        </div>
                       )}
                     />
                     <Controller
                       control={control}
                       name="onCount"
                       render={({ field }) => (
-                        <>
-                          <div className={cn(styles.dateTime, 'flex items-center mb-0 !')}>
-                            <input
-                              type="text"
-                              className="max-w-[35px] h-[30px] !"
-                              {...field}
-                              value={field.value || ''}
-                              onChange={(e) => {
-                                field.onChange(numberFields(e.target.value))
-                              }}
-                              disabled={finishRepetition !== EFinishRepetition.ON_COUNT}
-                            />
-                            <label className="text-[13px]">повторений</label>
-                          </div>
-                        </>
+                        <div className={cn(styles.dateTime, 'flex items-center mb-0')}>
+                          <input
+                            type="text"
+                            className="max-w-[35px] h-[30px]"
+                            {...field}
+                            value={field.value || ''}
+                            onChange={(e) => field.onChange(numberFields(e.target.value))}
+                            disabled={finishRepetition !== EFinishRepetition.ON_COUNT}
+                          />
+                          <label className="text-[13px]">повторений</label>
+                        </div>
                       )}
                     />
                   </div>
                 </div>
-              )}
-              <ErrorField message={errors.onCount?.message || errors.onDate?.message} />
-            </>
+
+                <ErrorField message={errors.onCount?.message || errors.onDate?.message} />
+              </div>
+            )}
 
             <div className="flex mt-[20px] justify-end gap-[10px] border-t border-[#CACACA] pt-[10px] font-montserrat font-semibold">
               <button className="px-[20px] py-[10px] text-[16px] text-[#525252] text" type="button" onClick={onClose}>
