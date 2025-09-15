@@ -12,6 +12,7 @@ import { FormLabel } from '@/components/ui/form'
 import Modal from 'react-modal'
 import styles from '@/styles/AddMeetModal.module.css'
 import { X } from 'lucide-react'
+import PdfPreview from '@/components/ui/PdfPreview'
 
 interface AccountProps {
   form: UseFormReturn<z.infer<typeof accountSchema>>
@@ -88,17 +89,11 @@ export default function AccountPublic({ form, UserId }: AccountProps & { UserId:
                     }}
                   />
                 ) : (
-                  <div className="relative w-'100px' h-100 overflow-hidden">
-                    <iframe
-                      src={el.photoDiploma}
-                      width="100"
-                      height="150"
-                      title="PDF Preview"
-                      className="pointer-events-none border-none overflow-hidden"
-                    />
+                  <div className="relative w-[100px] h-[100px] overflow-hidden">
+                    <PdfPreview file={el.photoDiploma} width={100} onClick={() => openPdfinWindow(el.photoDiploma)} />
                     <div
                       onClick={() => openPdfinWindow(el.photoDiploma)}
-                      className="absolute top-0 left-0 min-w-full min-h-full cursor-pointer z-10 overflow-hidden"
+                      className="absolute top-0 left-0 w-full h-full cursor-pointer z-10"
                     />
                   </div>
                 )}
