@@ -21,6 +21,15 @@ export const calendarService = {
     return await axiosWithAuth.get<ICalendarNotifications>(`api/v1/General/leftMenu/notification`)
   },
 
+  async getNonWorkingDaysUnavailableDates(startDate: string, endDate: string) {
+    return await axiosWithAuth.get(`api/nonWorkingDay/unavailable-dates`, {
+      params: {
+        startDate,
+        endDate,
+      },
+    })
+  },
+
   async getCalendarData(year: number) {
     return await axiosWithAuth.get<ICalendarData>(`/api/v1/General/calendarData/get/${year}`)
   },

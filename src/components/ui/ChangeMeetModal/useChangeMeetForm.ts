@@ -15,13 +15,7 @@ export const useChangeMeetForm = (meetId: number) => {
     resolver: zodResolver(baseSchema),
   })
 
-  const {
-    watch,
-    reset,
-    control,
-    handleSubmit,
-    formState: { errors },
-  } = form
+  const { watch, reset, control, handleSubmit, formState } = form
 
   const type = data?.customer ? 'client' : null
 
@@ -53,7 +47,7 @@ export const useChangeMeetForm = (meetId: number) => {
     watch,
     type,
     control,
-    errors,
+    formState,
     reset,
     handleSubmit,
     numberFields,
