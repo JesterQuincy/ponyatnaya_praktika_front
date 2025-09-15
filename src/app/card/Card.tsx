@@ -21,6 +21,7 @@ import { ICouple } from '@/types/couple'
 import { getAge } from '@/helpers/utils/getAge'
 import { useGetMeetingCustomer } from '@/api/hooks/meet/useGetMeetingCustomer'
 import { emptyRowField } from '@/constants'
+import dayjs from 'dayjs'
 
 type TUserType =
   | { type: EClientType.ADULT; client: IClient }
@@ -87,10 +88,12 @@ export function Card({ id }: { id: string }) {
                   <span className="text-[#7E7E7E]">Всего встреч:</span> {data?.data?.countMeet ?? emptyRowField}
                 </div>
                 <div className="text-[11px]">
-                  <span className="text-[#7E7E7E]">Последняя:</span> {data?.data?.lastMeetDate ?? emptyRowField}
+                  <span className="text-[#7E7E7E]">Последняя:</span>{' '}
+                  {dayjs(data?.data?.lastMeetDate).format('DD-MM-YYYY') ?? emptyRowField}
                 </div>
                 <div className="text-[11px]">
-                  <span className="text-[#7E7E7E]">Следующая:</span> {data?.data?.nextMeetDate ?? emptyRowField}
+                  <span className="text-[#7E7E7E]">Следующая:</span>{' '}
+                  {dayjs(data?.data?.nextMeetDate).format('DD-MM-YYYY') ?? emptyRowField}
                 </div>
               </>
             )}
