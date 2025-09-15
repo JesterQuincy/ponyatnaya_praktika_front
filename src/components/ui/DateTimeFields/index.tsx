@@ -2,8 +2,7 @@ import { cn } from '@/lib/utils'
 import styles from '@/styles/AddMeetModal.module.css'
 import { Control, Controller, FieldErrors, FieldPath, FieldValues } from 'react-hook-form'
 import { ErrorField } from '@/components/ErrorField'
-import React, { FC } from 'react'
-import { TAddMeetSchema } from '@/components/ui/AddMeetModal/schema'
+import React from 'react'
 
 interface IDateTimeFieldsProps<T extends FieldValues> {
   control: Control<T>
