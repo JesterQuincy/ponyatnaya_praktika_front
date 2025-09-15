@@ -26,7 +26,7 @@ export const EditMethodicModal = ({ isOpen, onClose, id }: IMeetingModalProps) =
   const { mutateAsync: createType, isPending: isPendingCreateType } = useCreateMethodType()
   const { mutateAsync: updateMethod, isPending: isPendingUpdateMethod } = useUpdateProjMethod()
   const { data: method, isPending: isPendingMethod } = useGetMethodById(id)
-  const { data: meet, isPending: isPendingMeet } = useGetMeeting(paramsId ?? '')
+  const { data: meet, isPending: isPendingMeet } = useGetMeeting(Number(paramsId))
 
   const {
     values,
@@ -79,7 +79,7 @@ export const EditMethodicModal = ({ isOpen, onClose, id }: IMeetingModalProps) =
       await updateMethod({
         id: method?.data.id,
         typeMethod: { id: type },
-        meet: meet?.data,
+        meet,
         photoProjectiveMethods: base64Images.map((base64Image) => ({ photoMethod: base64Image })),
         dateCreateMethod: method?.data.dateCreateMethod,
       })

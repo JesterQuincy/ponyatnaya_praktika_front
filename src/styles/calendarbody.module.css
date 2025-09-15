@@ -3,87 +3,33 @@
     height: var(--main-content);
     border-radius: 6px;
     background: white;
-
 }
 
-.MainContainer > div {
-    height: 100%;
+.MainContainer > :global(.fc-media-screen) {
+    height: calc(100% - 72px);
 }
 
-.calendarTitle {
-    font-size: 15px;
-    font-weight: lighter;
-    color: #333;
+.MainContainer :global(.fc-event-title) {
+    text-overflow: ellipsis;
 }
 
-/* Стили для кнопок навигации */
-.calendarButton {
-    background-color: #007bff;
-    border: none;
-    color: white;
-    padding: 5px 10px;
-    border-radius: 4px;
-    cursor: pointer;
-    margin-right: 5px;
+.MainContainer :global(.fc-day-today) {
+    background-color: #ffece7 !important;
 }
 
-.calendarButton:hover {
-    background-color: #0056b3;
+.eventOnline {
+    background-color: var(--orange);
+    border: 1px solid var(--orange);
 }
 
-.fc-scrollgrid-sync-inner
-
-/* Стили для дней недели (шапка таблицы) */
-.calendarHeader {
-    background-color: #f8f9fa;
-    color: #333;
-    padding: 10px 0;
-    font-weight: 500;
+.eventOffline {
+    background-color: #049ADB;
+    border: 1px solid #049ADB;
 }
 
-/* Стили для ячеек с датами */
-.calendarDay {
-    border: 1px solid #ddd;
-    padding: 10px;
-}
+/* calendarbody.module.css */
+.calendarTooltip {} /* можно пустым — важно, что это локальный класс */
 
-.calendarDayNumber {
-    font-size: 0.875rem;
-    color: #888;
-}
-
-/* Стили для событий */
-/* .calendarEvent {
-    background-color: #EA660C;
-    color: white;
-    padding: 5px;
-    border-radius: 4px;
-    font-size: 0.875rem;
-    margin-bottom: 5px;
-} */
-
-/* Стили для сегодняшнего дня */
-.calendarToday {
-    background-color: #fff3cd;
-    border-color: #ffeeba;
-}
-
-.customTimeIndicator {
-    position: absolute;
-    width: 75%;
-    height: 2px;
-    background-color: orange;
-    z-index: 999;
-}
-
-/* Контейнер календаря с относительным позиционированием */
-.fc-timegrid-body {
-    position: relative;  /* Добавляем относительное позиционирование */
-    overflow: hidden;    /* Убираем видимость за границами блока */
-}
-
-.calendarTimeLabels {
-    color: #FF5733; /* Задайте нужный цвет текста времени */
-    font-weight: bold; /* По желанию можно сделать текст жирным */
-    font-size: 0.875rem; /* Размер шрифта */
+:global(body:has(.fc-popover)) .calendarTooltip {
+    display: none !important;
 }
