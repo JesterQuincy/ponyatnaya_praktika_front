@@ -19,6 +19,9 @@ export const useGetCalendarData = (year: number) => {
         editable: false,
         interaction: false,
         className: 'pointer-none',
+        extendedProps: {
+          id: day.id,
+        },
       }))
 
       const formattedMeetings = data.clientsData.flatMap((client) =>

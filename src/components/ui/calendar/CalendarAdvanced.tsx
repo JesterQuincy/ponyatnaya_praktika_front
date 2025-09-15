@@ -13,9 +13,30 @@ import { EventClickArg } from '@fullcalendar/core'
 import { Toolbar } from './Toolbar'
 import { renderEventContent } from './renderEventContent'
 import { TooltipProvider } from '@/components/ui/tooltip'
+import { useDeleteNonWorkingDay } from '@/api/hooks/calendar/useDeleteNonWorkingDay'
+import { useDeleteMeeting } from '@/api/hooks/meet/useDeleteMeeting'
+import { ChangeMeetModal } from '../ChangeMeetModal/ChangeMeetModal'
+import { toast } from 'react-toastify'
+import { CalendarContextMenu } from './CalendarContextMenu'
+
+type ContextMenuState = {
+  x: number
+  y: number
+  eventId: number
+  type: 'default' | 'holiday'
+  visible: boolean
+}
 
 export const CalendarAdvanced = () => {
   const [currentYear, setCurrentYear] = useState(new Date().getFullYear())
+  const [contextMenu, setContextMenu] = useState<ContextMenuState>({
+    x: 0,
+    y: 0,
+    eventId: 0,
+    type: 'default',
+    visible: false,
+  })
+  const [changeModalState, setChangeModalState] = useState(false)
   const [title, setTitle] = useState('')
 
   const router = useRouter()
@@ -23,6 +44,8 @@ export const CalendarAdvanced = () => {
   const calRef = useRef<FullCalendar | null>(null)
 
   const { data: events } = useGetCalendarData(currentYear)
+  const { mutateAsync: deleteMeeting } = useDeleteMeeting()
+  const { mutateAsync: deleteNonWorkingDay } = useDeleteNonWorkingDay()
 
   const handleEventClick = (eventInfo: EventClickArg) => {
     if (eventInfo.event.display === 'background') {
@@ -30,6 +53,54 @@ export const CalendarAdvanced = () => {
     }
 
     router.push(`/meet?id=${eventInfo.event.extendedProps.id}`)
+  }
+
+  const onDeleteMeeting = async () => {
+    if (!contextMenu?.eventId) return
+
+    const toastId = toast.loading('Удаление встречи...')
+
+    try {
+      await deleteMeeting(contextMenu.eventId)
+
+      toast.update(toastId, {
+        render: 'Встреча удалена',
+        type: 'success',
+        isLoading: false,
+        autoClose: 3000,
+      })
+    } catch {
+      toast.update(toastId, {
+        render: 'Ошибка при удалении встречи',
+        type: 'error',
+        isLoading: false,
+        autoClose: 5000,
+      })
+    }
+  }
+
+  const onDeleteNonWorkingDay = async () => {
+    if (!contextMenu?.eventId) return
+
+    const toastId = toast.loading('Удаление выходного...')
+
+    try {
+      await deleteNonWorkingDay(contextMenu.eventId)
+
+      toast.update(toastId, {
+        render: 'Выходной удалён',
+        type: 'success',
+        isLoading: false,
+        autoClose: 3000,
+      })
+    } catch {
+      toast.update(toastId, {
+        render: 'Ошибка при удалении выходного',
+        type: 'error',
+        isLoading: false,
+        autoClose: 5000,
+      })
+    }
   }
 
   return (
@@ -53,6 +124,7 @@ export const CalendarAdvanced = () => {
           locales={[ruLocale]}
           plugins={[timeGridPlugin, interactionPlugin, dayGridPlugin]}
           scrollTime="08:00:00"
+          scrollTimeReset={false}
           slotDuration="00:30:00"
           snapDuration="00:30:00"
           datesSet={(dateInfo) => {
@@ -81,8 +153,46 @@ export const CalendarAdvanced = () => {
 
             return ''
           }}
+          eventDidMount={(eventInfo) => {
+            const el = eventInfo.el as HTMLElement
+            if (!el.dataset._ctxAttached) {
+              el.dataset._ctxAttached = '1'
+
+              const onContext = (e: MouseEvent) => {
+                e.preventDefault()
+                e.stopPropagation()
+                setContextMenu({
+                  x: (e as MouseEvent).clientX,
+                  y: (e as MouseEvent).clientY,
+                  eventId: eventInfo.event.extendedProps.id,
+                  type: eventInfo.event.allDay ? 'holiday' : 'default',
+                  visible: true,
+                })
+              }
+
+              el.addEventListener('contextmenu', onContext)
+            }
+          }}
         />
       </TooltipProvider>
+      <CalendarContextMenu
+        contextMenu={contextMenu}
+        onClose={() =>
+          setContextMenu((prev) => {
+            return { ...prev, visible: false }
+          })
+        }
+        onDeleteMeeting={onDeleteMeeting}
+        onDeleteNonWorkingDay={onDeleteNonWorkingDay}
+        onChangeMeeting={() => setChangeModalState(true)}
+      />
+      {changeModalState && (
+        <ChangeMeetModal
+          meetId={contextMenu?.eventId ?? 0}
+          isOpen={changeModalState}
+          onClose={() => setChangeModalState(false)}
+        />
+      )}
     </div>
   )
 }
