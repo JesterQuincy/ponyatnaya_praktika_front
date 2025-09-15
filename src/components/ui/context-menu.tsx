@@ -17,6 +17,7 @@ interface Props {
 export default function CustomContextMenu({ x, y, items, onClose }: Props) {
   const menuRef = useRef<HTMLDivElement>(null)
   const [position, setPosition] = useState({ top: y, left: x })
+  const [show, setShow] = useState(false)
 
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
@@ -50,16 +51,22 @@ export default function CustomContextMenu({ x, y, items, onClose }: Props) {
     }
   }, [onClose])
 
+  useEffect(() => {
+    setShow(true)
+  }, [])
+
   return (
     <div
       ref={menuRef}
-      className="absolute z-[9999] bg-white border border-gray-300 rounded-md shadow-lg 
-                 w-48 max-w-xs max-h-72 overflow-y-auto flex flex-col h-auto"
+      className={`absolute z-[9999] bg-white border border-gray-300 rounded-md shadow-lg 
+                 w-48 max-w-xs max-h-72 overflow-y-auto flex flex-col h-auto transition-opacity duration-150 ${
+                   show ? 'opacity-100' : 'opacity-0'
+                 }`}
       style={{ top: position.top, left: position.left }}>
       {items.map((item, index) => (
         <button
           key={index}
-          className="px-3 py-2 text-left text-sm hover:bg-gray-100 cursor-pointer"
+          className="px-3 py-2 text-left text-sm hover:bg-gray-100 cursor-pointer hover:bg-[#ffece7] transition-colors duration-300"
           onClick={() => {
             item.onClick()
             onClose()
