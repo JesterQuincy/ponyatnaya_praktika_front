@@ -31,6 +31,7 @@ export const useGetCalendarData = (year: number) => {
           end: meeting.endTime,
           allDay: false,
           extendedProps: {
+            meetingType: !!meeting.title ? 'other' : 'client',
             formatMeet: meeting.formatMeet,
             id: meeting.id,
           },

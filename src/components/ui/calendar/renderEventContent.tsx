@@ -9,7 +9,7 @@ export const renderEventContent = (arg: EventContentArg) => {
   if (arg.event.display === 'background') {
     return <div className={'m-[0.5em] italic text-[0.85em]'}>{arg.event.title}</div>
   }
-
+  const meetingType = arg.event._def.extendedProps.meetingType
   const isMonth = arg.view.type.startsWith('dayGrid')
   const text = arg.event.title ?? ''
   const time = arg.timeText ?? ''
@@ -24,6 +24,7 @@ export const renderEventContent = (arg: EventContentArg) => {
           className={cn(
             'flex items-center min-w-0 gap-1 px-1 cursor-pointer overflow-hidden',
             !isMonth && 'flex-col items-start',
+            meetingType == 'other' && 'cursor-default',
           )}>
           {isMonth && <span className={cn('inline-block min-h-2 min-w-2 rounded-full', bgColor)} aria-hidden />}
           <div className={'gap-1 flex items-center justify-start'}>

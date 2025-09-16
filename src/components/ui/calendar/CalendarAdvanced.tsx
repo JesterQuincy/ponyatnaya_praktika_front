@@ -51,6 +51,11 @@ export const CalendarAdvanced = () => {
     if (eventInfo.event.display === 'background') {
       return
     }
+    if (eventInfo.event.extendedProps.meetingType === 'other') {
+      eventInfo.jsEvent.preventDefault()
+      eventInfo.jsEvent.stopPropagation()
+      return
+    }
 
     router.push(`/meet?id=${eventInfo.event.extendedProps.id}`)
   }
