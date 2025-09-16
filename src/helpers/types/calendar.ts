@@ -68,3 +68,10 @@ export enum ECreateMeetingRepeat {
   WEEKLY = 'Еженедельно',
   DAILY = 'Ежедневно',
 }
+
+export interface IUnavailabeDatesError {
+  emptyWarning: boolean
+  meetsMessage: string
+  nonWorkingDaysMessage: string
+  otherMeetsMessage: string
+}

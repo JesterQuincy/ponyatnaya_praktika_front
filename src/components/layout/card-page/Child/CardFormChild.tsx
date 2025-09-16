@@ -155,17 +155,17 @@ export const CardFormChild = ({ user }: ICardFormProps) => {
               <InputChild form={form} name={'mail'} label={'Почта ребенка'} />
               <SelectChild form={form} options={genderOptions} name={'gender'} label={'Пол ребенка'} />
               <SelectChild form={form} options={statusOptions} name={'clientStatus'} label={'Статус'} />
-              <InputChild
+              <TextareaChild
                 form={form}
                 name={'adultRequestForTherapyDesiredOutcome'}
                 label={'Желаемый результат от прохождения терапии от взрослого'}
               />
-              <InputChild
+              <TextareaChild
                 form={form}
                 name={'childExplanationForSeeingPsychologist'}
                 label={'Как ребенок объясняет причину своего посещения психолога?'}
               />
-              <InputChild
+              <TextareaChild
                 form={form}
                 name={'childDesiredChanges'}
                 label={'Что сам ребенок хотел изменить, если хотел?'}
@@ -223,28 +223,28 @@ export const CardFormChild = ({ user }: ICardFormProps) => {
               {isMore && (
                 <>
                   <InputChild form={form} name={'birth'} label={'Дата рождения'} type="date" />
-                  <InputChild form={form} name={'residenceAddress'} label={'Адрес проживания'} />
+                  <TextareaChild form={form} name={'residenceAddress'} label={'Адрес проживания'} />
                   <SelectChild
                     form={form}
                     options={channelOptions}
                     name={'priorityCommunicationChannel'}
                     label={'Приоритетный канал коммуникации'}
                   />
-                  <InputChild form={form} name={'peerRecommendation'} label={'Коллегиальные рекомендации'} />
+                  <TextareaChild form={form} name={'peerRecommendation'} label={'Коллегиальные рекомендации'} />
                   <SelectChild
                     form={form}
                     options={familyStatusOptions}
                     name={'familyStatus'}
                     label={'Семейное положение'}
                   />
-                  <InputChild
+                  <TextareaChild
                     form={form}
                     name={'takingMedic'}
                     label={
                       'Прием медицинских препаратов оказывающих влияние на сознание/эмоциональное состояние клиента'
                     }
                   />
-                  <InputChild
+                  <TextareaChild
                     form={form}
                     name={'prevExperience'}
                     label={'Предыдущий опыт получения психологической помощи'}
@@ -256,8 +256,8 @@ export const CardFormChild = ({ user }: ICardFormProps) => {
                     name={'supervisionStatusThisClient'}
                     label={'Берется ли супервизия на данного клиента'}
                   />
-                  <InputChild form={form} name={'contactSupervisor'} label={'ФИО и контакты супервизора'} />
-                  <InputChild
+                  <TextareaChild form={form} name={'contactSupervisor'} label={'ФИО и контакты супервизора'} />
+                  <TextareaChild
                     form={form}
                     name={'supervisionMaterial'}
                     label={'Материал для следующих сеансов из супервизии'}
