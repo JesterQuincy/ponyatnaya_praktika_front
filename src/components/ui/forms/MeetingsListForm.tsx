@@ -26,6 +26,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { mainHypothesesShema } from '@/models/mainHypothesesShema'
 import { ChangeMeetModal } from '../ChangeMeetModal/ChangeMeetModal'
 import { useDeleteMeeting } from '@/api/hooks/meet/useDeleteMeeting'
+import dayjs from 'dayjs'
 
 interface IMethodState {
   methodId: number
@@ -148,7 +149,7 @@ export function MeetingsListForm({ user }: ICardFormProps) {
                 </span>
                 <span className="text-[12px] flex gap-[5px]">
                   <span className="text-[#7E7E7E]">Дата:</span>
-                  <span className="font-semibold">{meet.dateMeet}</span>
+                  <span className="font-semibold">{dayjs(meet.dateMeet).format('DD-MM-YYYY')}</span>
                 </span>
               </div>
               <div className="flex flex-col gap-[5px]">

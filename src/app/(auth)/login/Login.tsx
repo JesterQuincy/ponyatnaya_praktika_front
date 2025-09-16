@@ -3,7 +3,6 @@
 import { Input } from '@/components/ui/input'
 import { SubmitHandler, useForm } from 'react-hook-form'
 import { AuthForm } from '@/helpers/types/auth'
-import React, { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { useMutation } from '@tanstack/react-query'
 import { authService } from '@/services/auth.service'
@@ -20,13 +19,12 @@ export function Login() {
     mode: 'onChange',
   })
 
-  const [isLoginForm, setIsLoginForm] = useState(false)
   const { push } = useRouter()
-  const { mutate } = useMutation({
+  const { mutate, isPending } = useMutation({
     mutationKey: ['auth'],
     mutationFn: (data: AuthForm) => authService.main(data),
     onSuccess() {
-      toast.success('Login successful!')
+      toast.success('Вы успешно авторизовались!')
       reset()
       push('/calendar')
     },
@@ -73,7 +71,7 @@ export function Login() {
             variant="default"
             type="submit"
             className="w-full bg-orange text-white hover:bg-orange/80 rounded-[6px]"
-            onClick={() => setIsLoginForm(true)}>
+            disabled={isPending}>
             Войти
           </Button>
 
