@@ -31,7 +31,7 @@ export const ClientCard: FC<IClientCardProps> = ({ client, onClientClick }) => {
 
   return (
     <div className="border-t border-[#6A6A6A] py-[10px]">
-      <div className="flex justify-between items-start">
+      <div className="flex items-start">
         <div>
           <h2
             onClick={() => onClientClick(client)}
@@ -51,7 +51,7 @@ export const ClientCard: FC<IClientCardProps> = ({ client, onClientClick }) => {
           </div>
         </div>
 
-        <div className="flex gap-8">
+        <div className="ml-auto flex gap-8 w-[600px]">
           <div className="flex flex-row align-center items-start justify-between text-[11px] gap-[8px] w-[200px]">
             <div className="flex flex-row items-center bg-[#E4E4E4] px-[12px] py-[3px] rounded-[30px] gap-[4px]">
               <Image src={ICON_MAP[client.clientType] || HumanIcon} alt="Тип клиента" width={8} height={8} />
@@ -72,25 +72,25 @@ export const ClientCard: FC<IClientCardProps> = ({ client, onClientClick }) => {
               {client.mail}
             </div>
           </div>
-          <div className="relative right-4">
-            <Button
-              onClick={() => handleDropdownToggle(client.customerId)}
-              className=" w-7 bg-[#E4E4E4] text-[#7E7E7E] text-[20px] flex items-center p-[10px] rounded-[6px]">
-              <Image src={TripleDots} alt="TripleDots" />
-            </Button>
-            {activeDropdown === client.customerId && (
-              <DropdownMenu
-                onClose={() => setActiveDropdown(null)}
-                items={[
-                  {
-                    label: 'Удалить',
-                    key: 'delete',
-                    onClick: () => deleteCustomer(client.customerId),
-                  },
-                ]}
-              />
-            )}
-          </div>
+        </div>
+        <div className="relative right-4">
+          <Button
+            onClick={() => handleDropdownToggle(client.customerId)}
+            className=" w-7 bg-[#E4E4E4] text-[#7E7E7E] text-[20px] flex items-center p-[10px] rounded-[6px]">
+            <Image src={TripleDots} alt="TripleDots" />
+          </Button>
+          {activeDropdown === client.customerId && (
+            <DropdownMenu
+              onClose={() => setActiveDropdown(null)}
+              items={[
+                {
+                  label: 'Удалить',
+                  key: 'delete',
+                  onClick: () => deleteCustomer(client.customerId),
+                },
+              ]}
+            />
+          )}
         </div>
       </div>
     </div>
