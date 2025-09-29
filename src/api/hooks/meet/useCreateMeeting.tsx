@@ -12,6 +12,7 @@ export const useCreateMeeting = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [EInvalidationTags.CALENDAR] })
       queryClient.invalidateQueries({ queryKey: [EInvalidationTags.MEET] })
+      queryClient.invalidateQueries({ queryKey: [EInvalidationTags.CLIENTS] })
       queryClient.refetchQueries({ queryKey: [EInvalidationTags.CALENDAR] })
     },
   })
