@@ -9,6 +9,7 @@ import { Button } from '../buttons/Button'
 import TripleDots from '@/public/icon/tripleDots.svg'
 import { DropdownMenu } from '../forms/DropDownMenu'
 import { useDeleteCustomer } from '@/api/hooks/customer/useDeleteCustomer'
+import dayjs from 'dayjs'
 
 interface IClientCardProps {
   client: IGetClientsBySearchResponseBody
@@ -44,7 +45,8 @@ export const ClientCard: FC<IClientCardProps> = ({ client, onClientClick }) => {
               Всего встреч: <div className="text-black">{client.countMeet}</div>
             </div>
             <div className="text-[11px] text-[#E4E4E4] rounded-[4px] flex gap-[4px]">
-              Последняя: <div className="text-black">{client.meetDate}</div>
+              Последняя:
+              <div className="text-black">{client.meetDate ? dayjs(client.meetDate).format('DD-MM-YYYY') : '-'}</div>
             </div>
           </div>
         </div>
