@@ -41,8 +41,7 @@ export const ClientCard: FC<IClientCardProps> = ({ client, onClientClick }) => {
             <div className={`text-[11px] px-[11px] rounded-[4px] ${statusColor}`}>{client.clientStatus}</div>
             <div className="text-[11px] bg-[#E4E4E4] px-[11px] rounded-[4px]">{client.meetingType}</div>
             <div className="text-[11px] text-[#E4E4E4] rounded-[4px] flex gap-[4px]">
-              Всего встреч:
-              <div className="text-black">{client.countMeet}</div>
+              Всего встреч: <div className="text-black">{client.countMeet}</div>
             </div>
             <div className="text-[11px] text-[#E4E4E4] rounded-[4px] flex gap-[4px]">
               Последняя: <div className="text-black">{client.meetDate}</div>
@@ -50,13 +49,13 @@ export const ClientCard: FC<IClientCardProps> = ({ client, onClientClick }) => {
           </div>
         </div>
 
-        <div className="flex justify-between w-1/3">
-          <div className="flex flex-row align-center items-start text-[11px] gap-[8px]">
+        <div className="flex gap-8">
+          <div className="flex flex-row align-center items-start justify-between text-[11px] gap-[8px] w-[200px]">
             <div className="flex flex-row items-center bg-[#E4E4E4] px-[12px] py-[3px] rounded-[30px] gap-[4px]">
               <Image src={ICON_MAP[client.clientType] || HumanIcon} alt="Тип клиента" width={8} height={8} />
               {client.clientType}
             </div>
-            <div className="text-[11px] text-[#E4E4E4] rounded-[4px] flex gap-[4px] mt-[4px]">
+            <div className="text-[11px] text-[#E4E4E4] rounded-[4px] flex gap-[4px] mt-[4px] w-[80px]">
               Возраст: <div className="text-black">{client.years}</div>
             </div>
           </div>
