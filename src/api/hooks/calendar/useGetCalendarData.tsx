@@ -9,33 +9,36 @@ export const useGetCalendarData = (year: number) => {
     queryFn: () => calendarService.getCalendarData(year).then((res) => res.data),
     enabled: !!year,
     select: (data) => {
-      const nonWorkingDays = data.nonWorkingDays.map((day) => ({
-        title: day.title,
-        start: day.date,
-        end: day.date,
-        allDay: true,
-        display: 'background',
-        color: '#e0e0e0',
-        editable: false,
-        interaction: false,
-        className: 'pointer-none',
-        extendedProps: {
-          id: day.id,
-        },
-      }))
-
-      const formattedMeetings = data.clientsData.flatMap((client) =>
-        client.meetings.map((meeting) => ({
-          title: client.fullName || meeting.title,
-          start: meeting.startTime,
-          end: meeting.endTime,
-          allDay: false,
+      const nonWorkingDays =
+        data.nonWorkingDays?.map((day) => ({
+          title: day.title,
+          start: day.date,
+          end: day.date,
+          allDay: true,
+          display: 'background',
+          color: '#e0e0e0',
+          editable: false,
+          interaction: false,
+          className: 'pointer-none',
           extendedProps: {
-            formatMeet: meeting.formatMeet,
-            id: meeting.id,
+            id: day.id,
           },
-        })),
-      )
+        })) || []
+
+      const formattedMeetings =
+        data.clientsData?.flatMap((client) =>
+          client.meetings.map((meeting) => ({
+            title: client.fullName || meeting.title,
+            start: meeting.startTime,
+            end: meeting.endTime,
+            allDay: false,
+            extendedProps: {
+              meetingType: !client.fullName ? 'other' : 'client',
+              formatMeet: meeting.formatMeet,
+              id: meeting.id,
+            },
+          })),
+        ) || []
 
       return [...formattedMeetings, ...nonWorkingDays]
     },
