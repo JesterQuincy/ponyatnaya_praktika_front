@@ -3,7 +3,7 @@ import Modal from 'react-modal'
 import styles from '@/styles/AddMeetModal.module.css'
 import { SubmitHandler, Controller } from 'react-hook-form'
 import { toast } from 'react-toastify'
-import { ECreateMeetingRepeat, IUnavailabeDatesError } from '@/helpers/types/calendar'
+import { ECreateMeetingRepeat, ICheckAvailableMeeting, IUnavailabeDatesError } from '@/helpers/types/calendar'
 import { useCreateMeeting } from '@/api/hooks/meet/useCreateMeeting'
 import { EMeetingFormat } from '@/types/clients'
 import { ErrorField } from '@/components/ErrorField'
@@ -70,19 +70,41 @@ export const AddMeetModal: FC<IAddMeetModalProps> = ({ isOpen, onClose }) => {
     }
   })
 
+  const buildAvailabilityPayload = (data: TAddMeetSchema): ICheckAvailableMeeting => {
+    const start = dayjs(
+      `${data.dateMeet} ${data.time}`,
+      ['YYYY-MM-DD HH:mm', 'YYYY-MM-DD HH:mm:ss'],
+      true, // strict
+    )
+    if (!start.isValid()) throw new Error('Некорректные dateMeet/time')
+
+    // нормализуем до 0 секунд/мс
+    // const start = startRaw.second(0).millisecond(0)
+
+    // const durationMin = Math.max(0, Math.floor(Number(data.duration ?? 0)))
+    // const end = start.add(durationMin, 'minute').second(0).millisecond(0)
+
+    // Если важно не пересекать полночь, можно раскомментировать проверку:
+    // if (end.isAfter(start.endOf('day'))) {
+    //   throw new Error('Встреча пересекает полночь — нет endDate в пэйлоаде')
+    // }
+
+    return {
+      startDate: start.format('YYYY-MM-DD'),
+      startTime: start.format('HH:mm'),
+      endTime: start.add(Number(data.duration), 'minutes').format('HH:mm'),
+      repeat: data.repeat,
+      onCount: data.onCount,
+      onDate: data.onDate == '' ? undefined : data.onDate,
+    }
+  }
+
   const checkDateAvailability = async (
-    startDate: string,
-    endDate: string,
+    data: ICheckAvailableMeeting,
   ): Promise<{ isAvailable: boolean; errorMessage?: string }> => {
     const toastId = toast.loading('Проверка доступности времени...')
-
     try {
-      await meetingService.getUnvailableMeetingDates(
-        dayjs(startDate).format('YYYY-MM-DD'),
-        dayjs(endDate).format('YYYY-MM-DD'),
-        dayjs(startDate).format('HH:mm'),
-        dayjs(endDate).format('HH:mm'),
-      )
+      await meetingService.getUnvailableMeetingDates(data)
       toast.update(toastId, {
         render: 'Время доступно!',
         type: 'success',
@@ -142,10 +164,8 @@ export const AddMeetModal: FC<IAddMeetModalProps> = ({ isOpen, onClose }) => {
   }
 
   const onSubmit: SubmitHandler<TAddMeetSchema> = async (data) => {
-    const startDate = dayjs(`${data.dateMeet} ${data.time}`)
-    const endDate = startDate.add(Number(data.duration), 'minute')
-
-    const result = await checkDateAvailability(startDate.format('YYYY-MM-DD HH:mm'), endDate.format('YYYY-MM-DD HH:mm'))
+    const payload = buildAvailabilityPayload(data)
+    const result = await checkDateAvailability(payload)
 
     if (result.isAvailable) {
       await createMeetingRequest(data)

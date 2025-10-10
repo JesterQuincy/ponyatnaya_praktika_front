@@ -75,3 +75,12 @@ export interface IUnavailabeDatesError {
   nonWorkingDaysMessage: string
   otherMeetsMessage: string
 }
+
+export interface ICheckAvailableMeeting {
+  startDate: string
+  startTime: string
+  endTime: string
+  repeat: ECreateMeetingRepeat
+  onCount?: string
+  onDate?: string
+}

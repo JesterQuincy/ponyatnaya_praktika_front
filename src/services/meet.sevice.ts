@@ -2,7 +2,8 @@ import { axiosWithAuth } from '@/api/interceptors'
 import { IMeetingDetails } from '@/types/meet/getMeetById'
 import { DeepPartial } from '@/types/common'
 import { IGetCustomerInfoByMeet } from '@/types/meet/getCustomerInfoByMeet'
-import { ICreateMeeting } from '@/helpers/types/calendar'
+import { ICheckAvailableMeeting, ICreateMeeting } from '@/helpers/types/calendar'
+import qs from 'qs'
 
 export const meetingService = {
   async getMeetingById(id: number | string) {
@@ -25,13 +26,15 @@ export const meetingService = {
     return await axiosWithAuth.post('/api/meet', data)
   },
 
-  async getUnvailableMeetingDates(startDate: string, endDate: string, startTime: string, endTime: string) {
-    return await axiosWithAuth.get('/api/meet/unavailable-dates/', {
+  async getUnvailableMeetingDates(request: ICheckAvailableMeeting) {
+    return await axiosWithAuth.get(`/api/meet/unavailable-dates`, {
       params: {
-        startDate,
-        endDate,
-        startTime,
-        endTime,
+        startDate: request.startDate,
+        startTime: request.startTime,
+        endTime: request.endTime,
+        repeat: request.repeat,
+        onCount: request.onCount,
+        onDate: request.onDate,
       },
     })
   },
