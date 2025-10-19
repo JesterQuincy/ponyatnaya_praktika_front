@@ -13,8 +13,9 @@ import { ErrorField } from '@/components/ErrorField'
 import { baseSchema } from '../ChangeMeetModal/schema'
 import moment from 'moment'
 import { calendarService } from '@/services/calendar.service'
-import { IUnavailabeDatesError } from '@/helpers/types/calendar'
+import { IScheduleData, IUnavailabeDatesError } from '@/helpers/types/calendar'
 import { AxiosError } from 'axios'
+import NonBlockingError from '../AddMeetModal/ui/NonBlockingError'
 
 interface IAddClientModalProps {
   isOpen: boolean
@@ -25,11 +26,11 @@ export const NonWorkingDayModal: FC<IAddClientModalProps> = ({ isOpen, onClose }
   const [errorModal, setErrorModal] = useState<string | null>(null)
   const [confirmModal, setConfirmModal] = useState<{
     isOpen: boolean
-    message: string
+    message: IScheduleData | null
     data: z.infer<typeof createNonWorkingDaySchema> | null
   }>({
     isOpen: false,
-    message: '',
+    message: null,
     data: null,
   })
   const form = useForm<z.infer<typeof createNonWorkingDaySchema>>({
@@ -44,7 +45,7 @@ export const NonWorkingDayModal: FC<IAddClientModalProps> = ({ isOpen, onClose }
   const checkDateAvailability = async (
     startDate: string,
     endDate: string,
-  ): Promise<{ isAvailable: boolean; errorMessage?: string }> => {
+  ): Promise<{ isAvailable: boolean; errorMessage?: IScheduleData }> => {
     const toastId = toast.loading('Проверка доступности даты...')
     try {
       await calendarService.getNonWorkingDaysUnavailableDates(
@@ -62,9 +63,7 @@ export const NonWorkingDayModal: FC<IAddClientModalProps> = ({ isOpen, onClose }
       const error = err as AxiosError<IUnavailabeDatesError>
       toast.dismiss(toastId)
       if (error?.response?.status === 409) {
-        const errorMessage = `${error.response?.data?.nonWorkingDaysMessage}
-        ${error.response?.data?.otherMeetsMessage}
-        ${error.response?.data?.meetsMessage}`
+        const errorMessage = error.response?.data as unknown as IScheduleData
         return { isAvailable: false, errorMessage }
       } else {
         toast.error('Ошибка при проверке доступности даты')
@@ -104,11 +103,11 @@ export const NonWorkingDayModal: FC<IAddClientModalProps> = ({ isOpen, onClose }
     if (confirmModal.data) {
       await createNonWorkingDays(confirmModal.data)
     }
-    setConfirmModal({ isOpen: false, message: '', data: null })
+    setConfirmModal({ isOpen: false, message: null, data: null })
   }
 
   const handleConfirmCancel = () => {
-    setConfirmModal({ isOpen: false, message: '', data: null })
+    setConfirmModal({ isOpen: false, message: null, data: null })
   }
 
   const onSubmit: SubmitHandler<z.infer<typeof createNonWorkingDaySchema>> = async (data) => {
@@ -209,12 +208,14 @@ export const NonWorkingDayModal: FC<IAddClientModalProps> = ({ isOpen, onClose }
         isOpen={confirmModal.isOpen}
         onRequestClose={handleConfirmCancel}
         contentLabel="Подтверждение"
-        className={`${styles.modalContent}  w-2/4 p-2`}
+        className={`${styles.modalContent}  w-1/4 p-4`}
         overlayClassName={styles.modalOverlay}>
         <div className="font-montserrat">
-          <div className="text-orange-600 font-bold text-xl mb-4">Время недоступно</div>
-          <div className="mb-4">
-            <p className="text-red-600 mb-2">{confirmModal.message}</p>
+          <div className="text-orange-600 font-bold text-xl mb-4">Время занято</div>
+          <div className="mb-4 flex flex-col gap-3">
+            <NonBlockingError items={confirmModal.message?.meet} title="Пересечение с клиентскими встречами" />
+            <NonBlockingError items={confirmModal.message?.nonWorkingDate} title="Пересечение с другими выходными" />
+            <NonBlockingError items={confirmModal.message?.otherMeet} title="Пересечение с иными встречами" />
           </div>
           <div className="flex justify-end gap-[10px] mt-6">
             <button
