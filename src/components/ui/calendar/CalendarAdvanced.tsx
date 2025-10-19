@@ -6,10 +6,10 @@ import interactionPlugin from '@fullcalendar/interaction'
 import timeGridPlugin from '@fullcalendar/timegrid'
 import dayGridPlugin from '@fullcalendar/daygrid'
 import ruLocale from '@fullcalendar/core/locales/ru'
-import { useRef, useState } from 'react'
+import { useCallback, useRef, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { useGetCalendarData } from '@/api/hooks/calendar/useGetCalendarData'
-import { EventClickArg } from '@fullcalendar/core'
+import { DatesSetArg, EventClickArg } from '@fullcalendar/core'
 import { Toolbar } from './Toolbar'
 import { renderEventContent } from './renderEventContent'
 import { TooltipProvider } from '@/components/ui/tooltip'
@@ -59,6 +59,25 @@ export const CalendarAdvanced = () => {
 
     router.push(`/meet?id=${eventInfo.event.extendedProps.id}`)
   }
+
+  const lastViewRef = useRef<{ title: string; year: number }>({
+    title: '',
+    year: new Date().getFullYear(),
+  })
+
+  const handleDatesSet = useCallback((info: DatesSetArg) => {
+    const newTitle = info.view.title
+    const newYear = info.view.currentStart.getFullYear()
+
+    if (lastViewRef.current.title !== newTitle) {
+      lastViewRef.current.title = newTitle
+      setTitle(newTitle)
+    }
+    if (lastViewRef.current.year !== newYear) {
+      lastViewRef.current.year = newYear
+      setCurrentYear(newYear)
+    }
+  }, [])
 
   const onDeleteMeeting = async () => {
     if (!contextMenu?.eventId) return
@@ -132,14 +151,7 @@ export const CalendarAdvanced = () => {
           scrollTimeReset={false}
           slotDuration="00:30:00"
           snapDuration="00:30:00"
-          datesSet={(dateInfo) => {
-            setTitle(dateInfo.view.title)
-
-            const newYear = dateInfo.view.currentStart.getFullYear()
-            if (newYear !== currentYear) {
-              setCurrentYear(newYear)
-            }
-          }}
+          datesSet={handleDatesSet}
           views={{
             dayGridMonth: {
               eventDisplay: 'list-item',

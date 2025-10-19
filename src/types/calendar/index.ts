@@ -1,7 +1,7 @@
 export interface ICalendarData {
-  currentDate: string
-  clientsData: IClientsData[]
-  nonWorkingDays: IClientDataNonWorkingDays[]
+  currentDate: string | undefined
+  clientsData: IClientsData[] | undefined
+  nonWorkingDays: IClientDataNonWorkingDays[] | undefined
 }
 
 interface IClientsData {
@@ -29,7 +29,7 @@ interface IClientDataNonWorkingDays {
 
 export interface ICalendarNotifications {
   count: number
-  notificationResponseList: ICalendarNotificationResponseList[]
+  notificationResponseList: ICalendarNotificationResponseList[] | null
 }
 
 interface ICalendarNotificationResponseList {

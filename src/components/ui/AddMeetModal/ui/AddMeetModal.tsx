@@ -3,7 +3,12 @@ import Modal from 'react-modal'
 import styles from '@/styles/AddMeetModal.module.css'
 import { SubmitHandler, Controller } from 'react-hook-form'
 import { toast } from 'react-toastify'
-import { ECreateMeetingRepeat, IUnavailabeDatesError } from '@/helpers/types/calendar'
+import {
+  ECreateMeetingRepeat,
+  ICheckAvailableMeeting,
+  IUnavailabeDatesError,
+  IScheduleData,
+} from '@/helpers/types/calendar'
 import { useCreateMeeting } from '@/api/hooks/meet/useCreateMeeting'
 import { EMeetingFormat } from '@/types/clients'
 import { ErrorField } from '@/components/ErrorField'
@@ -29,6 +34,7 @@ import { AxiosError } from 'axios'
 import { DateTimeFields } from '../../DateTimeFields'
 import dayjs from 'dayjs'
 import { meetingService } from '@/services/meet.sevice'
+import NonBlockingError from './NonBlockingError'
 
 interface IAddMeetModalProps {
   isOpen: boolean
@@ -54,11 +60,11 @@ export const AddMeetModal: FC<IAddMeetModalProps> = ({ isOpen, onClose }) => {
   const [errorModal, setErrorModal] = useState<string | null>(null)
   const [confirmModal, setConfirmModal] = useState<{
     isOpen: boolean
-    message: string
+    message: IScheduleData | null
     data: TAddMeetSchema | null
   }>({
     isOpen: false,
-    message: '',
+    message: null,
     data: null,
   })
 
@@ -70,19 +76,30 @@ export const AddMeetModal: FC<IAddMeetModalProps> = ({ isOpen, onClose }) => {
     }
   })
 
-  const checkDateAvailability = async (
-    startDate: string,
-    endDate: string,
-  ): Promise<{ isAvailable: boolean; errorMessage?: string }> => {
-    const toastId = toast.loading('Проверка доступности времени...')
+  const buildAvailabilityPayload = (data: TAddMeetSchema): ICheckAvailableMeeting => {
+    const start = dayjs(
+      `${data.dateMeet} ${data.time}`,
+      ['YYYY-MM-DD HH:mm', 'YYYY-MM-DD HH:mm:ss'],
+      true, // strict
+    )
+    if (!start.isValid()) throw new Error('Некорректные dateMeet/time')
 
+    return {
+      startDate: start.format('YYYY-MM-DD'),
+      startTime: start.format('HH:mm'),
+      endTime: start.add(Number(data.duration), 'minutes').format('HH:mm'),
+      repeat: data.repeat == 'Не повторять' ? undefined : data.repeat,
+      onCount: data.onCount,
+      onDate: data.onDate == '' ? undefined : data.onDate,
+    }
+  }
+
+  const checkDateAvailability = async (
+    data: ICheckAvailableMeeting,
+  ): Promise<{ isAvailable: boolean; errorMessage?: IScheduleData }> => {
+    const toastId = toast.loading('Проверка доступности времени...')
     try {
-      await meetingService.getUnvailableMeetingDates(
-        dayjs(startDate).format('YYYY-MM-DD'),
-        dayjs(endDate).format('YYYY-MM-DD'),
-        dayjs(startDate).format('HH:mm'),
-        dayjs(endDate).format('HH:mm'),
-      )
+      await meetingService.getUnvailableMeetingDates(data)
       toast.update(toastId, {
         render: 'Время доступно!',
         type: 'success',
@@ -95,7 +112,7 @@ export const AddMeetModal: FC<IAddMeetModalProps> = ({ isOpen, onClose }) => {
       toast.dismiss(toastId)
 
       if (error?.response?.status === 409) {
-        const errorMessage = `${error.response.data.nonWorkingDaysMessage}\n${error.response.data.otherMeetsMessage}`
+        const errorMessage = error.response?.data as unknown as IScheduleData
         return { isAvailable: false, errorMessage }
       } else {
         toast.error('Ошибка при проверке доступности времени')
@@ -142,10 +159,8 @@ export const AddMeetModal: FC<IAddMeetModalProps> = ({ isOpen, onClose }) => {
   }
 
   const onSubmit: SubmitHandler<TAddMeetSchema> = async (data) => {
-    const startDate = dayjs(`${data.dateMeet} ${data.time}`)
-    const endDate = startDate.add(Number(data.duration), 'minute')
-
-    const result = await checkDateAvailability(startDate.format('YYYY-MM-DD HH:mm'), endDate.format('YYYY-MM-DD HH:mm'))
+    const payload = buildAvailabilityPayload(data)
+    const result = await checkDateAvailability(payload)
 
     if (result.isAvailable) {
       await createMeetingRequest(data)
@@ -162,11 +177,11 @@ export const AddMeetModal: FC<IAddMeetModalProps> = ({ isOpen, onClose }) => {
     if (confirmModal.data) {
       await createMeetingRequest(confirmModal.data)
     }
-    setConfirmModal({ isOpen: false, message: '', data: null })
+    setConfirmModal({ isOpen: false, message: null, data: null })
   }
 
   const handleConfirmCancel = () => {
-    setConfirmModal({ isOpen: false, message: '', data: null })
+    setConfirmModal({ isOpen: false, message: null, data: null })
   }
 
   const handleClose = () => {
@@ -367,7 +382,9 @@ export const AddMeetModal: FC<IAddMeetModalProps> = ({ isOpen, onClose }) => {
         <div className="font-montserrat">
           <div className="text-orange-600 font-bold text-xl mb-4">Время недоступно</div>
           <div className="mb-4">
-            <p className="text-red-600 mb-2">{confirmModal.message}</p>
+            <NonBlockingError items={confirmModal.message?.meet} />
+            <NonBlockingError items={confirmModal.message?.nonWorkingDate} title="Пересечение с нерабочими днями" />
+            <NonBlockingError items={confirmModal.message?.otherMeet} title="Пересечение с иными встречами" />
           </div>
           <div className="flex justify-end gap-[10px] mt-6">
             <button

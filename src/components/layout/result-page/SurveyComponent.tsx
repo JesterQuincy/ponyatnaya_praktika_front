@@ -12,8 +12,8 @@ export const SurveyComponent = ({ q }: { q: IQuestions }) => {
       {q.answerOptions.map((o) => {
         if (q.type === 'Развернутый ответ') {
           return (
-            <div key={o.id} className="flex items-center gap-2 mt-2">
-              <span>{o.text}</span>
+            <div key={o.id} className="flex items-start gap-2 mt-2">
+              <span className="whitespace-pre-line break-words break-all max-w-full">{o.text}</span>
             </div>
           )
         }
