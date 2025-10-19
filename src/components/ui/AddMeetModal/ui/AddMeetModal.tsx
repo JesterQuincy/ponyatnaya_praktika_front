@@ -3,7 +3,12 @@ import Modal from 'react-modal'
 import styles from '@/styles/AddMeetModal.module.css'
 import { SubmitHandler, Controller } from 'react-hook-form'
 import { toast } from 'react-toastify'
-import { ECreateMeetingRepeat, ICheckAvailableMeeting, IUnavailabeDatesError, IScheduleData } from '@/helpers/types/calendar'
+import {
+  ECreateMeetingRepeat,
+  ICheckAvailableMeeting,
+  IUnavailabeDatesError,
+  IScheduleData,
+} from '@/helpers/types/calendar'
 import { useCreateMeeting } from '@/api/hooks/meet/useCreateMeeting'
 import { EMeetingFormat } from '@/types/clients'
 import { ErrorField } from '@/components/ErrorField'
@@ -29,6 +34,7 @@ import { AxiosError } from 'axios'
 import { DateTimeFields } from '../../DateTimeFields'
 import dayjs from 'dayjs'
 import { meetingService } from '@/services/meet.sevice'
+import NonBlockingError from './NonBlockingError'
 
 interface IAddMeetModalProps {
   isOpen: boolean
@@ -146,7 +152,7 @@ export const AddMeetModal: FC<IAddMeetModalProps> = ({ isOpen, onClose }) => {
         autoClose: 5000,
       })
       if (error?.response?.status === 409) {
-        const msg = typeof error.response?.data === 'string' ? error.response.data : 'Конфликт: встреча уже существует'  
+        const msg = typeof error.response?.data === 'string' ? error.response.data : 'Конфликт: встреча уже существует'
         setErrorModal(msg)
       }
     }
@@ -376,24 +382,9 @@ export const AddMeetModal: FC<IAddMeetModalProps> = ({ isOpen, onClose }) => {
         <div className="font-montserrat">
           <div className="text-orange-600 font-bold text-xl mb-4">Время недоступно</div>
           <div className="mb-4">
-             <div>
-            Пересечение со встречами
-          {confirmModal.message?.meet.map((el)=>{
-            return <p>Встреча {el.name} в {dayjs(el.eventDate).format('HH:mm')}</p>
-          })}
-          </div>
-          <div>
-          Пересечение с нерабочими днями
-          {confirmModal.message?.nonWorkingDate.map((el)=>{
-            return <p>Встреча {el.name} в {dayjs(el.eventDate).format('HH:mm')}</p>
-          })}
-          </div>
-          <div>
-          Пересечение с иными встречами
-          {confirmModal.message?.otherMeet.map((el)=>{
-            return <p>Встреча {el.name} в {dayjs(el.eventDate).format('HH:mm')}</p>
-          })}
-          </div>
+            <NonBlockingError items={confirmModal.message?.meet} />
+            <NonBlockingError items={confirmModal.message?.nonWorkingDate} title="Пересечение с нерабочими днями" />
+            <NonBlockingError items={confirmModal.message?.otherMeet} title="Пересечение с иными встречами" />
           </div>
           <div className="flex justify-end gap-[10px] mt-6">
             <button

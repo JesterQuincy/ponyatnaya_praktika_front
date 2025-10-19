@@ -86,13 +86,13 @@ export interface ICheckAvailableMeeting {
 }
 
 interface ScheduleItem {
-  name: string;
-  eventDate: string;
+  name: string
+  eventDate: string
 }
 
 export interface IScheduleData {
-  otherMeet: ScheduleItem[];
-  nonWorkingDate: ScheduleItem[];
-  meet: ScheduleItem[];
-  empty: boolean;
+  otherMeet: ScheduleItem[]
+  nonWorkingDate: ScheduleItem[]
+  meet: ScheduleItem[]
+  empty: boolean
 }
