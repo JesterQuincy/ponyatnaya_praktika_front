@@ -81,6 +81,8 @@ export function Card({ id }: { id: string }) {
     }
   }, [tabFromUrl])
 
+  console.log(data?.data?.nextMeetDate)
+
   return (
     <div className={styles.card}>
       {isLoading && <Spinner />}
@@ -104,11 +106,11 @@ export function Card({ id }: { id: string }) {
                 </div>
                 <div className="text-[11px]">
                   <span className="text-[#7E7E7E]">Последняя:</span>{' '}
-                  {dayjs(data?.data?.lastMeetDate).format('DD-MM-YYYY') ?? emptyRowField}
+                  {data?.data?.lastMeetDate ? dayjs(data.data.lastMeetDate).format('DD-MM-YYYY') : emptyRowField}
                 </div>
                 <div className="text-[11px]">
                   <span className="text-[#7E7E7E]">Следующая:</span>{' '}
-                  {dayjs(data?.data?.nextMeetDate).format('DD-MM-YYYY') ?? emptyRowField}
+                  {data?.data?.nextMeetDate ? dayjs(data.data.nextMeetDate).format('DD-MM-YYYY') : emptyRowField}
                 </div>
               </>
             )}

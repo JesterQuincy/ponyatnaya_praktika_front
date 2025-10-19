@@ -13,6 +13,7 @@ import { Input } from '@/components/ui/input'
 import { IQuestionnaireRequest, IQuestionnaireResult } from '@/types/questionnaire'
 import { useSaveQuestionnaire } from '@/api/hooks/therapistQuestionnaires/useSaveQuestionnaire'
 import { Wrapper } from '@/components/layout/poll-page/Wrapper'
+import { AutoResizeTextarea } from '@/components/ui/AutoResizeTextarea'
 
 interface ISurveyProps {
   data: IQuestionnaireRequest
@@ -161,7 +162,7 @@ export const Survey: FC<ISurveyProps> = ({ data, token }) => {
                         {i + 1}. {q.text}
                       </FormLabel>
                       <FormControl>
-                        <Input
+                        <AutoResizeTextarea
                           placeholder="Введите ответ"
                           value={field.value || ''}
                           onChange={(val) => {
