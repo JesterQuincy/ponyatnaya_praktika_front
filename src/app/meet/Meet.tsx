@@ -16,7 +16,7 @@ export function Meet() {
   return (
     <div className={styles.card}>
       {isPending && <Spinner />}
-      {!isPending && meet && (
+      {meet && (
         <>
           <Heading title={meet?.nameMeet} />
           <MeetForm meetData={meet} />

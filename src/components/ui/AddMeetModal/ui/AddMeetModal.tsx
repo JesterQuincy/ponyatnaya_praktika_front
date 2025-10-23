@@ -185,9 +185,15 @@ export const AddMeetModal: FC<IAddMeetModalProps> = ({ isOpen, onClose }) => {
   }
 
   const handleClose = () => {
-    onClose()
     reset(DEFAULT_VALUES)
+    onClose()
   }
+
+  useEffect(() => {
+    if (!isOpen) {
+      reset(DEFAULT_VALUES)
+    }
+  }, [isOpen, reset])
 
   return (
     <>
@@ -362,7 +368,10 @@ export const AddMeetModal: FC<IAddMeetModalProps> = ({ isOpen, onClose }) => {
             )}
 
             <div className="flex mt-[20px] justify-end gap-[10px] border-t border-[#CACACA] pt-[10px] font-montserrat font-semibold">
-              <button className="px-[20px] py-[10px] text-[16px] text-[#525252] text" type="button" onClick={onClose}>
+              <button
+                className="px-[20px] py-[10px] text-[16px] text-[#525252] text"
+                type="button"
+                onClick={handleClose}>
                 Отмена
               </button>
               <button className="px-[20px] py-[10px] text-[16px] text-white bg-[#EA660C] rounded-[6px]" type="submit">
