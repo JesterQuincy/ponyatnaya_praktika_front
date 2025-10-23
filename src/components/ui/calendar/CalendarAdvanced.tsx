@@ -52,6 +52,13 @@ export const CalendarAdvanced = () => {
       return
     }
 
+    const type = eventInfo.event.extendedProps.meetingType
+    if (type === 'other') {
+      eventInfo.jsEvent.preventDefault()
+      eventInfo.jsEvent.stopPropagation()
+      return
+    }
+
     router.push(`/meet?id=${eventInfo.event.extendedProps.id}`)
   }
 

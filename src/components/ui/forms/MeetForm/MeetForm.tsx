@@ -27,7 +27,7 @@ export function MeetForm({ meetData }: IMeetFormProps) {
   return (
     <div>
       <MeetHeader headerData={meetData} />
-      <MeetContent content={meetData} modalOpen={setIsOpenMethodicModal} />
+      <MeetContent content={meetData} modalOpen={setIsOpenMethodicModal} key={meetData.id} />
       <CreateMethodicModal
         customerId={meetData.customer.id}
         isOpen={isOpenMethodicModal?.type === 'create'}
