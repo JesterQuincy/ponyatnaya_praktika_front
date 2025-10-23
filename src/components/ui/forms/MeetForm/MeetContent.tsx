@@ -13,9 +13,8 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { isEmpty } from '@/helpers/utils/isEmpty'
 import { useUpdateMeeting } from '@/api/hooks/meet/useUpdateMeeting'
 import { FormPrompt } from '@/components/form-prompt'
-import { Dispatch, SetStateAction, useState } from 'react'
+import { Dispatch, SetStateAction, useEffect, useMemo, useState } from 'react'
 import { IMeetingDetails } from '@/types/meet/getMeetById'
-import { removeEmptyValues } from '@/helpers/utils/removeEmptyValues'
 import { useGetProjMethods } from '@/api/hooks/methods/useGetProjMethods'
 import { Spinner } from '@/components/Spinner'
 import { Pencil, Trash2 } from 'lucide-react'
@@ -53,11 +52,10 @@ export function MeetContent({ content, modalOpen }: IMeetFormProps) {
     techniquesAndMethodsUsed,
     clientMainObstaclesMethods,
     note,
-  } = removeEmptyValues(content)
+  } = content
 
-  const form = useForm<IMeetingSchema>({
-    resolver: zodResolver(meetingSchema),
-    defaultValues: {
+  const defaultValues = useMemo(() => {
+    return {
       clientSessionRequest,
       therapistStateAtSessionStart,
       mainTopicsDiscussedDuringSession,
@@ -67,15 +65,42 @@ export function MeetContent({ content, modalOpen }: IMeetFormProps) {
       techniquesAndMethodsUsed,
       clientMainObstaclesMethods,
       note,
-    },
+    }
+  }, [
+    clientKeyPhrasesInsights,
+    clientMainEmotions,
+    clientMainObstaclesMethods,
+    clientSessionRequest,
+    mainTopicsDiscussedDuringSession,
+    note,
+    techniquesAndMethodsUsed,
+    therapistMainEmotionsExpressed,
+    therapistStateAtSessionStart,
+  ])
+
+  const form = useForm<IMeetingSchema>({
+    resolver: zodResolver(meetingSchema),
   })
 
   const handleFormSubmit = async (data: IMeetingSchema) => {
+    const toastid = toast.loading('Сохранение...')
     try {
       await updateMeet({ id: content.id, ...data })
-
+      toast.update(toastid, {
+        render: 'Успешно сохранено',
+        type: 'success',
+        isLoading: false,
+        autoClose: 3000,
+      })
       form.reset(data)
-    } catch {}
+    } catch {
+      toast.update(toastid, {
+        render: 'Ошибка при сохранении',
+        type: 'error',
+        isLoading: false,
+        autoClose: 3000,
+      })
+    }
   }
 
   const isLoadingMethod = isGetProjMethodsPending || isGetProjMethodsLoading || isGetProjMethodsRefetching
@@ -95,6 +120,10 @@ export function MeetContent({ content, modalOpen }: IMeetFormProps) {
   const onClose = () => {
     setChangeModalState(false)
   }
+
+  useEffect(() => {
+    form.reset(defaultValues)
+  }, [defaultValues, form])
 
   return (
     <Form {...form}>
