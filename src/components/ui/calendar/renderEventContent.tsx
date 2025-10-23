@@ -15,6 +15,7 @@ export const renderEventContent = (arg: EventContentArg) => {
   const time = arg.timeText ?? ''
   const tooltipText = isMonth && time ? `${time} ${text}` : text
   const bgColor = arg.event.extendedProps.formatMeet === 'Онлайн' ? 'bg-orange' : 'bg-[#049ADB]'
+  const type = arg.event.extendedProps.meetingType === 'other'
 
   return (
     <Tooltip>
@@ -24,7 +25,7 @@ export const renderEventContent = (arg: EventContentArg) => {
           className={cn(
             'flex items-center min-w-0 gap-1 px-1 cursor-pointer overflow-hidden',
             !isMonth && 'flex-col items-start',
-            meetingType == 'other' && 'cursor-default',
+            type && 'cursor-default',
           )}>
           {isMonth && <span className={cn('inline-block min-h-2 min-w-2 rounded-full', bgColor)} aria-hidden />}
           <div className={'gap-1 flex items-center justify-start'}>

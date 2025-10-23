@@ -189,9 +189,7 @@ export function PollForm({ type, name }: PollFormProps) {
                       <Textarea
                         {...field}
                         className="border-gray rounded-[6px] max-h-[25vh] h-[15vh]"
-                        placeholder={`Этот опрос создан специально для клиента: 
-${'\n'}Продолжить разбираться в истории Анны и выявить возможные триггеры ее тревоги.
-${'\n'}Использовать методы релаксации (например, `}
+                        placeholder={`Введите заметку`}
                       />
                     </>
                   </FormControl>
