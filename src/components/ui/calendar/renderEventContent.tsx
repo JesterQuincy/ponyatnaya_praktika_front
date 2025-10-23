@@ -9,7 +9,7 @@ export const renderEventContent = (arg: EventContentArg) => {
   if (arg.event.display === 'background') {
     return <div className={'m-[0.5em] italic text-[0.85em]'}>{arg.event.title}</div>
   }
-
+  const meetingType = arg.event._def.extendedProps.meetingType
   const isMonth = arg.view.type.startsWith('dayGrid')
   const text = arg.event.title ?? ''
   const time = arg.timeText ?? ''

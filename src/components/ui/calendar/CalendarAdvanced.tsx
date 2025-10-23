@@ -51,6 +51,11 @@ export const CalendarAdvanced = () => {
     if (eventInfo.event.display === 'background') {
       return
     }
+    if (eventInfo.event.extendedProps.meetingType === 'other') {
+      eventInfo.jsEvent.preventDefault()
+      eventInfo.jsEvent.stopPropagation()
+      return
+    }
 
     const type = eventInfo.event.extendedProps.meetingType
     if (type === 'other') {
