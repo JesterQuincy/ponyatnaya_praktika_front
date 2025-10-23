@@ -9,7 +9,7 @@ export const useGetNotifications = () => {
     queryFn: () => calendarService.getNotifications().then((res) => res.data),
     select: (data) =>
       data.notificationResponseList
-        .sort((a, b) => new Date(b.dateFirstRequest).getTime() - new Date(a.dateFirstRequest).getTime())
+        ?.sort((a, b) => new Date(b.dateFirstRequest).getTime() - new Date(a.dateFirstRequest).getTime())
         .map((item: any) => ({
           date: new Date(item.dateFirstRequest).toLocaleDateString('ru-RU', {
             day: '2-digit',
@@ -20,7 +20,7 @@ export const useGetNotifications = () => {
           id: item.customerId,
           clientType: item.clientType,
           applicationFormStatus: item.applicationFormStatus,
-        })),
+        })) || [],
   })
 
   if (query.isError) {
