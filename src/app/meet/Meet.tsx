@@ -11,11 +11,11 @@ import { Suspense } from 'react'
 export function Meet() {
   const id = useSearchParams().get('id')
 
-  const { data: meet, isFetching } = useGetMeeting(Number(id))
+  const { data: meet, isPending } = useGetMeeting(Number(id))
 
   return (
     <div className={styles.card}>
-      {isFetching && <Spinner />}
+      {isPending && <Spinner />}
       {meet && (
         <>
           <Heading title={meet?.nameMeet} />

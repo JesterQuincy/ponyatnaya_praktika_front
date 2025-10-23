@@ -200,7 +200,11 @@ export function TestForm({ name }: TestFormProps) {
                   <FormControl>
                     <>
                       <h1 className="text-xl font-semibold">Заметка к материалу</h1>
-                      <Textarea {...field} className="border-gray rounded-[6px] max-h-[25vh] h-[15vh]" />
+                      <Textarea
+                        {...field}
+                        className="border-gray rounded-[6px] max-h-[25vh] h-[15vh]"
+                        placeholder="Введите заметку"
+                      />
                     </>
                   </FormControl>
                   <FormMessage />
