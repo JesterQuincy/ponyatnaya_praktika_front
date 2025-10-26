@@ -5,7 +5,7 @@ import { toast } from 'react-toastify'
 
 export const useGetCalendarData = (year: number) => {
   const query = useQuery({
-    queryKey: [EInvalidationTags.CALENDAR],
+    queryKey: [EInvalidationTags.CALENDAR, year],
     queryFn: () => calendarService.getCalendarData(year).then((res) => res.data),
     enabled: !!year,
     select: (data) => {
