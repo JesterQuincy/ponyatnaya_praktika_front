@@ -9,9 +9,10 @@ export const useCreateNonWorkingday = () => {
   return useMutation({
     mutationKey: ['NonWorkingDay'],
     mutationFn: (data: INonWorkingDay) => calendarService.createNonWorkingDay(data),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: [EInvalidationTags.CALENDAR] })
-      queryClient.refetchQueries({ queryKey: [EInvalidationTags.CALENDAR] })
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({
+        queryKey: [EInvalidationTags.CALENDAR],
+      })
     },
   })
 }
