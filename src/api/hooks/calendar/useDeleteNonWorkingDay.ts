@@ -9,10 +9,7 @@ export const useDeleteNonWorkingDay = () => {
     mutationKey: [EInvalidationTags.MEET_ID],
     mutationFn: (id: number) => calendarService.deleteNonWorkingDay(id),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: [EInvalidationTags.MEET] })
-      queryClient.invalidateQueries({ queryKey: [EInvalidationTags.MEET_ID] })
       queryClient.invalidateQueries({ queryKey: [EInvalidationTags.CALENDAR] })
-      queryClient.refetchQueries({ queryKey: [EInvalidationTags.CALENDAR] })
     },
   })
 }
