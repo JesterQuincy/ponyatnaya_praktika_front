@@ -31,7 +31,7 @@ export function InputAccount({ form, name, label, type, textarea = false }: Acco
                 <Textarea
                   {...field}
                   placeholder={label}
-                  value={field.value || undefined}
+                  value={field.value ?? ''}
                   className="bg-white rounded-[6px] border-gray"
                 />
               ) : (
@@ -39,7 +39,7 @@ export function InputAccount({ form, name, label, type, textarea = false }: Acco
                   {...field}
                   type={type}
                   placeholder={label}
-                  value={field.value || undefined}
+                  value={field.value ?? ''}
                   className="bg-white rounded-[6px]"
                 />
               )}

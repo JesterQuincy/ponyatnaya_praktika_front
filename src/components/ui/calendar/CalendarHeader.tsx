@@ -13,8 +13,13 @@ interface Option {
   type: string
 }
 
-// @ts-ignore
-export default function Header({ onOpenModal, onOpenModalMeet, onOpenNonWorkingDayModal }) {
+type Props = {
+  onOpenModal: () => void
+  onOpenModalMeet: () => void
+  onOpenNonWorkingDayModal: () => void
+}
+
+export default function Header({ onOpenModal, onOpenModalMeet, onOpenNonWorkingDayModal }: Props) {
   const [selectedOption, setSelectedOption] = useState<Option | null>(null)
   const [options, setOptions] = useState<Option[]>([])
   const [isLoading, setIsLoading] = useState(false)

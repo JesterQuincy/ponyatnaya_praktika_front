@@ -148,6 +148,7 @@ export function MeetContent({ content, modalOpen }: IMeetFormProps) {
                   <FormControl>
                     <textarea
                       {...field}
+                      value={field.value ?? ''}
                       className="border border-[#D9D9D9] mt-[5px] rounded-[6px] w-full min-h-[46px] p-[6px]"
                     />
                   </FormControl>
@@ -249,6 +250,7 @@ export function MeetContent({ content, modalOpen }: IMeetFormProps) {
                 <FormItem className="mt-[5px]">
                   <textarea
                     {...field}
+                    value={field.value ?? ''}
                     className="border border-[#D9D9D9] rounded-[6px] w-[90%] min-h-[110px] p-[6px]"
                   />
                 </FormItem>

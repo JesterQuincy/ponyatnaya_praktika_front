@@ -43,12 +43,6 @@ interface IMainHypotheses {
 
 export function MeetingsListForm({ user }: ICardFormProps) {
   const router = useRouter()
-  const params = useParams()
-
-  const id = useMemo(() => {
-    const { id } = params
-    return typeof id === 'string' ? id : undefined
-  }, [params])
 
   const { setMeet } = useMeet()
 
@@ -60,7 +54,7 @@ export function MeetingsListForm({ user }: ICardFormProps) {
   const [method, setMethod] = useState<IMethodState | null>(null)
   const [loadingMethodId, setLoadingMethodId] = useState<number | null>(null) // Состояние для отслеживания загружающегося метода
 
-  const { data: projMethods, isLoading: isProjMethodsLoading } = useGetProjMethodsByCustomerId(id ?? '')
+  const { data: projMethods, isLoading: isProjMethodsLoading } = useGetProjMethodsByCustomerId(user.id ?? '')
   const { mutateAsync: typePhotos } = useGetTypePhoto()
   const { mutateAsync: deleteMeeting } = useDeleteMeeting()
   const { data: meetsData, isFetching } = useGetUserMeets(user.id, currentPage, 15)
@@ -242,6 +236,7 @@ export function MeetingsListForm({ user }: ICardFormProps) {
                     <FormControl>
                       <textarea
                         {...field}
+                        value={field.value ?? ''}
                         className="border border-[#D9D9D9] rounded-[6px] w-[90%] min-h-[110px] p-2  "
                       />
                     </FormControl>

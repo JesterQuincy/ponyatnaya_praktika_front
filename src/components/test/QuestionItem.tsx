@@ -1,46 +1,56 @@
 'use client'
 
-import { useFormContext } from 'react-hook-form'
+import React, { useRef } from 'react'
+import { useFormContext, useFieldArray } from 'react-hook-form'
 import { FormField, FormItem, FormControl, FormLabel, FormMessage } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { Grip, Trash2, PlusCircle } from 'lucide-react'
-import { QuestionItemProps } from '@/helpers/types/testPoll'
-import { TestSchemaType } from '@/models/testSchema'
 import { Button } from '@/components/ui/button'
 
+import type { QuestionItemProps } from '@/helpers/types/testPoll'
+import type { TestSchemaType } from '@/models/testSchema'
+
 export function QuestionItem({ index, removeQuestion, dragHandleProps }: QuestionItemProps) {
-  const { control, setValue, watch } = useFormContext<TestSchemaType>()
+  const { control, setValue, getValues, watch } = useFormContext<TestSchemaType>()
 
-  const answerOptions = watch(`questions.${index}.answerOptions`)
+  // Массив вариантов для текущего вопроса
+  const arrayName = `questions.${index}.answerOptions` as const
 
-  // Устанавливаем один вариант как правильный
+  // RHF создаёт стабильные ключи для рендера
+  const { fields } = useFieldArray({
+    control,
+    name: arrayName,
+    keyName: 'key',
+  })
+
+  // Наблюдаем текущее значение массива (для длины/лейблов)
+  const answerOptions = watch(arrayName) ?? []
+
+  // Временные id для новых вариантов (не конфликтуют с БД)
+  const tmpIdRef = useRef(-1)
+
   const setCorrectAnswer = (answerIndex: number) => {
-    const updatedOptions = answerOptions.map((option, i) => ({
-      ...option,
-      correct: i === answerIndex, // Только этот вариант становится правильным
-    }))
-
-    setValue(`questions.${index}.answerOptions`, updatedOptions)
+    const current = [...(getValues(arrayName) ?? [])]
+    const updated = current.map((o, i) => ({ ...o, correct: i === answerIndex }))
+    setValue(arrayName, updated, { shouldDirty: true, shouldValidate: true })
   }
 
-  // Добавление нового варианта ответа
   const addAnswerOption = () => {
-    const newOption = { id: 0, text: '', correct: false } // По умолчанию неправильный
-    setValue(`questions.${index}.answerOptions`, [...answerOptions, newOption])
+    const current = [...(getValues(arrayName) ?? [])]
+    const newOption = { id: tmpIdRef.current--, text: '', correct: false }
+    setValue(arrayName, [...current, newOption], { shouldDirty: true })
   }
 
-  // Удаление варианта ответа (минимум 2 варианта, 1 правильный)
+  // минимум 2 варианта, гарантируем что всегда есть хотя бы один correct
   const removeAnswerOption = (answerIndex: number) => {
-    if (answerOptions.length <= 2) return // Запрещаем удалять, если их всего 2
+    const current = [...(getValues(arrayName) ?? [])]
+    if (current.length <= 2) return
 
-    const updatedOptions = answerOptions.filter((_, i) => i !== answerIndex)
-
-    // Если удаляемый вариант был правильным, делаем первый оставшийся правильным
-    if (!updatedOptions.some((option) => option.correct)) {
-      updatedOptions[0].correct = true
+    const updated = current.filter((_, i) => i !== answerIndex)
+    if (!updated.some((o) => o.correct) && updated.length) {
+      updated[0].correct = true
     }
-
-    setValue(`questions.${index}.answerOptions`, updatedOptions)
+    setValue(arrayName, updated, { shouldDirty: true, shouldValidate: true })
   }
 
   return (
@@ -65,37 +75,41 @@ export function QuestionItem({ index, removeQuestion, dragHandleProps }: Questio
       <div className="mt-4">
         <span className="font-medium text-[14px]">Варианты ответа:</span>
         <div className="space-y-2 mt-2">
-          {answerOptions.map((option, i) => (
-            <div key={option.id} className="flex items-center gap-2">
-              <span
-                className={`w-3 h-3 rounded-full cursor-pointer transition ${
-                  option.correct ? 'bg-green-500' : 'bg-red-500'
-                }`}
-                onClick={() => setCorrectAnswer(i)}
-              />
-              <FormField
-                control={control}
-                name={`questions.${index}.answerOptions.${i}.text`}
-                render={({ field }) => (
-                  <FormItem className="flex items-center gap-2 w-full">
-                    <FormLabel className="w-[20%]">
-                      {option.correct ? 'Правильный ответ' : 'Неправильный ответ'}
-                    </FormLabel>
-                    <FormControl>
-                      <Input {...field} placeholder="Текст" className="w-full" />
-                    </FormControl>
-                    <FormMessage className="text-red-500" />
-                  </FormItem>
+          {fields.map((field, i) => {
+            const isCorrect = watch(`questions.${index}.answerOptions.${i}.correct`)
+            return (
+              <div key={field.key} className="flex items-center gap-2">
+                <span
+                  className={`w-3 h-3 rounded-full cursor-pointer transition ${
+                    isCorrect ? 'bg-green-500' : 'bg-red-500'
+                  }`}
+                  onClick={() => setCorrectAnswer(i)}
+                />
+
+                <FormField
+                  control={control}
+                  name={`questions.${index}.answerOptions.${i}.text`}
+                  render={({ field: textField }) => (
+                    <FormItem className="flex items-center gap-2 w-full">
+                      <FormLabel className="w-[20%]">{isCorrect ? 'Правильный ответ' : 'Неправильный ответ'}</FormLabel>
+                      <FormControl>
+                        <Input {...textField} placeholder="Текст" className="w-full" />
+                      </FormControl>
+                      <FormMessage className="text-red-500" />
+                    </FormItem>
+                  )}
+                />
+
+                {answerOptions.length > 2 && (
+                  <Button type="button" variant="ghost" onClick={() => removeAnswerOption(i)}>
+                    <Trash2 width={18} height={18} color="gray" />
+                  </Button>
                 )}
-              />
-              {answerOptions.length > 2 && (
-                <Button type="button" variant="ghost" onClick={() => removeAnswerOption(i)}>
-                  <Trash2 width={18} height={18} color="gray" />
-                </Button>
-              )}
-            </div>
-          ))}
+              </div>
+            )
+          })}
         </div>
+
         <Button type="button" variant="ghost" className="mt-3 flex items-center gap-2" onClick={addAnswerOption}>
           <PlusCircle width={18} height={18} />
           Добавить вариант
