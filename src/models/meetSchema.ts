@@ -1,15 +1,22 @@
 import { z } from 'zod'
 
+const ns = z
+  .string()
+  .nullish()
+  .transform((v) => v ?? '')
+
 export const meetingSchema = z.object({
-  clientSessionRequest: z.string().optional(),
-  therapistStateAtSessionStart: z.string().optional(),
-  mainTopicsDiscussedDuringSession: z.string().optional(),
-  clientKeyPhrasesInsights: z.string().optional(),
-  clientMainEmotions: z.string().optional(),
-  therapistMainEmotionsExpressed: z.string().optional(),
-  techniquesAndMethodsUsed: z.string().optional(),
-  clientMainObstaclesMethods: z.string().optional(),
-  note: z.string().optional(),
+  clientSessionRequest: ns,
+  therapistStateAtSessionStart: ns,
+  mainTopicsDiscussedDuringSession: ns,
+  clientKeyPhrasesInsights: ns,
+  clientMainEmotions: ns,
+  therapistMainEmotionsExpressed: ns,
+  techniquesAndMethodsUsed: ns,
+  clientMainObstaclesMethods: ns,
+  note: ns,
 })
 
-export type IMeetingSchema = z.infer<typeof meetingSchema>
+// Типы:
+export type FormIn = z.input<typeof meetingSchema> // string | null | undefined
+export type FormOut = z.output<typeof meetingSchema> // string
