@@ -7,8 +7,8 @@ import { Button } from '../../buttons/Button'
 import { Button as SaveButton } from '@/components/ui/button'
 import { meetData } from '../mocks/meetsList'
 import { Form, FormControl, FormField, FormItem, FormMessage } from '@/components/ui/form'
-import { useForm } from 'react-hook-form'
-import { IMeetingSchema, meetingSchema } from '@/models/meetSchema'
+import { SubmitHandler, useForm } from 'react-hook-form'
+import { FormIn, FormOut, meetingSchema } from '@/models/meetSchema'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { isEmpty } from '@/helpers/utils/isEmpty'
 import { useUpdateMeeting } from '@/api/hooks/meet/useUpdateMeeting'
@@ -78,11 +78,13 @@ export function MeetContent({ content, modalOpen }: IMeetFormProps) {
     therapistStateAtSessionStart,
   ])
 
-  const form = useForm<IMeetingSchema>({
+  const form = useForm<FormIn, any, FormOut>({
     resolver: zodResolver(meetingSchema),
+    defaultValues: defaultValues as FormIn,
   })
 
-  const handleFormSubmit = async (data: IMeetingSchema) => {
+  const handleFormSubmit: SubmitHandler<FormIn> = async (raw) => {
+    const data: FormOut = meetingSchema.parse(raw)
     const toastid = toast.loading('Сохранение...')
     try {
       await updateMeet({ id: content.id, ...data })
@@ -92,7 +94,7 @@ export function MeetContent({ content, modalOpen }: IMeetFormProps) {
         isLoading: false,
         autoClose: 3000,
       })
-      form.reset(data)
+      form.reset(data as FormIn)
     } catch {
       toast.update(toastid, {
         render: 'Ошибка при сохранении',
