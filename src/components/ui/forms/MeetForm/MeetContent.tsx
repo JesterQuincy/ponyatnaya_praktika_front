@@ -78,7 +78,7 @@ export function MeetContent({ content, modalOpen }: IMeetFormProps) {
     therapistStateAtSessionStart,
   ])
 
-  const form = useForm<FormIn, any, FormOut>({
+  const form = useForm<FormIn>({
     resolver: zodResolver(meetingSchema),
     defaultValues: defaultValues as FormIn,
   })
