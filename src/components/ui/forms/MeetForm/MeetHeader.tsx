@@ -16,7 +16,7 @@ export function MeetHeader({ headerData }: IMeetFormProps) {
   const router = useRouter()
 
   const getTime = (time: string) => {
-    return moment(time, 'HH:mm').format('HH:mm')
+    return time ? moment(time, 'HH:mm').format('HH:mm') : ''
   }
 
   const getDate = (date: string) => {
