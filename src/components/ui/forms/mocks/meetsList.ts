@@ -1,6 +1,6 @@
-import { IMeetingSchema } from '@/models/meetSchema'
+import { FormOut } from '@/models/meetSchema'
 
-export const meetData: { name: keyof IMeetingSchema; label: string }[] = [
+export const meetData: { name: keyof FormOut; label: string }[] = [
   {
     name: 'clientSessionRequest',
     label: 'Запрос на сессию со стороны клиента',
