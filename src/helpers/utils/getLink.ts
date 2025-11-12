@@ -62,7 +62,7 @@ export const copyAndLoadToClipboard = async (
   } catch {
     toast.error('Ошибка при копировании ссылки')
   } finally {
-    document.body.removeChild(textArea)
+    textArea.remove()
   }
 }
 
