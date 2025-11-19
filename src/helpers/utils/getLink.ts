@@ -24,70 +24,40 @@ export const getLink = async (
   }
 }
 
-export async function copyTextUniversal(text: string) {
+export const copyAndLoadToClipboard = async (linkData: any, id: string | number) => {
   try {
-    //
-    // --- 1. Современный Clipboard API (Chrome, Safari >= 13.1, Firefox) ---
-    //
-    if (navigator.clipboard && navigator.clipboard.writeText) {
-      await navigator.clipboard.writeText(text)
-      return true
-    }
-
-    //
-    // --- 2. iOS Safari / старые WebKit (используем textarea-хак) ---
-    //
-    const textArea = document.createElement('textarea')
-
-    textArea.style.position = 'fixed'
-    textArea.style.top = '0'
-    textArea.style.left = '0'
-    textArea.style.width = '1px'
-    textArea.style.height = '1px'
-    textArea.style.opacity = '0'
-    textArea.style.fontSize = '16px'
-    // 16px — важно! иначе iOS блокирует focus()
-
-    document.body.appendChild(textArea)
-
-    textArea.focus()
-    textArea.select()
-
-    const result = document.execCommand('copy')
-    textArea.remove()
-
-    return result
-  } catch (e) {
-    return false
-  }
-}
-
-/** Костыль-функция для копирования ссылки для http протокола */
-export const copyAndLoadToClipboard = async (
-  linkData: (
-    variables: string,
-    options?: MutateOptions<{ data: string }, Error, string, unknown> | undefined,
-  ) => Promise<{ data: string }>,
-  id: string | number,
-) => {
-  try {
+    // 1. Загружаем данные ЗАРАНЕЕ (перед копированием)
     const { data } = await linkData(String(id))
-
     const [typeValue, tokenValue] = data.split('/')
 
     const url = `${BASE_HOST}/questionnaire?type=${typeValue}&token=${tokenValue}`
 
-    const copied = await copyTextUniversal(url)
+    // 2. Копирование должно быть синхронным
+    safeCopy(url)
 
-    if (copied) {
-      toast.success('Ссылка скопирована в буфер обмена')
-      return url
-    } else {
-      toast.error('Не удалось скопировать ссылку')
-    }
-  } catch {
-    toast.error('Ошибка при копировании ссылки')
+    toast.success('Ссылка скопирована')
+
+    return url
+  } catch (e) {
+    toast.error('Ошибка копирования')
   }
+}
+
+function safeCopy(text: string) {
+  const input = document.createElement('input')
+  input.value = text
+
+  input.style.position = 'absolute'
+  input.style.left = '-9999px'
+  input.style.fontSize = '16px'
+
+  document.body.appendChild(input)
+
+  input.select()
+  input.setSelectionRange(0, text.length)
+
+  document.execCommand('copy')
+  input.remove()
 }
 
 export const copyLink = async (link: string) => {
