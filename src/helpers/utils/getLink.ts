@@ -24,6 +24,46 @@ export const getLink = async (
   }
 }
 
+export async function copyTextUniversal(text: string) {
+  try {
+    //
+    // --- 1. Современный Clipboard API (Chrome, Safari >= 13.1, Firefox) ---
+    //
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      await navigator.clipboard.writeText(text)
+      return true
+    }
+
+    //
+    // --- 2. iOS Safari / старые WebKit (используем textarea-хак) ---
+    //
+    const textArea = document.createElement("textarea")
+
+    // iOS Safari требует специфические стили
+    textArea.value = text
+    textArea.style.position = "fixed"
+    textArea.style.top = "0"
+    textArea.style.left = "0"
+    textArea.style.width = "1px"
+    textArea.style.height = "1px"
+    textArea.style.opacity = "0"
+    textArea.style.fontSize = "16px" 
+    // 16px — важно! иначе iOS блокирует focus()
+
+    document.body.appendChild(textArea)
+
+    textArea.focus()
+    textArea.select()
+
+    const result = document.execCommand("copy")
+    textArea.remove()
+
+    return result
+  } catch (e) {
+    return false
+  }
+}
+
 /** Костыль-функция для копирования ссылки для http протокола */
 export const copyAndLoadToClipboard = async (
   linkData: (
@@ -32,37 +72,23 @@ export const copyAndLoadToClipboard = async (
   ) => Promise<{ data: string }>,
   id: string | number,
 ) => {
-  const textArea = document.createElement('textarea')
-
   try {
-    const { data } = await linkData(String(id)) // Запрос данных
+    const { data } = await linkData(String(id))
 
-    const parts = data.split('/')
+    const [typeValue, tokenValue] = data.split('/')
 
-    const typeValue = parts[0] // Тип
-    const tokenValue = parts[1] // Токен
+    const url = `${BASE_HOST}/questionnaire?type=${typeValue}&token=${tokenValue}`
 
-    const newString = `type=${typeValue}&token=${tokenValue}`
+    const copied = await copyTextUniversal(url)
 
-    textArea.value = `${BASE_HOST}/questionnaire?${newString}`
-    textArea.style.position = 'fixed' // Чтобы текстовое поле не отображалось
-    document.body.appendChild(textArea)
-    textArea.focus()
-    textArea.select()
-
-    const successful = document.execCommand('copy')
-
-    if (successful) {
+    if (copied) {
       toast.success('Ссылка скопирована в буфер обмена')
-
-      return textArea.value
+      return url
+    } else {
+      toast.error('Не удалось скопировать ссылку')
     }
-
-    toast.error('Не удалось скопировать ссылку')
   } catch {
     toast.error('Ошибка при копировании ссылки')
-  } finally {
-    textArea.remove()
   }
 }
 
