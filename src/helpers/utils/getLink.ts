@@ -37,17 +37,15 @@ export async function copyTextUniversal(text: string) {
     //
     // --- 2. iOS Safari / старые WebKit (используем textarea-хак) ---
     //
-    const textArea = document.createElement("textarea")
+    const textArea = document.createElement('textarea')
 
-    // iOS Safari требует специфические стили
-    textArea.value = text
-    textArea.style.position = "fixed"
-    textArea.style.top = "0"
-    textArea.style.left = "0"
-    textArea.style.width = "1px"
-    textArea.style.height = "1px"
-    textArea.style.opacity = "0"
-    textArea.style.fontSize = "16px" 
+    textArea.style.position = 'fixed'
+    textArea.style.top = '0'
+    textArea.style.left = '0'
+    textArea.style.width = '1px'
+    textArea.style.height = '1px'
+    textArea.style.opacity = '0'
+    textArea.style.fontSize = '16px'
     // 16px — важно! иначе iOS блокирует focus()
 
     document.body.appendChild(textArea)
@@ -55,7 +53,7 @@ export async function copyTextUniversal(text: string) {
     textArea.focus()
     textArea.select()
 
-    const result = document.execCommand("copy")
+    const result = document.execCommand('copy')
     textArea.remove()
 
     return result
