@@ -24,40 +24,34 @@ export const getLink = async (
   }
 }
 
-export const copyAndLoadToClipboard = async (linkData: any, id: string | number) => {
-  try {
-    // 1. Загружаем данные ЗАРАНЕЕ (перед копированием)
-    const { data } = await linkData(String(id))
-    const [typeValue, tokenValue] = data.split('/')
+export const getQuestionnaireUrl = async (linkData: any, id: string | number) => {
+  const { data } = await linkData(String(id))
 
-    const url = `${BASE_HOST}/questionnaire?type=${typeValue}&token=${tokenValue}`
+  const [typeValue, tokenValue] = data.split('/')
 
-    // 2. Копирование должно быть синхронным
-    safeCopy(url)
-
-    toast.success('Ссылка скопирована')
-
-    return url
-  } catch (e) {
-    toast.error('Ошибка копирования')
-  }
+  return `${BASE_HOST}/questionnaire?type=${typeValue}&token=${tokenValue}`
 }
 
-function safeCopy(text: string) {
+export const safariCopy = (text: string) => {
   const input = document.createElement('input')
   input.value = text
 
-  input.style.position = 'absolute'
-  input.style.left = '-9999px'
+  input.style.position = 'fixed'
+  input.style.top = '0'
+  input.style.left = '0'
+  input.style.opacity = '0'
   input.style.fontSize = '16px'
 
   document.body.appendChild(input)
 
+  input.focus()
   input.select()
-  input.setSelectionRange(0, text.length)
 
-  document.execCommand('copy')
+  const ok = document.execCommand('copy')
+
   input.remove()
+
+  return ok
 }
 
 export const copyLink = async (link: string) => {
