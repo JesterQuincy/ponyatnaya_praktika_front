@@ -19,28 +19,37 @@ export const CardButtons: FC<ICardButtonsProps> = ({ linkData, id, isPendingLink
   const popoverTimeout = useRef<NodeJS.Timeout | null>(null)
   const [popoverData, setPopoverData] = useState('')
 
-  const handleCopy = async () => {
+  // Срабатывает максимально рано - фиксируем жест синхронно
+  const handlePointerDown = () => {
+    // Копируем placeholder — это фиксирует user gesture в Safari
+    const ok = safariCopy('...')
+    // для логов на этапе отладки
+    if (!ok) {
+      // это не фатально — продолжим попытки при реальной загрузке
+      console.debug('Initial safariCopy placeholder failed')
+    } else {
+      console.debug('Initial safariCopy placeholder ok')
+    }
+  }
+
+  const handleClick = async () => {
     try {
-      // 1. асинхронно получаем ссылку (это можно — Safari не против)
-      const url = await getQuestionnaireUrl(linkData, id)
-      if (!url) return
+      // loadUrl будет выполнен асинхронно
+      const url = await safeSafariCopyWithAsyncUrl(() => getQuestionnaireUrl(linkData, id))
 
-      // 2. копируем СИНХРОННО — Safari-friendly
-      const ok = safariCopy(url)
-
-      if (ok) {
-        toast.success('Ссылка скопирована!')
-
-        setPopoverData(`${url.slice(0, 19)}...`)
-
-        if (popoverTimeout.current) clearTimeout(popoverTimeout.current)
-        popoverTimeout.current = setTimeout(() => {
-          setPopoverData('')
-        }, 3000)
-      } else {
-        toast.error('Safari заблокировал копирование')
+      if (!url) {
+        toast.error('Не удалось скопировать ссылку')
+        return
       }
+
+      toast.success('Ссылка скопирована!')
+
+      setPopoverData(`${url.slice(0, 19)}...`)
+
+      if (popoverTimeout.current) clearTimeout(popoverTimeout.current)
+      popoverTimeout.current = setTimeout(() => setPopoverData(''), 3000)
     } catch (e) {
+      console.error('handleClick copy error', e)
       toast.error('Ошибка копирования')
     }
   }
@@ -57,23 +66,11 @@ export const CardButtons: FC<ICardButtonsProps> = ({ linkData, id, isPendingLink
 
         <Popover open={!!popoverData.length}>
           <PopoverTrigger asChild>
+            {/* Вешаем pointerdown + click. pointerdown фиксирует жест максимально рано */}
             <button
               type="button"
-              onClick={async () => {
-                const url = await safeSafariCopyWithAsyncUrl(() => getQuestionnaireUrl(linkData, id))
-
-                if (!url) {
-                  toast.error('Не удалось скопировать')
-                  return
-                }
-
-                toast.success('Ссылка скопирована!')
-
-                setPopoverData(`${url.slice(0, 19)}...`)
-
-                if (popoverTimeout.current) clearTimeout(popoverTimeout.current)
-                popoverTimeout.current = setTimeout(() => setPopoverData(''), 3000)
-              }}
+              onPointerDown={handlePointerDown}
+              onClick={handleClick}
               disabled={isPendingLink}
               className="bg-[#5A5A5A] text-white py-2 px-4 rounded-[6px] disabled:cursor-not-allowed disabled:bg-[#8E8E8E]">
               Ссылка на анкету
