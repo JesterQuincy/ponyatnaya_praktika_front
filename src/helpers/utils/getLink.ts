@@ -24,49 +24,82 @@ export const getLink = async (
   }
 }
 
-export const getQuestionnaireUrl = async (linkData: any, id: string | number) => {
+export const getQuestionnaireUrl = async (linkData: any, id: string | number): Promise<string> => {
   const { data } = await linkData(String(id))
-
   const [typeValue, tokenValue] = data.split('/')
-
   return `${BASE_HOST}/questionnaire?type=${typeValue}&token=${tokenValue}`
 }
 
-export const safariCopy = (text: string) => {
-  const input = document.createElement('input')
-  input.value = text
+/**
+ * Синхронный Safari-friendly copy (execCommand fallback).
+ * Возвращает true если успешно.
+ */
+export const safariCopy = (text: string): boolean => {
+  try {
+    const input = document.createElement('input')
+    input.value = text
 
-  input.style.position = 'fixed'
-  input.style.top = '0'
-  input.style.left = '0'
-  input.style.opacity = '0'
-  input.style.fontSize = '16px'
+    // Ставим так, чтобы iOS/iPadOS/Safari корректно фокусировали
+    input.style.position = 'absolute'
+    input.style.left = '-9999px'
+    input.style.top = '0'
+    input.style.fontSize = '16px' // важно для iOS
+    input.setAttribute('aria-hidden', 'true')
 
-  document.body.appendChild(input)
+    document.body.appendChild(input)
 
-  input.focus()
-  input.select()
+    input.focus()
+    input.select()
 
-  const ok = document.execCommand('copy')
+    // Для input полезно явно выставить диапазон
+    try {
+      input.setSelectionRange(0, input.value.length)
+    } catch (e) {
+      // ignore: не все браузеры поддерживают
+    }
 
-  input.remove()
+    const ok = document.execCommand('copy')
 
-  return ok
+    // очистка
+    document.body.removeChild(input)
+
+    return !!ok
+  } catch (err) {
+    console.error('safariCopy error:', err)
+    return false
+  }
 }
 
+/**
+ * Хак: сначала синхронно фиксируем gesture, затем асинхронно загружаем URL и
+ * подменяем содержимое буфера (тоже синхронно).
+ *
+ * loadUrl — функция, которая возвращает Promise<string>
+ */
 export const safeSafariCopyWithAsyncUrl = async (loadUrl: () => Promise<string>) => {
-  // 1. Захватываем user gesture — копированием пустой строки
+  // 1) Синхронно фиксируем жест (placeholder)
+  // Важно: этот вызов должен происходить В ТОМ ЖЕ call-stack, что и пользовательский жест (onPointerDown / onClick)
   safariCopy('...')
 
   try {
-    // 2. Загружаем настоящий URL (можно await)
+    // 2) Загружаем реальный URL (можно await)
     const url = await loadUrl()
 
-    // 3. Ещё раз копируем — теперь Safari не блокирует
-    const ok = safariCopy(url)
+    // 3) Попробуем стандартный Clipboard API (только если доступен и страница HTTPS)
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      try {
+        await navigator.clipboard.writeText(url)
+        return url
+      } catch {
+        // если не получилось — падём к execCommand
+      }
+    }
 
+    // 4) Синхронно подменяем буфер через execCommand
+    const ok = safariCopy(url)
     return ok ? url : null
-  } catch {
+  } catch (e) {
+    console.error('safeSafariCopyWithAsyncUrl load error', e)
     return null
   }
 }
