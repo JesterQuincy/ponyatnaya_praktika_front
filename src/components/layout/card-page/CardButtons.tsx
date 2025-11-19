@@ -2,7 +2,7 @@ import { FC, useRef, useState } from 'react'
 import { MutateOptions } from '@tanstack/react-query'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 
-import { getQuestionnaireUrl, safariCopy } from '@/helpers/utils/getLink'
+import { getQuestionnaireUrl, safariCopy, safeSafariCopyWithAsyncUrl } from '@/helpers/utils/getLink'
 import { toast } from 'react-toastify'
 
 interface ICardButtonsProps {
@@ -59,7 +59,21 @@ export const CardButtons: FC<ICardButtonsProps> = ({ linkData, id, isPendingLink
           <PopoverTrigger asChild>
             <button
               type="button"
-              onClick={handleCopy}
+              onClick={async () => {
+                const url = await safeSafariCopyWithAsyncUrl(() => getQuestionnaireUrl(linkData, id))
+
+                if (!url) {
+                  toast.error('Не удалось скопировать')
+                  return
+                }
+
+                toast.success('Ссылка скопирована!')
+
+                setPopoverData(`${url.slice(0, 19)}...`)
+
+                if (popoverTimeout.current) clearTimeout(popoverTimeout.current)
+                popoverTimeout.current = setTimeout(() => setPopoverData(''), 3000)
+              }}
               disabled={isPendingLink}
               className="bg-[#5A5A5A] text-white py-2 px-4 rounded-[6px] disabled:cursor-not-allowed disabled:bg-[#8E8E8E]">
               Ссылка на анкету

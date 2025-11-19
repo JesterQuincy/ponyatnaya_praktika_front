@@ -54,6 +54,23 @@ export const safariCopy = (text: string) => {
   return ok
 }
 
+export const safeSafariCopyWithAsyncUrl = async (loadUrl: () => Promise<string>) => {
+  // 1. Захватываем user gesture — копированием пустой строки
+  safariCopy('...')
+
+  try {
+    // 2. Загружаем настоящий URL (можно await)
+    const url = await loadUrl()
+
+    // 3. Ещё раз копируем — теперь Safari не блокирует
+    const ok = safariCopy(url)
+
+    return ok ? url : null
+  } catch {
+    return null
+  }
+}
+
 export const copyLink = async (link: string) => {
   try {
     await navigator.clipboard.writeText(link)
