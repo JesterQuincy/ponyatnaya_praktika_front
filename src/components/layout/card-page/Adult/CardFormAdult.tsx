@@ -33,7 +33,7 @@ export function CardFormAdult({ user }: ICardFormProps) {
   const [isMore, setIsMore] = useState(false)
 
   const { mutate, isPending } = useClientUpdate()
-  const { mutateAsync: linkData, isPending: isPendingLink } = useGetLink()
+  // const { mutateAsync: linkData, isPending: isPendingLink } = useGetLink()
 
   const {
     lastName,
@@ -190,7 +190,7 @@ export function CardFormAdult({ user }: ICardFormProps) {
                 </>
               )}
             </div>
-            <CardButtons id={id} linkData={linkData} isPendingLink={isPendingLink} isLoading={isSubmitLoading} />
+            <CardButtons id={id} isLoading={isSubmitLoading} />
           </form>
         </Form>
         {!isMore && (

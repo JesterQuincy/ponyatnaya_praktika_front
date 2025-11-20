@@ -106,9 +106,19 @@ export const safeSafariCopyWithAsyncUrl = async (loadUrl: () => Promise<string>)
 
 export const copyLink = async (link: string) => {
   try {
-    await navigator.clipboard.writeText(link)
-    toast.success('Ссылка скопирована в буфер обмена')
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      await navigator.clipboard.writeText(link)
+      toast.success('Ссылка скопирована в буфер обмена')
+      return link
+    }
 
+    // fallback для Safari/старых браузеров
+    const ok = safariCopy(link)
+    if (!ok) {
+      throw new Error('execCommand fallback failed')
+    }
+
+    toast.success('Ссылка скопирована в буфер обмена')
     return link
   } catch (error) {
     console.error('Ошибка копирования:', error)
