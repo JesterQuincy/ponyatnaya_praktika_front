@@ -1,57 +1,50 @@
 import { FC, useRef, useState } from 'react'
-import { MutateOptions } from '@tanstack/react-query'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
-
-import { getQuestionnaireUrl, safariCopy, safeSafariCopyWithAsyncUrl } from '@/helpers/utils/getLink'
 import { toast } from 'react-toastify'
 
+import { copyLink } from '@/helpers/utils/getLink'
+import { useGetLink } from '@/api/hooks/profile-link/useGetLink'
+
 interface ICardButtonsProps {
-  linkData: (
-    variables: string,
-    options?: MutateOptions<{ data: string }, Error, string, unknown> | undefined,
-  ) => Promise<{ data: string }>
   id: string | number
-  isPendingLink: boolean
-  isLoading: boolean
+  isLoading: boolean // загрузка формы "Сохранить"
 }
 
-export const CardButtons: FC<ICardButtonsProps> = ({ linkData, id, isPendingLink, isLoading }) => {
-  const popoverTimeout = useRef<NodeJS.Timeout | null>(null)
+export const CardButtons: FC<ICardButtonsProps> = ({ id, isLoading }) => {
+  const popoverTimeout = useRef<ReturnType<typeof setTimeout> | null>(null)
   const [popoverData, setPopoverData] = useState('')
 
-  // Срабатывает максимально рано - фиксируем жест синхронно
-  const handlePointerDown = () => {
-    // Копируем placeholder — это фиксирует user gesture в Safari
-    const ok = safariCopy('...')
-    // для логов на этапе отладки
-    if (!ok) {
-      // это не фатально — продолжим попытки при реальной загрузке
-      console.debug('Initial safariCopy placeholder failed')
-    } else {
-      console.debug('Initial safariCopy placeholder ok')
-    }
-  }
+  const { link, isLoading: isLinkLoading, error409 } = useGetLink(id)
 
   const handleClick = async () => {
-    try {
-      // loadUrl будет выполнен асинхронно
-      const url = await safeSafariCopyWithAsyncUrl(() => getQuestionnaireUrl(linkData, id))
+    // 1. Пока запрос ещё идёт
+    if (isLinkLoading) {
+      toast.info('Ссылка ещё загружается...')
+      return
+    }
 
-      if (!url) {
-        toast.error('Не удалось скопировать ссылку')
-        return
+    // 2. Ссылка успешно получена — копируем
+    if (link) {
+      const copied = await copyLink(link)
+
+      if (copied) {
+        setPopoverData(`${link.slice(0, 19)}...`)
+
+        if (popoverTimeout.current) clearTimeout(popoverTimeout.current)
+        popoverTimeout.current = setTimeout(() => setPopoverData(''), 3000)
       }
 
-      toast.success('Ссылка скопирована!')
-
-      setPopoverData(`${url.slice(0, 19)}...`)
-
-      if (popoverTimeout.current) clearTimeout(popoverTimeout.current)
-      popoverTimeout.current = setTimeout(() => setPopoverData(''), 3000)
-    } catch (e) {
-      console.error('handleClick copy error', e)
-      toast.error('Ошибка копирования')
+      return
     }
+
+    // 3. Был 409 — показываем текст, который пришёл с бэка
+    if (error409) {
+      toast.warning(error409, { autoClose: 5000 })
+      return
+    }
+
+    // 4. Что-то другое пошло не так
+    toast.error('Не удалось получить ссылку')
   }
 
   return (
@@ -66,12 +59,9 @@ export const CardButtons: FC<ICardButtonsProps> = ({ linkData, id, isPendingLink
 
         <Popover open={!!popoverData.length}>
           <PopoverTrigger asChild>
-            {/* Вешаем pointerdown + click. pointerdown фиксирует жест максимально рано */}
             <button
               type="button"
-              onPointerDown={handlePointerDown}
               onClick={handleClick}
-              disabled={isPendingLink}
               className="bg-[#5A5A5A] text-white py-2 px-4 rounded-[6px] disabled:cursor-not-allowed disabled:bg-[#8E8E8E]">
               Ссылка на анкету
             </button>
