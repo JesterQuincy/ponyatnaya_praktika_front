@@ -32,7 +32,7 @@ export const CardFormCouple = ({ user }: ICardFormProps) => {
   const [isMore, setIsMore] = useState(false)
 
   const { mutate, isPending } = useUpdateCouple()
-  const { mutateAsync: linkData, isPending: isPendingLink } = useGetLink()
+  // const { mutateAsync: linkData, isPending: isPendingLink } = useGetLink()
 
   const {
     lastName,
@@ -271,7 +271,7 @@ export const CardFormCouple = ({ user }: ICardFormProps) => {
                 </>
               )}
             </div>
-            <CardButtons id={id} linkData={linkData} isPendingLink={isPendingLink} isLoading={isSubmitLoading} />
+            <CardButtons id={id} isLoading={isSubmitLoading} />
           </form>
         </Form>
         {!isMore && (
