@@ -1,50 +1,40 @@
-import { FC, useRef, useState } from 'react'
+import { FC, useState } from 'react'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
+import { useGetLink } from '@/api/hooks/profile-link/useGetLink'
+import { ClientLinkModal } from './ClientLinkModal'
+import axios from 'axios'
 import { toast } from 'react-toastify'
 
-import { copyLink } from '@/helpers/utils/getLink'
-import { useGetLink } from '@/api/hooks/profile-link/useGetLink'
-
 interface ICardButtonsProps {
-  id: string | number
-  isLoading: boolean // загрузка формы "Сохранить"
+  id: string
+  isLoading: boolean
 }
 
 export const CardButtons: FC<ICardButtonsProps> = ({ id, isLoading }) => {
-  const popoverTimeout = useRef<ReturnType<typeof setTimeout> | null>(null)
   const [popoverData, setPopoverData] = useState('')
+  const [modalOpen, setModalOpen] = useState(false)
+  const [link, setLink] = useState('')
 
-  const { link, isLoading: isLinkLoading, error409 } = useGetLink(id)
+  const { mutateAsync: getLink, isPending } = useGetLink(id)
 
   const handleClick = async () => {
-    // 1. Пока запрос ещё идёт
-    if (isLinkLoading) {
-      toast.info('Ссылка ещё загружается...')
-      return
-    }
+    try {
+      const resp = await getLink(id)
+      setLink(resp.data)
+      setModalOpen(true)
+    } catch (err: unknown) {
+      if (axios.isAxiosError(err) && err.response?.status === 409) {
+        const message =
+          (typeof err.response?.data === 'string' && err.response.data) ||
+          (typeof err.response?.data?.message === 'string' && err.response.data.message) ||
+          'Ошибка при генерации ссылки'
 
-    // 2. Ссылка успешно получена — копируем
-    if (link) {
-      const copied = await copyLink(link)
-
-      if (copied) {
-        setPopoverData(`${link.slice(0, 19)}...`)
-
-        if (popoverTimeout.current) clearTimeout(popoverTimeout.current)
-        popoverTimeout.current = setTimeout(() => setPopoverData(''), 3000)
+        toast.error(message)
+        return
       }
 
-      return
+      toast.error('Ошибка при генерации ссылки')
     }
-
-    // 3. Был 409 — показываем текст, который пришёл с бэка
-    if (error409) {
-      toast.warning(error409, { autoClose: 5000 })
-      return
-    }
-
-    // 4. Что-то другое пошло не так
-    toast.error('Не удалось получить ссылку')
   }
 
   return (
@@ -62,6 +52,7 @@ export const CardButtons: FC<ICardButtonsProps> = ({ id, isLoading }) => {
             <button
               type="button"
               onClick={handleClick}
+              disabled={isPending}
               className="bg-[#5A5A5A] text-white py-2 px-4 rounded-[6px] disabled:cursor-not-allowed disabled:bg-[#8E8E8E]">
               Ссылка на анкету
             </button>
@@ -72,6 +63,8 @@ export const CardButtons: FC<ICardButtonsProps> = ({ id, isLoading }) => {
           </PopoverContent>
         </Popover>
       </div>
+
+      <ClientLinkModal modalOpen={modalOpen} setModalOpen={setModalOpen} link={link} />
     </div>
   )
 }

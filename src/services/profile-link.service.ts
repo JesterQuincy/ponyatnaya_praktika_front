@@ -21,7 +21,7 @@ export const profileLinkService = {
     })
   },
 
-  async getLink(id: string | null): Promise<{ data: string }> {
+  async getLink(id: string): Promise<{ data: string }> {
     return await axiosWithAuth.get(`/api/applicationForm/get/${id}`)
   },
 
