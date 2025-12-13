@@ -190,7 +190,7 @@ export function CardFormAdult({ user }: ICardFormProps) {
                 </>
               )}
             </div>
-            <CardButtons id={id} isLoading={isSubmitLoading} />
+            <CardButtons id={String(id)} isLoading={isSubmitLoading} />
           </form>
         </Form>
         {!isMore && (
