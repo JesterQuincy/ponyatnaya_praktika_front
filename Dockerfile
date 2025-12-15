@@ -14,6 +14,6 @@ RUN npm run build
 FROM node:20-alpine
 WORKDIR /app
 COPY --from=build /app ./
-EXPOSE 3330
-
-CMD ["npm", "start -p 3300"]
+ENV NODE_ENV=production
+EXPOSE 3000
+CMD ["npm","start","--","-p","3000"]
