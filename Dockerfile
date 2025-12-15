@@ -1,19 +1,38 @@
-# Этап сборки
-FROM node:20 as build
+# syntax=docker/dockerfile:1
+
+# 1) deps — установка зависимостей (кешируемо)
+FROM node:20-alpine AS deps
 WORKDIR /app
+RUN apk add --no-cache libc6-compat
 COPY package*.json ./
 RUN npm ci
+
+# 2) build — сборка Next
+FROM node:20-alpine AS build
+WORKDIR /app
+RUN apk add --no-cache libc6-compat
+COPY --from=deps /app/node_modules ./node_modules
 COPY . .
-RUN ls -la
-RUN test -f .prettierrc && echo "prettierrc OK" || (echo "NO .prettierrc" && exit 1)
-RUN npx prettier -v
-RUN npx prettier --find-config-path src/components/ui/button.tsx
+ENV NEXT_TELEMETRY_DISABLED=1
 RUN npm run build
 
-# Этап выполнения
-FROM node:20-alpine
+# 3) run — финальный рантайм (минимальный)
+FROM node:20-alpine AS run
 WORKDIR /app
-COPY --from=build /app ./
 ENV NODE_ENV=production
+ENV NEXT_TELEMETRY_DISABLED=1
+ENV PORT=3000
+
+# запуск не под root (безопаснее)
+RUN addgroup -S nextjs && adduser -S nextjs -G nextjs
+
+# переносим standalone-сервер
+COPY --from=build /app/.next/standalone ./
+# переносим статику Next
+COPY --from=build /app/.next/static ./.next/static
+# переносим public
+COPY --from=build /app/public ./public
+
+USER nextjs
 EXPOSE 3000
-CMD ["npm","start","--","-p","3000"]
+CMD ["node", "server.js"]
